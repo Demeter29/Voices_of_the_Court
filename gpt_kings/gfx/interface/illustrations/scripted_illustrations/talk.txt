@@ -1,0 +1,44 @@
+﻿#datacontext is the talking partner, use the 'talk_first_scope' global variable to scope the player
+talk_background = {
+
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_throneroom
+		}
+		
+		reference = "character_view/west.dds"		
+	}
+	
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_garden
+		}
+		
+		reference = "activities/activity_playdate.dds"		
+	}
+	
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_bedchamber
+		}
+		
+		reference = "event_scenes/bedchamber.dds"		
+	}
+	
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_dungeon
+		}
+		
+		reference = "event_scenes/dungeon.dds"		
+	}
+	
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_feast
+		}
+		
+		reference = "activities/activity_feast.dds"	
+	}
+	
+

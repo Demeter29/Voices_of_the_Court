@@ -1,0 +1,41 @@
+{
+  "name": "gpt_kings",
+  "productName": "gpt_kings",
+  "version": "1.0.0",
+  "description": "A chatbot mod for Crusader Kings 3",
+  "main": "dist/main/main.js",
+  "build": {
+    "asar": false,
+    "files": [
+      "build/**/*"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "go": "electron .",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
+  },
+  "keywords": [],
+  "author": "Durond",
+  "license": "MIT",
+  "dependencies": {
+    "dompurify": "^3.0.8",
+    "electron-build": "^0.0.3",
+    "electron-overlay-window": "^3.3.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "marked": "^11.1.0",
+    "openai": "^4.24.1",
+    "papaparse": "^5.4.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.4",
+    "@electron-forge/maker-deb": "^6.0.4",
+    "@electron-forge/maker-rpm": "^6.0.4",
+    "@electron-forge/maker-squirrel": "^6.0.4",
+    "@electron-forge/maker-zip": "^6.0.4",
+    "electron": "22.0.3"
+  }
+}

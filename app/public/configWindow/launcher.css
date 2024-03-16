@@ -1,0 +1,175 @@
+html{
+  background-image: url('../assets/background_area_light.png');
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color:white;
+}
+
+body{
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.navbar{
+  position: fixed;
+  top: 0px;
+  width:100%;
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+
+  width: 100%;
+  float: left;
+  display:flex;
+  flex-direction:row;
+}
+
+.navbar li {
+  text-align: center;
+  float: left;
+  order:1;
+  flex-grow:1;
+  width: 100%;
+}
+
+.navbar li a {
+  display: block;
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none; 
+}
+
+.navbar li a:hover {
+  background-color: #111;
+}
+
+.navbar .active{
+  background-color: #181818;
+}
+
+.border{
+  border: 2px solid black;
+  border-radius: 5%;
+  padding: 5% 5% 5% 5%;
+}
+
+.border h2{
+  padding: 0;
+  margin:0;
+}
+
+button{
+  background-color: black;
+  color:white;
+}
+
+button:hover{
+  background-color: rgb(34, 34, 34);
+  border-color: rgb(34, 34, 34);
+}
+
+select{
+  width: 100%;
+  background-color: black;
+  color:white;
+  border-radius: 8px;
+}
+
+input{
+  background-color: black;
+  color:white;
+}
+
+input[type=text]{
+  width: 100%;
+}
+
+input[type=checkbox]{
+  accent-color: black;
+  outline: 0.5px solid white;
+}
+
+.input-group{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.input-group input,select,button, textarea {
+  border: 0.1px solid rgb(0, 0, 0);
+  background-color: #101010;
+  color: white;
+}
+
+.container{
+  padding: 2rem;
+  padding-top: 4rem;
+}
+
+.row {
+  display: flex;
+  width:100%;
+}
+
+.column {
+  flex: 50%;
+  width: 50%;
+}
+
+.column + .column {
+  margin-left:3%
+}
+
+/* status Page */
+
+.status-icon{
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* Connection Page */
+
+#run-path-input{
+  width: 80%;
+}
+
+/* interaction page */
+
+/* model settings */
+
+input[type=range]{
+  width: 60%;
+  vertical-align: middle;
+}
+
+.model-setting-number{
+  width: 30%;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  color: #105e53;
+}
+
+
+.border hr{
+  margin: 0 -5% 0 -5%;
+  border: 1px solid black;
+}
+
+textarea{
+  width: 100%;
+  max-width: 100%;
+}

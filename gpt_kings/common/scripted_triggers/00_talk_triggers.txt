@@ -1,0 +1,60 @@
+﻿#these triggers check if the player can talk with the character in the given scenes. they are used in the character interaction, and in the travel arrival event.
+
+can_talk_in_throneroom = {
+	AND = {
+		scope:actor.location = scope:recipient.location
+		scope:actor = {is_imprisoned = no}
+		scope:recipient = {is_imprisoned = no}
+		
+	}
+}
+
+can_talk_in_garden = {
+	AND = {
+		scope:actor.location = scope:recipient.location
+		scope:actor = {is_imprisoned = no}
+		scope:recipient = {is_imprisoned = no}	
+	}
+}
+
+can_talk_in_bedchamber = {
+	AND = {
+		scope:actor.location = scope:recipient.location
+		scope:actor = {is_imprisoned = no}
+		scope:recipient = {is_imprisoned = no}
+		
+		scope:actor = {
+			primary_partner = scope:recipient
+		}
+	}
+}
+
+can_talk_in_dungeon = {
+	AND = {
+		scope:actor.location = scope:recipient.location
+		
+		OR = {
+			scope:actor = {is_imprisoned = yes}
+			scope:recipient = {is_imprisoned = yes}
+		}
+			
+	}
+}
+
+#not how to do it correctly but whatever
+can_talk_in_feast = {
+	AND = {
+		scope:actor.location = scope:recipient.location
+		
+		scope:actor = {
+			involved_activity ?= { has_activity_type = activity_feast }
+			location ?= involved_activity.activity_location
+		}
+		scope:recipient = {
+			involved_activity ?= { has_activity_type = activity_feast }
+			location ?= involved_activity.activity_location
+		}
+		
+	}
+}
+

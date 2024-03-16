@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GPT Kings</title>
+    <link rel="stylesheet" href="launcher.css" />
+    
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li><a href="status.html">Status</a></li>
+        <li><a href="connection.html">Connection</a></li>
+        <li><a href="prompting.html">Prompting</a></li>
+        <li class="active"><a href="interactions.html">Interactions</a></li>
+        <li><a href="modelSettings.html">Model Settings</a></li>
+        <li><a href="userSettings.html">User Settings</a></li>
+      </ul> 
+    </div>
+
+    <div class="container">
+      <div class="input-group">
+        <input type="checkbox" id="enable-interactions" name="enableInteractions"/>
+        <label for="interactions">Enable Interactions</label>  
+      </div>
+      
+      <div class="border">
+
+        <div class="input-group">
+          <label for="api-key">OpenAI API Key</label>
+          <input type="text" class="connectionTextInput" id="api-key">
+          <button type="button" id="api-key-save">Save</button>
+        </div>
+        
+        <div class="input-group">
+          <label for="modelSelect">Model</label>
+          <select name="modelSelect" id="model-select">
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            <option value="gpt-4">GPT-4</option>
+          </select>
+        </div>
+        
+
+        <p>Select which interactions you want the mod to detect:</p>
+      
+            <div class="input-group">
+              <input type="checkbox" id="relation-modifier"/>
+              <label for="relation-modifier">Relation modifier</label>
+            </div>    
+         
+            <div class="input-group">
+              <input type="checkbox" id="gold-exchange"/>
+              <label for="gold-exchange">Gold exchange</label> 
+            </div> 
+          
+      </div>
+    </div>
+    
+   
+
+    <script>require("../../dist/configWindow/interactionRenderer.js")</script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+﻿
+
+beach1 = {
+	camera = {
+		position = cylindrical{ 460 120 -20 } # Radius, height, angle
+		#position_node = camera_torso_look_at
+
+		look_at = {	0 110 0 } # L/R, U/D, F/B
+		#look_at_node = camera_torso_look_at
+		fov = 20
+		camera_near_far = { 10 5000 }
+	}
+
+	unknown = "gfx/0.dds"
+}
+

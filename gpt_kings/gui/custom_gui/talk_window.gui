@@ -1,0 +1,57 @@
+window = {
+	name = "talk_window"
+	size = { 100% 100% }
+	parentanchor = center
+	movable = no
+	#position = { -80 130 }
+	layer = middle
+	
+	state = {
+		name = itsshowtime
+		trigger_on_create = yes
+		on_start = "[GetScriptedGui('randos').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_start = "[GetScriptedGui('getBackground').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+		on_finish = "[GetVariableSystem.Set( 'blur', '1' )]"
+		
+	}
+
+	background = {
+		texture = "[GetIllustration('talk_background').GetTexture(GetGlobalVariable('talk_second_scope').GetCharacter.MakeScope)]"
+	}
+	
+	beach1 = {
+		datacontext = "[GetGlobalVariable('talk_second_scope').GetCharacter]"
+		parentanchor = bottom|hcenter
+		position = { 300 50}
+	}
+
+	
+	button_standard = {
+		parentanchor = top|left
+		position = { 0 0}
+		size = { 20 20 }
+		raw_text = "e"
+		
+		onclick = "[ExecuteConsoleCommand('event talk_event.9002')]"		
+		onclick = "[ExecuteConsoleCommand('GUI.ClearWidgets talk_window talk_window_counter')]"		
+	}
+	
+	#close window
+	hbox = {
+		name = "talk_window_counter"
+	
+		state = {
+			name = _show
+			trigger_on_create = yes
+			duration = 0.3
+			on_finish = "[ExecuteConsoleCommand('run gpt_kings.txt')]"
+		}
+	
+		state = {
+			name = _show2
+			trigger_on_create = yes
+			duration = 0.4
+			on_finish = "[ExecuteConsoleCommand('gui.createwidget gui/custom_gui/talk_window.gui talk_window_counter')]"
+		}
+	}
+}

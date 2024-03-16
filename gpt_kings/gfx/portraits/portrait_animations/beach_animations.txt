@@ -1,0 +1,234 @@
+﻿############################################################################################################################################################
+############################################################################################################################################################
+
+
+beach5 = {
+	male = {
+		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
+
+		reg = {
+			animation = { head = "AI_rational_entry" torso = "gnp_body" }
+
+			weight = {
+				base = 100
+			}
+			portrait_modifier = {
+		
+				#animations_props = artisan_sword_steppe_prop
+				arocker = rocking
+			}
+		}
+	}
+
+	boy = {
+		default = { head = "idle" torso = "idle" }
+	}
+	female = male
+	girl = boy
+}
+beach4 = {
+	male = {
+		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
+
+		reg = {
+			animation = { head = "AI_rational_entry" torso = "emotion_dying_entry" }
+
+			weight = {
+				base = 100
+			}
+
+		}
+	}
+
+	boy = {
+		default = { head = "idle" torso = "idle" }
+	}
+	female = male
+	girl = boy
+}
+beach1 = {
+	male = {
+		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
+
+		reg = {
+			animation = { head = "AI_rational_entry" torso = "AI_rational_entry" }
+
+			weight = {
+				base = 100
+			}
+			portrait_modifier = {
+		
+				#animations_props = artisan_sword_steppe_prop
+				arocker = rocking
+			}
+		}
+	}
+
+	boy = {
+		default = { head = "idle" torso = "idle" }
+	}
+	female = male
+	girl = boy
+}
+beach2 = {
+	male = {
+		default ={ head = "throneRoom_conversation1_entry" torso = "AI_rational_entry" }
+
+
+
+			emotion_two_handed_aggressive_spear_basicw = {
+				animation = { head = "talktalk" torso = "emotion_twoHandedAggressive1_entry" }
+	
+				weight = {
+					base = 0
+	
+					modifier = {
+						add = 100
+						AND = {
+							scope:current_weight < 50
+							NOT = { portrait_has_trait_trigger = { TRAIT = dwarf } }
+							NOT = { portrait_has_trait_trigger = { TRAIT = pregnant } }
+							
+						}
+					}
+				}
+	
+				portrait_modifier = {
+					trigger = {
+						any_equipped_character_artifact = { artifact_type = spear }
+					}
+					animations_props = artifact_spear_equipped_prop
+					animations = AI_vengeful_decal
+				}
+	
+				portrait_modifier = {
+					trigger = {
+						NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+						culture = { has_clothing_gfx = indian_clothing_gfx }
+					}			
+					animations_props = artisan_indian_spear_prop_right_hand
+					animations = AI_vengeful_decal
+				}
+				
+				portrait_modifier = {
+					trigger = {
+						NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+						culture = {
+							OR = {
+								has_clothing_gfx = mena_clothing_gfx
+								has_clothing_gfx = mongol_clothing_gfx
+								has_clothing_gfx = iberian_christian_clothing_gfx
+								has_clothing_gfx = iberian_muslim_clothing_gfx
+							}
+						}
+					}			
+					animations_props = artisan_mena_spear_prop_right_hand
+					animations = AI_vengeful_decal
+				}
+	
+				portrait_modifier = {
+					trigger = {
+						NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+						culture = {	has_clothing_gfx = african_clothing_gfx }
+					}			
+					animations_props = artisan_african_spear_prop_right_hand
+					animations = AI_vengeful_decal
+				}
+				
+				portrait_modifier = {
+					trigger = {
+						NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+						spear_unique_gfx_trigger = no
+					}			
+					animations_props = artisan_spear_prop_right_hand
+					animations = AI_vengeful_decal
+				}
+			}	
+	}
+
+	boy = {
+		default = { head = "idle" torso = "idle" }
+	}
+	female = male
+	girl = boy
+}
+beach3 = {
+	male = {
+		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
+
+		emotion_two_handed_aggressive_spear_basic = {
+			animation = { head = "talktalk" torso = "teabag_body" }
+
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					AND = {
+						scope:current_weight < 50
+						NOT = { portrait_has_trait_trigger = { TRAIT = dwarf } }
+						NOT = { portrait_has_trait_trigger = { TRAIT = pregnant } }
+                        
+					}
+				}
+			}
+
+			portrait_modifier = {
+				trigger = {
+					any_equipped_character_artifact = { artifact_type = spear }
+				}
+				animations_props = artifact_spear_equipped_prop
+				animations = AI_vengeful_decal
+			}
+
+			portrait_modifier = {
+				trigger = {
+					NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+					culture = { has_clothing_gfx = indian_clothing_gfx }
+				}			
+				animations_props = artisan_indian_spear_prop_right_hand
+				animations = AI_vengeful_decal
+			}
+			
+			portrait_modifier = {
+				trigger = {
+					NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+					culture = {
+						OR = {
+							has_clothing_gfx = mena_clothing_gfx
+							has_clothing_gfx = mongol_clothing_gfx
+							has_clothing_gfx = iberian_christian_clothing_gfx
+							has_clothing_gfx = iberian_muslim_clothing_gfx
+						}
+					}
+				}			
+				animations_props = artisan_mena_spear_prop_right_hand
+				animations = AI_vengeful_decal
+			}
+
+			portrait_modifier = {
+				trigger = {
+					NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+					culture = {	has_clothing_gfx = african_clothing_gfx }
+				}			
+				animations_props = artisan_african_spear_prop_right_hand
+				animations = AI_vengeful_decal
+			}
+			
+			portrait_modifier = {
+				trigger = {
+					NOT = { any_equipped_character_artifact = { artifact_type = spear } }
+					spear_unique_gfx_trigger = no
+				}			
+				animations_props = artisan_spear_prop_right_hand
+				animations = AI_vengeful_decal
+			}
+		}	
+	}
+
+	boy = {
+		default = { head = "idle" torso = "idle" }
+	}
+	female = male
+	girl = boy
+}

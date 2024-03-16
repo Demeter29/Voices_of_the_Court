@@ -1,0 +1,59 @@
+﻿l_english:
+#output:
+talk_event.9001.desc:0 "GK:IN%;%$t_1$%;%$t_2$%;%$t_3$%;%$t_4$%;%$t_5$%;%$t_6$%;%$t_16$%;%$t_17$%;%$t_18$%;%$t_19$%;%$t_20$%;%$t_21$%;%$t_22$%;%$t_23$%;%$t_24$%;%$t_25$%;%$t_26$%;%$t_27$%;%$t_28$%;%$t_29$%;%$t_30$%;%$t_31$%;%$t_32$%;%$t_33$%;%$t_34$%;%$t_35$%;%$t_36$%;%$t_37$%;%$t_38$%;%$t_39$%;%$t_40$%;%$t_41$"
+#variables:
+
+#game
+t_1:0 "date%:%[GetCurrentDate.GetStringShort]"
+t_2:0 "scene%:%[GetGlobalVariable('talk_scene').GetFlagName]"
+t_3:0 "host%:%[ROOT.Char.GetInvolvedActivity.GetHost.GetTitledFirstName]"
+t_4:0 "location%:%[recipient.GetCurrentLocation.GetName]"
+
+#first (you)
+t_5:0 "playerID%:%[ROOT.Char.GetID]"
+t_6:0 "playerName%:%[ROOT.Char.GetTitledFirstName]"
+#t_7:0 "[ROOT.Char.GetAge]'"
+#t_8:0 "[ROOT.Char.GetGold]'"
+#t_9:0 "[ROOT.Char.GetCulture.GetName]'"
+#t_10:0 "[ROOT.Char.GetFaith.GetName]'"
+#t_11:0 "[ROOT.Char.GetHouse.GetName]'"
+#t_12:0 "[ROOT.Char.IsIndependentRuler]'"
+#t_13:0 "[ROOT.Char.GetLiege.GetFullName]'"
+#t_14:0 "[ROOT.Char.IsRuler]'"
+#t_15:0 "[ROOT.Char.GetConsort.GetTitledFirstName]'"
+
+#second (ai)
+t_16:0 "aiID%:%[recipient.GetID]"
+t_17:0 "aiName%:%[recipient.GetTitledFirstName]"
+t_18:0 "aiPrimaryTitlt%:%[recipient.GetPrimaryTitle.GetName]"
+t_19:0 "aiSheHe%:%[recipient.GetSheHe]"
+t_20:0 "aiAge%:%[recipient.GetAge]"
+t_21:0 "aiGold%:%[recipient.GetGold]"
+t_22:0 "aiOpinion%:%[recipient.GetOpinionOf(ROOT.Char)]"
+t_23:0 "aiRelations%:%[recipient.GetRelationToStringExtended(ROOT.Char)]"
+t_24:0 "aiSexuality%:%[recipient.GetSexuality]"
+t_25:0 "aiPersonality%:%[recipient.GetAIPersonality]"
+t_26:0 "aiGreed%:%[recipient.GetAIGreed]"
+t_27:0 "aiIsIndependentRuler%:%[recipient.IsIndependentRuler]"
+t_28:0 "aiLiege%:%[recipient.GetLiege.GetFullName]"
+t_29:0 "aiConsort%:%[recipient.GetConsort.GetTitledFirstName]"
+t_30:0 "aiCulture%:%[recipient.GetCulture.GetName]"
+t_31:0 "aiFaith%:%[recipient.GetFaith.GetName]"
+t_32:0 "aiHouse%:%[recipient.GetHouse.GetName]"
+t_33:0 "aiIsRuler%:%[recipient.IsRuler]"
+t_34:0 "aiPersonalityTrait1Name%:%[GetGlobalVariable('talk_trait_1').Trait.GetName(recipient)]"
+t_35:0 "aiPersonalityTrait1Desc%:%[GetGlobalVariable('talk_trait_1').Trait.GetDescription(recipient)]"
+t_36:0 "aiPersonalityTrait2Name%:%[GetGlobalVariable('talk_trait_2').Trait.GetName(recipient)]"
+t_37:0 "aiPersonalityTrait2Desc%:%[GetGlobalVariable('talk_trait_2').Trait.GetDescription(recipient)]"
+t_38:0 "aiPersonalityTrait3Name%:%[GetGlobalVariable('talk_trait_3').Trait.GetName(recipient)]"
+t_39:0 "aiPersonalityTrait3Desc%:%[GetGlobalVariable('talk_trait_3').Trait.GetDescription(recipient)]"
+t_40:0 "aiPersonalityTrait4Name%:%[GetGlobalVariable('talk_trait_4').Trait.GetName(recipient)]"
+t_41:0 "aiPersonalityTrait4Desc%:%[GetGlobalVariable('talk_trait_4').Trait.GetDescription(recipient)]"
+
+#Closing event
+talk_event.9002.desc:0 "GK:CLOSE"
+
+#debug
+
+
+#talk_event.9001.desc:0 "[recipient.GetCourt.GetName]"

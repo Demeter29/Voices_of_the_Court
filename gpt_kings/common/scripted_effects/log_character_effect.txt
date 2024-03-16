@@ -1,0 +1,32 @@
+﻿log_character = {
+	debug_log = log_character
+
+	log_relations = {}
+
+	log_personality_traits = {}
+
+	log_memories = {}
+}
+
+log_relations = {
+	debug_log = "GK:IN/;/relations/;/[THIS.Char.GetID]/;/STARTMULTILINE#[THIS.Char.GetRelationToStringExtended(GetPlayer)]#ENDMULTILINE/;/"
+}
+
+log_personality_traits = {
+	every_character_trait = {
+			limit = {
+				has_trait_category = personality
+			}
+		debug_log = "GK:IN/;/trait/;/[PREV.Char.GetID]/;/personality/;/[THIS.Trait.GetNameNoTooltip(PREV.Char)]/;/[THIS.Trait.GetDescription(PREV.Char)]"
+	}
+}
+
+log_memories = {
+	every_memory = {
+		set_variable = {
+			name = relevance_weight
+			value = weight_memory_relevance
+		}
+		debug_log = "GK:IN/;/memory/;/[THIS.CharacterMemory.GetOwner.GetID]/;/[THIS.CharacterMemory.GetName]/;/[THIS.CharacterMemory.GetCreationDate.GetStringShort]/;/[THIS.CharacterMemory.GetThirdPerspectiveDescription]/;/[THIS.Var('relevance_weight').GetValue]"
+	}
+}

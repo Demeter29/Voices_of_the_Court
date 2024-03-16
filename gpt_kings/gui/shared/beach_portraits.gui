@@ -1,0 +1,37 @@
+######################################################
+################## PORTRAIT TYPES ####################
+######################################################
+
+types PortraitTypes_Beach
+{
+
+    ####################################
+    ######### MAIN PORTRAITS ###########
+    ####################################
+
+    # The standard portrait types. CoA, opinion and status icons are included by default; use blockovveride to disable them.
+
+
+    type beach1 = widget {
+        size = { 690 870 }
+        tooltip_enabled = no
+        portrait_button = {
+            tooltip_enabled = no
+            parentanchor = bottom|hcenter
+            size = { 690 870 }
+			using = portrait_base
+			alwaystransparent = yes
+            block "portrait_texture" {
+                portrait_texture = "[Character.GetAnimatedPortrait('environment_event_battlefield', 'beach1', 'beach1', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]"
+            }
+            block "mask" {
+                mask = "gfx/interface/tavern_gfx/mask_off.dds"
+            
+            }
+            effectname = "NoHighlight"
+
+		   }
+    }
+
+
+}

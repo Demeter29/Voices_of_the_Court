@@ -1,0 +1,42 @@
+date: string    -> "8 Nov 1067"
+scene: string   -> "garden"
+activityHost: string    (name of the character who hosts the activity)     
+location: string    -> "Kraków" (the name of the province)
+
+playerName: string  -> "King Bolesław"
+playerPrimaryTitle: string  -> "Kingdom of Poland"
+playerAge: number
+playerGold: number
+playerCulture: string
+playerFaith: string
+playerHouse: string    -> "Rurikid"
+playerIsIndependent: boolean
+playerLiege: string
+playerIsRuler: boolean
+playerConsort: string
+
+aiID: number
+aiName: string
+aiPrimaryTitle: string
+aiSheHe: string
+aiAge: number
+aiGold: number
+aiOpinion: number
+aiRelations: string[]   -> [Vassal, Brother, Steward]  (explains what the ai is to the player, the ai is the player's vassal, brother and steward)
+aiSexuality: string
+aiPersonality: string
+aiGreed: number
+aiIsIndependentRuler: boolean
+aiLiege: string
+aiConsort: string
+aiCulture: string
+aiFaith: string
+aiHouse: string
+aiIsRuler: boolean
+aiPersonalityTraits: Trait[]
+
+---type definitions---
+Trait = {
+    name: string
+    desc: string
+}

@@ -1,0 +1,5 @@
+/app/node_modules
+/app/dist
+/app/build
+/app/configs/app.config.json
+/app/conversations

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GPT Kings</title>
+    <link rel="stylesheet" href="launcher.css" />
+    
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li><a href="status.html">Status</a></li>
+        <li><a href="connection.html">Connection</a></li>
+        <li class="active"><a href="prompting.html">Prompting</a></li>
+        <li><a href="interactions.html">Interactions</a></li>
+        <li ><a href="modelSettings.html">Model Settings</a></li>
+        <li><a href="userSettings.html">User Settings</a></li>
+      </ul> 
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+
+                <h2>Prompts</h2>
+
+                <div class="border" id="prompt-options">
+                    
+                    <div class="input-group">
+                        <label for="main-prompt">main</label><br>
+                        <textarea id="main-prompt" rows="6"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="summarize-prompt">Summarization</label><br>
+                        <textarea id="summarize-prompt" rows="6" ></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="checkbox" id="nsfw-checkbox">
+                        <label for="nsfw-prompt">NSFW</label><br>
+                        <textarea id="nsfw-prompt" rows="6" ></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="checkbox" id="jailbreak-checkbox">
+                        <label for="jailbreak-promot">Jailbreak</label><br>
+                        <textarea id="jailbreak-prompt" rows="6" ></textarea>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="column">
+
+                <h2>Scripts</h2>
+      
+                <div class="border">
+      
+                  <div class="input-group">
+                    <button type="button">🔄 Reload files</button>
+                  </div>
+                  
+                  <div class="input-group">
+                    <label for="description-script-select">Character Description script</label>
+                    <select id="description-script-select">
+      
+                    </select>
+                    <button type="button">import</button>
+                  </div>
+      
+                  <div class="input-group">
+                    <label for="example-messages-script-select">Example messages script</label>
+                    <select id="example-messages-script-select">
+                      
+                    </select>
+                    <button type="button">import</button>
+                    
+                  </div>
+                  
+                </div>
+      
+            </div>
+        </div>
+      
+
+    </div>
+    
+   
+
+    <script>require("../../dist/configWindow/promptingRenderer.js")</script>
+  </body>
+</html>
