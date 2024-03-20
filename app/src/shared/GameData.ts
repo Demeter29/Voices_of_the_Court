@@ -13,6 +13,11 @@ export type Memory = {
     relevanceWeight: number
 }
 
+export type OpinionModifier = {
+    reason: string,
+    value: number,
+}
+
 export type Character = {
     id: number,
     shortName: string,
@@ -36,7 +41,8 @@ export type Character = {
 
     memories: Memory[],
     personalityTraits: Trait[],
-    relationsToPlayer: string[]
+    relationsToPlayer: string[],
+    opinionBreakdownToPlayer: OpinionModifier[]
 }
 
 
@@ -58,8 +64,9 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
     let gameData: GameData
 
     //some data are passed through multiple lines
-    let multiLineTempStorage: string[] = [];
+    let multiLineTempStorage: any[] = [];
     let isWaitingForMultiLine: boolean = false;
+    let multiLineType: string = ""; //relation or opinionModifier
 
     const fileStream = fs.createReadStream(debugLogPath);
 
@@ -70,18 +77,23 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
 
     for await (const line of rl) {
         if(isWaitingForMultiLine){
-            if(line.includes('#ENDMULTILINE')){
-                multiLineTempStorage.push(removeTooltip(line.split('#')[0]))
-                isWaitingForMultiLine = false;
+            let value = line.split('#')[0]
+            switch (multiLineType){
+                case "relations":
+                    multiLineTempStorage.push(removeTooltip(value))
+                break;
+                case "opinionBreakdown":
+                        multiLineTempStorage.push(parseOpinionModifier(value));
+                break;
             }
-            else{
-                multiLineTempStorage.push(removeTooltip(line));
+
+            if(line.includes('#ENDMULTILINE')){         
+                isWaitingForMultiLine = false;
             }
            continue;
         }
 
         if(line.includes("GK:IN")){
-            //console.log(line.split("GK:IN")[1])
 
             //0: GK:IN, 1: dataType, 3: rootID 4...: data
             let data = line.split("/;/")
@@ -124,8 +136,19 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
                     if(!line.includes("#ENDMULTILINE")){
                         multiLineTempStorage = gameData!.characters.get(rootID)!.relationsToPlayer
                         isWaitingForMultiLine = true;
+                        multiLineType = "relations";
                     }
                 break;
+                case "opinionBreakdown":
+                    if(line.split('#')[1] !== ''){
+                        gameData!.characters.get(rootID)!.opinionBreakdownToPlayer = [parseOpinionModifier(line.split('#')[1])]
+                    }
+                    
+                    if(!line.includes("#ENDMULTILINE")){
+                        multiLineTempStorage = gameData!.characters.get(rootID)!.opinionBreakdownToPlayer
+                        isWaitingForMultiLine = true;
+                        multiLineType = "opinionBreakdown";
+                    }
             }
         }
     } 
@@ -167,12 +190,12 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             firstName: data[18],
             memories: [],
             personalityTraits: [],
-            relationsToPlayer: []
+            relationsToPlayer: [],
+            opinionBreakdownToPlayer: []
         }
     }
     
     function parseMemory(data: string[]): Memory{
-        //console.log(removeTooltip(data[4]))
         return {
             type: data[1],
             creationDate: data[2],
@@ -188,10 +211,30 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
         }
     }
 
-    console.log(gameData!)
-    console.log(gameData!.characters.get(gameData!.aiID)?.memories)
+    function parseOpinionModifier(line: string): OpinionModifier{
+        line = line.replace(/ *\([^)]*\) */g, "");
 
-    console.log(gameData!.characters.get(gameData!.playerID)?.memories)
+        
+        
+
+        let splits = line.split(": ");
+
+
+        for(let i=0;i<splits.length;i++){
+            splits[i] = removeTooltip(splits[i])
+        }
+
+        
+
+        return {
+            reason: splits[0],
+            value: Number(splits[1])
+        }
+    }
+
+    //console.log(gameData!)
+    console.log(gameData!.characters.get(gameData!.aiID!)!.relationsToPlayer)
+    console.log(gameData!.characters.get(gameData!.aiID!)!.opinionBreakdownToPlayer)
 
     return gameData!;
 }
@@ -202,7 +245,6 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
 //TODO: just learn regex for fuck's sake
 function removeTooltip(str: string): string{
     let newWords: string[] = []
-   // console.log(str.split(' '))
     str.split(" ").forEach( (word) =>{
         if(word.includes('')){
             newWords.push(word.split('')[0])
@@ -214,85 +256,3 @@ function removeTooltip(str: string): string{
     return newWords.join(' ').replace(/ +(?= )/g,'').trim();
 }
 
-
-
-/*
-export function clipboardToGameData(clipboardText: string): GameData {
-
-        let varLines = clipboardText.split('%;%');
-
-        let gameData = new Map();   
-        for(const line of varLines){
-            let lineSplit: string[] = line.split("%:%");
-
-            
-            
-            gameData.set(lineSplit[0], lineSplit[1])
-
-            if(lineSplit[1] === ""){
-               // console.log(lineSplit)
-                gameData.set(lineSplit[0], null);
-                //console.log(gameData.get(lineSplit[0]))
-            }
-
-
-            //@ts-ignore
-            if(lineSplit[1] != "" && !isNaN(lineSplit[1])){
-                gameData.set(lineSplit[0], Number(lineSplit[1]));
-            }
-
-
-        }
-
-        gameData.delete('GK:IN');
-
-        console.log(gameData.get('scene'))
-        gameData.set('scene', (gameData.get('scene')).substring(11));
-
-        gameData.set('aiPersonalityTraits', groupTraits('aiPersonalityTrait', gameData))
-
-        console.log(gameData)
-
-
-        return gameData;
-}
-
-//groups traits with the same prefix into 1 array.
-function groupTraits(traitPrefix: string, gameData: GameData): Trait[]{
-    let output: Trait[] = [];
-
-    gameData.forEach( (value, key, map) => {
-        if(key.startsWith(traitPrefix)){
-            let traitSuffix = key.substring(traitPrefix.length);
-            console.log(traitSuffix)
-
-            if(traitSuffix.includes('Name')){
-                if(gameData.has(key.replace('Name', 'Desc')) && value != null){
-                    output.push( {
-                        name: value,
-                        desc: gameData.get(key.replace('Name', 'Desc'))
-                    })
-
-                    gameData.delete(key.replace('Name', 'Desc'));
-                }
-
-                gameData.delete(key);
-            }
-            else if(traitSuffix.includes('Desc')){
-                if(gameData.has(key.replace('Desc', 'Name')) && value != null){
-                    output.push( {
-                        name: gameData.get(key.replace('Desc', 'Name')),
-                        desc: value
-                    })
-
-                    gameData.delete(key.replace('Desc', 'Name'));
-                }
-
-                gameData.delete(key);
-            }
-        }
-    })
-
-    return output;
-}
-*/

@@ -31,8 +31,8 @@ newTokensNumber.value = config.newTokens;
 streamingCheckbox.checked = config.stream;
 cleanMessagesCheckbox.checked = config.cleanMessages;
 
-populateSelectWithFileNames(presetSelect, `./public/settings/${config.selectedApi} settings`, '.json');
-let preset = require(`../../public/settings/${config.selectedApi} settings/${presetSelect.value}`);
+populateSelectWithFileNames(presetSelect, `./public/settings/${config.textGenerationApiConnection.type} settings`, '.json');
+let preset = require(`../../public/settings/${config.textGenerationApiConnection.type} settings/${presetSelect.value}`);
  
 //temperatureSlider.value = temperatureNumber.value = parameters.temperature;
 //frequencyPSlider.value = frequencyPNumber.value = parameters.frequency_penalty;

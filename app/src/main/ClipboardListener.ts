@@ -24,7 +24,7 @@ export class ClipboardListener extends EventEmitter{
         if(this.isListening){
             throw new Error('ClipboardListener is already listening!');
         }
-        this.interval = setInterval(this.readClipboard.bind(this), 200);
+        this.interval = setInterval(this.readClipboard.bind(this), 100);
         this.isListening = true;
     }
 
@@ -39,11 +39,18 @@ export class ClipboardListener extends EventEmitter{
 
     readClipboard(){
         let currentClipboard = clipboard.readText();
-
         if(this.previousClipboard == currentClipboard) return;
 
-        if(currentClipboard.startsWith('GK:IN')){
-            this.emit('GK:IN', currentClipboard)
+        if(currentClipboard.startsWith('GK:')){
+            let command = currentClipboard.split(':')[1];
+            switch (command){
+                case "IN":
+                    this.emit('GK:IN');
+                break;
+                case "EFFECT_ACCEPTED":
+                    this.emit('GK:EFFECT_ACCEPTED');
+            }
+            
             
             clipboard.writeText(this.previousClipboard);
         }

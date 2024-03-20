@@ -1,89 +1,104 @@
-import { GameData } from "../../shared/GameData";
+import { Interaction} from "../ts/conversation_interfaces"
+import { Character, OpinionModifier } from "../../shared/GameData";
 import { Conversation } from "./Conversation";
-import { Config } from "../../shared/Config";
-import OpenAI from "openai";
+import { RunFileManager } from "../RunFileManager";
 
-export async function checkInteractions(conv: Conversation){
+export const interactions: Interaction[] = [
+    {
+        signature: "improveOpinionOfPlayer()",
+        description: `execute when {{playerName}}'s last dialogue or action drastically improved {{aiName}}'s opinion of {{playerName}}.`,
+        group: "opinion",
+        run: (conv: Conversation): void => {
+            let conversationOpinion: number = getConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID)?.opinionBreakdownToPlayer!)
+            if(conversationOpinion<50){
+                changeConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID)?.opinionBreakdownToPlayer!, conversationOpinion+5);
 
-    let openai = new OpenAI({
-        apiKey: conv.config.openaiKey,
-        dangerouslyAllowBrowser: true,
-    });
+                conv.runFileManager.write(
+                    `global_var:talk_second_scope = {
+                        add_opinion = {
+                            target = global_var:talk_first_scope
+                            modifier = conversation_opinion
+                            opinion = 5
+                        }
+                    }`
+                )
+            }
+        },
+        chatMessage: "{{aiName}}'s opinion of you has improved slightly.",
+        chatMessageClass: "positive-interaction-message"
+    },
+    {
+        signature: "lowerOpinionOfPlayer()",
+        description: `execute when {{playerName}}'s last single  or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
+        group: "opinion",
+        run: (conv: Conversation): void => {
+            let conversationOpinion: number = getConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID)?.opinionBreakdownToPlayer!)
+            if(conversationOpinion>-50){
+                changeConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID)?.opinionBreakdownToPlayer!, conversationOpinion-5)
 
-    let interactionConfig = {
-        enableAll: conv.config.interactionsEnableAll,
-        relationModifier: conv.config.interactionsRelations
-    };
+                conv.runFileManager.write(
+                    `global_var:talk_second_scope = {
+                        add_opinion = {
+                            target = global_var:talk_first_scope
+                            modifier = conversation_opinion
+                            opinion = -5
+                        }
+                    }`
+                )
+            }
+        },
+        chatMessage: "{{aiName}}'s opinion of you has deteriorated slightly.",
+        chatMessageClass: "negative-interaction-message"
+    },
+    {
+        signature: "aiGetsWounded()",
+        description: `execute when {{aiName}} gets seriously wounded.`,
+        group: "fight",
+        run: (conv: Conversation): void => {
+            conv.runFileManager.write(
+                `global_var:talk_second_scope = {
+                    add_trait = wounded_1
+                }`
+            )
+        },
+        chatMessage: "{{aiName}} got wounded!.",
+        chatMessageClass: "negative-interaction-message"
+    },
+]
 
-    if(!interactionConfig.enableAll || (!interactionConfig.relationModifier)){
-        return {};
+//help functions
+
+function getConversationOpinionValue(opinionBreakdown: OpinionModifier[]): number{
+    let results = opinionBreakdown.filter( (opinionModifier: OpinionModifier) =>{
+        return opinionModifier.reason == "From conversations";
+    })
+
+    let conversationOpinion = 0;
+    if(results.length>0){
+        conversationOpinion = results[0].value;
     }
 
-    let tools: any = [];   
+    return conversationOpinion;
+}
 
-    if(interactionConfig.relationModifier){
-        tools.push({
-            "type": "function",
-            "function": {
-                "name": "change_opinion",
-                "description": `increase or decrease ${conv.gameData.aiName}'s opinion of ${conv.gameData.playerName} if ${conv.gameData.playerName}'s actions or words made ${conv.gameData.aiName} drastically hate or like ${conv.gameData.playerName} more in the last message.`,
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "opinion_value": {
-                            "type": "number",
-                            "description": "The increased or decreased opinion value, upper limit is +10, bottom limit is -10",
-                        }
-                    }     
-                }
-            },            
+function changeConversationOpinionValue(opinionBreakdown: OpinionModifier[], value: number): void{
+    let found: boolean = false;
+    opinionBreakdown.forEach( (om: OpinionModifier) =>{
+        
+        if(om.reason == "From conversations"){
+            om.value = value;
+
+            found = true
+        }        
+    })
+
+    //no modifier found
+    if(!found){
+        opinionBreakdown.push({
+            reason: "From conversations",
+            value: value
         })
     }
-
-    /*
-    if(interactionConfig.goldExchange){
-        tools.push({
-            "type": "function",
-            "function":{
-                "name": "gold_exchange",
-                "description": "Exchange gold between the characters, execute only if the sender explicitly says that he gave over the gold!",
-                "parameters":{
-                    "type": "object",
-                    "properties": {
-                        "gold_amount": {
-                            "type": "number",
-                            "description": "The amount of gold to be exchanged",
-                        },
-                        "sender": {
-                            "type": "string",
-                            "description": "The name of the character that sends the gold"
-                        }
-                    }
-                }          
-            }        
-        });
-    }
-    */
     
 
-    const completion = await openai.chat.completions.create({
-        model: conv.config.interactionsModel,
-        messages: conv.messages.slice(conv.messages.length-2),
-        tools: tools,
-        tool_choice: "auto",  // auto is default, but we'll be explicit
-    });
-
-
-    if(!completion.choices[0].message.tool_calls){
-        return {};
-    }
-
-    const toolCalls = completion.choices[0].message.tool_calls;
-
-    let interactions: any = {};
-    for(let toolCall of toolCalls){
-        interactions[toolCall.function.name] = JSON.parse(toolCall.function.arguments);
-    }
-
-    return interactions;
-}
+}   

@@ -1,3 +1,5 @@
+import { Conversation } from "../conversation/Conversation";
+
 export interface Message {
     role: 'system' | 'user' | 'assistant';
     name?: string,
@@ -6,7 +8,7 @@ export interface Message {
 
 export type ResponseObject = {
     message: Message,
-    interactions: any
+    interactions: InteractionResponse[]
 }
 
 export interface ErrorMessage {
@@ -34,4 +36,21 @@ export interface Setting {
 export interface Summary{
     date: string,
     content: string
+}
+
+export interface Interaction{
+    signature: string,
+    description: string,
+    group: string,
+    run: (arg1: Conversation) => void,
+    chatMessage: string,
+    chatMessageClass: string
+}
+
+export interface InteractionResponse{
+    rationale: string,
+    action: string,
+    interactionGroup: string,
+    chatMessage: string,
+    chatMessageClass: string
 }

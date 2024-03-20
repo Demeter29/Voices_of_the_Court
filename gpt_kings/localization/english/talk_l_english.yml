@@ -18,6 +18,6 @@ talk_event.1001.exit:0 "Actually, I don't want to talk to $talk_herhim$."
 
 talk_window_end:0 "End conversation"
 
-talk_opinion_modifier:0 "[GetGlobalVariable('opinion_char').Char.GetFullNameNoTooltip]"
+conversation_opinion:0 "From conversations"
 
 not_in_same_province:0 "We are in the same province"

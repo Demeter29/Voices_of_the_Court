@@ -87,7 +87,7 @@ talk_event.1001 = {
 talk_event.9001 = {
 	type = character_event
 	title = "aha"
-	theme = family
+	theme = clipboard_transfer_event_theme
 	desc = talk_event.9001.desc
 	
 	immediate = {
@@ -124,12 +124,27 @@ talk_event.9001 = {
 talk_event.9002 = {
 	type = character_event
 	title = "aha"
-	theme = family
+	theme = clipboard_transfer_event_theme
 	desc = talk_event.9002.desc
 	
 	widget = {
         gui = "event_window_widget_talk_close"
         container = "custom_widgets_container"
     }
+}
+
+##
+talk_event.9003 = {
+	type = character_event
+	title = "aha"
+	theme = clipboard_transfer_event_theme
+	desc = "GK:EFFECT_ACCEPTED"
+	
+	widget = {
+        gui = "event_window_widget_talk_clear"
+        container = "custom_widgets_container"
+    }
+	
+
 }
 

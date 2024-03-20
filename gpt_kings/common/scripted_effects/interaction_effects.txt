@@ -1,0 +1,29 @@
+﻿increase_opinion_of_player_interaction = {
+	
+	if = {
+		limit = {	
+			OR = {
+				NOT = {
+					has_opinion_modifier = {
+						target = global_var:talk_first_scope
+						modifier = conversation_opinion
+					}
+				}
+					
+				has_opinion_modifier = {
+					target = global_var:talk_first_scope
+					modifier = conversation_opinion
+					value < 50
+				}	
+			}
+			
+		}
+		
+		add_opinion = {
+			target = global_var:talk_first_scope
+			modifier = conversation_opinion
+			opinion = 5
+		}	
+	}
+	
+}

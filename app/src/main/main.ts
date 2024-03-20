@@ -6,6 +6,7 @@ import { ClipboardListener } from "./ClipboardListener.js";
 import { Conversation } from "./conversation/Conversation.js";
 import { GameData, parseLog } from "../shared/GameData.js";
 import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
+const fs = require('fs');
 const shell = require('electron').shell;
 
 
@@ -29,11 +30,18 @@ let config: Config;
 
 app.on('ready',  () => {
     console.log("App ready!");
+
+    if (!fs.existsSync(`./configs/configs.json`)){
+      //TODO
+    }
+    
+
     launcherWindow = new ConfigWindow();
     chatWindow = new ChatWindow();
 
     clipboardListener.start();
     config = new Config();
+
 
     launcherWindow.window.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);
@@ -44,25 +52,24 @@ app.on('ready',  () => {
 
 let conversation: Conversation
 
-clipboardListener.on('GK:IN', async (clipboard) =>{
+clipboardListener.on('GK:IN', async () =>{
     conversation = new Conversation(await parseLog('C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III\\logs\\debug.log'), config);
     chatWindow.show();
-    chatWindow.window.webContents.send('chat-start');
+    chatWindow.window.webContents.send('chat-start', conversation.gameData);
     console.log("New conversation started!")
+})
+
+clipboardListener.on('GK:EFFECT_ACCEPTED', async () =>{
+    if(conversation){
+        conversation.runFileManager.clear();
+    }
+    
 })
 
 //IPC 
 
-ipcMain.on('message-send', async (e, messageText) =>{
-    let msg: Message = {
-        role: "user",
-        name: conversation.gameData.playerName,
-        content: messageText
-    }
-    conversation.pushMessage(msg);
-
-    chatWindow.window.webContents.send('message-receive', msg);
-
+ipcMain.on('message-send', async (e, message: Message) =>{
+    conversation.pushMessage(message);
     
     if(config.stream){
         streamMessage = {
@@ -75,15 +82,13 @@ ipcMain.on('message-send', async (e, messageText) =>{
 
         let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
 
-        chatWindow.window.webContents.send('stream-end');
-        console.log(response)
+        chatWindow.window.webContents.send('stream-end', response);
     }
     else{
         let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
 
         
-        chatWindow.window.webContents.send('message-receive', response.message);
-        console.log(response)
+        chatWindow.window.webContents.send('message-receive', response);
     }
     
 });
@@ -95,7 +100,7 @@ function streamRelay(msgChunk: MessageChunk): void{
 }
 
 ipcMain.on('config-change', (e, newConfig) =>{
-    config = newConfig
+    config = newConfig;
     if(chatWindow.isShown){
         conversation.updateConfig(config);
     }

@@ -8,7 +8,7 @@ let output = "";
 
 output+=`\n[date(${date}), location(${location}), scenario(${scenario()})]`
 
-output+= `[${player.shortName}'s Persona: full name(${player.fullName}), ${nobleManOrWoman(player)}, ${titleAndVassalage(player)}, age(${ai.age}), ${marriage(player)}, faith(${ai.faith}), culture(${ai.culture}), ${personalityTraits(player)}]`
+output+= `\n[${player.shortName}'s Persona: full name(${player.fullName}), ${nobleManOrWoman(player)}, ${titleAndVassalage(player)}, age(${ai.age}), ${marriage(player)}, faith(${ai.faith}), culture(${ai.culture}), ${personalityTraits(player)}]`
 
 output+=`\n[${ai.shortName}'s Persona: full Name(${ai.fullName}), ${nobleManOrWoman(ai)}, ${titleAndVassalage(ai)}, age(${ai.age}), ${greedines(ai)}, ${marriage(ai)}, faith(${ai.faith}), culture(${ai.culture}), ${personalityTraits(ai)}, ${listRelationsToPlayer(ai)}]`
 

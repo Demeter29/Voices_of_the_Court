@@ -43,7 +43,6 @@ window = {
 		state = {
 			name = _show
 			trigger_on_create = yes
-			duration = 0.3
 			on_finish = "[ExecuteConsoleCommand('run gpt_kings.txt')]"
 		}
 	

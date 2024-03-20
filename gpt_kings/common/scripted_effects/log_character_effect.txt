@@ -2,6 +2,8 @@
 	debug_log = log_character
 
 	log_relations = {}
+	
+	log_opinion_breakdown = {}
 
 	log_personality_traits = {}
 
@@ -10,6 +12,10 @@
 
 log_relations = {
 	debug_log = "GK:IN/;/relations/;/[THIS.Char.GetID]/;/STARTMULTILINE#[THIS.Char.GetRelationToStringExtended(GetPlayer)]#ENDMULTILINE/;/"
+}
+
+log_opinion_breakdown = {
+	debug_log = "GK:IN/;/opinionBreakdown/;/[THIS.Char.GetID]/;/STARTMULTILINE#[THIS.Char.GetOpinionBreakdownText(GetPlayer)]#ENDMULTILINE/;/"
 }
 
 log_personality_traits = {

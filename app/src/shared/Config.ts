@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { ApiConnection } from './apiConnection';
 
 interface openaiParameters {
     max_tokens: number,
@@ -55,9 +56,10 @@ interface oobaParameters {
     early_stopping: boolean,
 }
 
+
+
 export class Config{
-    selectedApi: string;
-    runPath: string;
+    userFolderPath: string;
 
     stream: boolean;
     maxTokens: number;
@@ -66,17 +68,12 @@ export class Config{
     selectedDescScript: string;
     selectedExMsgScript: string;
 
-    oobaServerUrl: string;
-    oobaSelectedSetting: string;
+    textGenerationApiConnection: ApiConnection;
+    summarizationApiConnection: ApiConnection;
+    interactionApiConnection: ApiConnection;
 
-    openRouterKey: string;
-    openRouterModel: string;
-    openRouterForceInstruct: boolean;
-    openRouterSelectedSetting: string;
-
-    openaiKey: string;
-    openaiModel: string;
-    openaiSelectedSetting: string;
+    summarizationUseTextGenApi: boolean;
+    interactionUseTextGenApi: boolean;
 
     interactionsEnableAll: boolean;
     interactionsModel: string;
@@ -97,25 +94,19 @@ export class Config{
     constructor(){
         const obj = JSON.parse(fs.readFileSync('./configs/config.json').toString());
 
-        this.selectedApi = obj.selectedApi;
-        this.runPath = obj.runPath;
+        this.userFolderPath = obj.userFolderPath;
         this.stream = obj.stream;
         this.maxTokens = obj.maxTokens;
         this.newTokens = obj.newTokens;
         this.selectedDescScript = obj.selectedDescScript;
         this.selectedExMsgScript = obj.selectedExMsgScript;
 
-        this.oobaServerUrl = obj.oobaServerUrl;
-        this.oobaSelectedSetting = obj.oobaSelectedSetting;
+        this.textGenerationApiConnection = new ApiConnection(obj.textGenerationApiConnection);
+        this.summarizationApiConnection = new ApiConnection(obj.summarizationApiConnection);
+        this.interactionApiConnection = new ApiConnection(obj.interactionApiConnection);
 
-        this.openRouterKey = obj.openRouterKey;
-        this.openRouterModel = obj.openRouterModel;
-        this.openRouterForceInstruct = obj.openRouterForceInstruct;
-        this.openRouterSelectedSetting = obj.openRouterSelectedSetting;
-
-        this.openaiKey = obj.openaiKey;
-        this.openaiModel = obj.openaiModel;
-        this.openaiSelectedSetting = obj.openaiSelectedSetting;
+        this.summarizationUseTextGenApi = obj.summarizationUseTextGenApi;
+        this.interactionUseTextGenApi = obj.interactionUseTextGenApi;
 
         this.interactionsEnableAll = obj.interactionsEnableAll;
         this.interactionsModel = obj.interactionsModel;

@@ -39,6 +39,14 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     
     chatPrompt = chatPrompt.concat(conv.exampleMessages);
 
+    const memoriesString: string = getNumberOfMemoriesString(conv.gameData, 10);
+
+    if(memoriesString.length>0){
+        chatPrompt.push({
+            role: "system",
+            content: memoriesString
+        })    
+    }
     
 
     if(conv.summaries.length === 0){
@@ -107,10 +115,9 @@ export function buildSummarizeChatPrompt(conv: Conversation): Message[]{
 
 
 
-
 //help functions 
 
-function convertMessagesToString(messages: Message[], inputSeq: string, outputSeq: string): string{
+export function convertMessagesToString(messages: Message[], inputSeq: string, outputSeq: string): string{
     let output= "";
     for(const message of messages){
         if(message.role === 'user'){
@@ -185,11 +192,32 @@ function getDateDifference(pastDate: string, todayDate: string): string{
       }
 }
 
-function sortMemories(gameData: GameData): Memory[]{
+
+
+
+function getNumberOfMemoriesString(gameData: GameData, num: number): string{
+
     let allMemories: Memory[] = [];
 
-    allMemories.concat(gameData.characters.get(gameData.playerID)!.memories);
-    allMemories.concat(gameData.characters.get(gameData.aiID)!.memories);
+    allMemories =allMemories.concat(gameData.characters.get(gameData.playerID)!.memories);
+    allMemories = allMemories.concat(gameData.characters.get(gameData.aiID)!.memories);
+
+    allMemories.sort((a, b) => (a.relevanceWeight - b.relevanceWeight));
+    
+    allMemories.reverse();
 
     
+
+    let output ="";
+    if(allMemories.length>0){
+        output = "These are the significant events that has happened to the characters:"
+    }
+
+    while(allMemories.length>0 && num-- > 0){
+        const memory: Memory = allMemories.pop()!;
+
+        output += `\n${memory.creationDate}: ${memory.desc}`;
+    }
+
+    return output;
 }

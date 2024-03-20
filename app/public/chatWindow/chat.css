@@ -87,6 +87,14 @@ em{
     color:red;
 }
 
+.positive-interaction-message{
+    color:green;
+}
+
+.negative-interaction-message{
+    color:red;
+}
+
 .player-message{
     color: rgb(209, 209, 209);
 }

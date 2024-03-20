@@ -1,0 +1,9 @@
+﻿conversation_opinion = {
+	decaying = yes 	
+	stacking = yes
+	
+	years = 4
+	
+	min = -10
+	max = 10
+}

@@ -1,6 +1,7 @@
 import { ipcMain, ipcRenderer, dialog} from 'electron';
 import { Config } from '../shared/Config';
 import  {OpenAI}  from "openai";
+import { ApiConnection } from '../shared/apiConnection';
 
 let apiSelector: HTMLSelectElement = document.querySelector("#connection-api")!;
 
@@ -23,38 +24,72 @@ let runPathButton: HTMLSelectElement = document.querySelector("#run-path-button"
 let runPathInput: HTMLSelectElement = document.querySelector("#run-path-input")!;
 
 let config = new Config();
-apiSelector.value = config.selectedApi;
+
+
+apiSelector.value = config.textGenerationApiConnection.type;
 
 displaySelectedApiBox();
 
-openaiKeyInput.value = config.openaiKey;
-openaiModelSelect.value = config.openaiModel;
 
-oobaUrlInput.value = config.oobaServerUrl;
+switch(apiSelector.value){
+    case "openrouter":
+        openrouterKeyInput.value = config.textGenerationApiConnection.key;
+        openrouterModelInput.value = config.textGenerationApiConnection.model;
+        openrouterInstructModeCheckbox.checked = config.textGenerationApiConnection.forceInstruct;
+        break;
+    case "openai":
+        openaiKeyInput.value = config.textGenerationApiConnection.key;
+        openaiModelSelect.value = config.textGenerationApiConnection.model;
+        break;
+    case "ooba":
+        oobaUrlInput.value = config.textGenerationApiConnection.baseUrl;
+        break;
+    default:
+        //TODO ERROR
+}
 
-openrouterKeyInput.value = config.openRouterKey;
-openrouterModelInput.value = config.openRouterModel;
-openrouterInstructModeCheckbox.checked = config.openRouterForceInstruct;
-
-runPathInput.value = config.runPath;
+runPathInput.value = config.userFolderPath;
 
 apiSelector.addEventListener("change", displaySelectedApiBox)
 
 
 
 document.addEventListener('change', () =>{
-    config.selectedApi = apiSelector.value;
+    
+    switch(apiSelector.value){
+        case "openrouter":
+            config.textGenerationApiConnection = new ApiConnection({
+                type: "openrouter",
+                baseUrl: "https://openrouter.ai/api/v1",
+                key: openrouterKeyInput.value,
+                model: openrouterModelInput.value,
+                forceInstruct: openrouterInstructModeCheckbox.checked
+            })
+            break;
+        case "openai":
+            config.textGenerationApiConnection = new ApiConnection({
+                type: "openai",
+                baseUrl: "https://api.openai.com/v1",
+                key: openaiKeyInput.value,
+                model: openaiModelSelect.value,
+                forceInstruct: false
+            })
+            break;
+        case "ooba":
+            config.textGenerationApiConnection = new ApiConnection({
+                type: "ooba",
+                baseUrl: oobaUrlInput.value,
+                key: "111111111111111111111111",
+                model: "string",
+                forceInstruct: false
+            })
+            break;
+        default:
+            //TODO ERROR
+    }
 
-    config.openaiKey = openaiKeyInput.value
-    config.openaiModel = openaiModelSelect.value;
-
-    config.oobaServerUrl = oobaUrlInput.value;
-
-    config.openRouterKey = openrouterKeyInput.value;
-    config.openRouterModel = openrouterModelInput.value;
-    config.openRouterForceInstruct = openrouterInstructModeCheckbox.checked;
-
-    config.runPath =  runPathInput.value;
+    console.log(config.textGenerationApiConnection)
+    config.userFolderPath =  runPathInput.value;
 
     ipcRenderer.send('config-change', config);
     config.export();

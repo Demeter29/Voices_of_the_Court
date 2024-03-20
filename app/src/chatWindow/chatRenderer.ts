@@ -1,6 +1,7 @@
 import { ipcMain, ipcRenderer } from 'electron';
-import {Message, MessageChunk} from '../main/ts/conversation_interfaces.js';
+import {Interaction, InteractionResponse, Message, MessageChunk, ResponseObject} from '../main/ts/conversation_interfaces.js';
 import { marked } from 'marked';
+import { GameData } from '../shared/GameData.js';
 const DOMPurify = require('dompurify');
 
 const sanitizeConfig = {
@@ -16,7 +17,8 @@ let chatInput: HTMLInputElement= document.querySelector('.chat-input')!;
 let leaveButton: HTMLButtonElement = document.querySelector('.leave-button')!;
 let loadingDots: any;
 
-
+let playerName: string;
+let aiName: string;
 
 
 async function initChat(){
@@ -50,17 +52,18 @@ async function displayMessage(message: Message): Promise<HTMLDivElement>{
     return messageDiv;
 }
 
-function displayOpinionMessage(opinionValue: number, aiName: string){
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    if(opinionValue >= 0){
-        messageDiv.classList.add('positive-opinion-message');
-        messageDiv.innerText = `${aiName}'s opinion of you is improved by ${opinionValue}`;
-    }else{
-        messageDiv.classList.add('negative-opinion-message');
-        messageDiv.innerText = `${aiName}'s opinion of you is deteriorated by ${opinionValue}`;
+function displayInteractions(interactions: InteractionResponse[]){
+    
+    for(const interaction of interactions){
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+
+        messageDiv.classList.add(interaction.chatMessageClass);
+        messageDiv.innerText = interaction.chatMessage;
+
+        chatMessages.append(messageDiv);
     }
-    chatMessages.append(messageDiv);
+    
     chatMessages.scrollTop = chatMessages.scrollHeight; 
 }
 
@@ -84,7 +87,14 @@ chatInput.addEventListener('keydown', function(e) {
             const messageText = chatInput.value;
             chatInput.value = ''
 
-            ipcRenderer.send('message-send', messageText);
+            let message: Message = {
+                role: "user",
+                name: playerName,
+                content: messageText
+            }
+
+            displayMessage(message);
+            ipcRenderer.send('message-send', message);
 
         };
     };
@@ -113,16 +123,23 @@ leaveButton.addEventListener("click", ()=>{
 
 //IPC Events
 
-ipcRenderer.on('chat-start', (e) =>{
+ipcRenderer.on('chat-start', (e, gameData: GameData) =>{
+    playerName = gameData.playerName;
+    aiName = gameData.aiName;
     document.body.style.display = '';
     initChat();
 })
 
-ipcRenderer.on('message-receive', (e, message: Message)=>{
-    displayMessage(message);
+ipcRenderer.on('message-receive', async (e, responseObject: ResponseObject)=>{
+    console.log(responseObject)
+    await displayMessage(responseObject.message);
+
+    displayInteractions(responseObject.interactions);
+
+
 })
 
-ipcRenderer.on('stream-start', async (e)=>{
+ipcRenderer.on('stream-start', async (e, gameData)=>{
     let streamMessage = document.createElement('div');
     streamMessage.classList.add('message');
     streamMessage.classList.add('ai-message');

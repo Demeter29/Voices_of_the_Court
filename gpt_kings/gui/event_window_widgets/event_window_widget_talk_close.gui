@@ -1,4 +1,4 @@
-hbox = {
+﻿hbox = {
 	name = "event_window_widget_talk_close"
 	layoutpolicy_horizontal = expanding
 	margin = { 10 0 }
@@ -9,7 +9,6 @@ hbox = {
         name = widget_show
         trigger_on_create = yes
 
-		on_start = "[EventWindowData.CopyToClipboard]"
 		on_start = "[ExecuteConsoleCommand('GUI.ClearWidgets talk_window talk_window_counter')]"
 	}
 

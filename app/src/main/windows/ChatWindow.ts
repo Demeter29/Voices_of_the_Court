@@ -5,7 +5,6 @@ import { Conversation } from "../conversation/Conversation.js";
 import {GameData} from "../../shared/GameData.js";
 import fs from 'fs';
 import { ConfigWindow } from "./ConfigWindow.js";
-import { writeToRun, clearRun } from "../runFunctions.js";
 
 export class ChatWindow{
     window: BrowserWindow;
@@ -37,10 +36,7 @@ export class ChatWindow{
         this.isShown = false;
         console.log("chat window opened")
 
-        
-
-        //make sure the previous conversation session didn't leave anything
-        writeToRun("");
+    
 
         //this.clipboardListener.on('GK:IN', (clipboard) =>{this.show(clipboard)});
 
@@ -60,10 +56,6 @@ export class ChatWindow{
         this.isShown = false;
         clearInterval(this.interval);
 
-        writeToRun("trigger_event = talk_event.9002");
-        setTimeout(()=>{
-            writeToRun("");
-        }, 500);
     }
 }
 

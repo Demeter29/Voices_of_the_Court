@@ -1,6 +1,6 @@
 ﻿l_english:
 #output:
-talk_event.9001.desc:0 "GK:IN%;%$t_1$%;%$t_2$%;%$t_3$%;%$t_4$%;%$t_5$%;%$t_6$%;%$t_16$%;%$t_17$%;%$t_18$%;%$t_19$%;%$t_20$%;%$t_21$%;%$t_22$%;%$t_23$%;%$t_24$%;%$t_25$%;%$t_26$%;%$t_27$%;%$t_28$%;%$t_29$%;%$t_30$%;%$t_31$%;%$t_32$%;%$t_33$%;%$t_34$%;%$t_35$%;%$t_36$%;%$t_37$%;%$t_38$%;%$t_39$%;%$t_40$%;%$t_41$"
+talk_event.9001.desc:0 "GK:IN"
 #variables:
 
 #game
@@ -56,4 +56,4 @@ talk_event.9002.desc:0 "GK:CLOSE"
 #debug
 
 
-#talk_event.9001.desc:0 "[recipient.GetCourt.GetName]"
+#talk_event.9001.desc:0 "[recipient.GetOpinionBreakdownText(ROOT.Char)]"
