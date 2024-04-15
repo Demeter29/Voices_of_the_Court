@@ -50,7 +50,7 @@ app.on('ready',  () => {
    
 });
 
-let conversation: Conversation
+let conversation: Conversation;
 
 clipboardListener.on('GK:IN', async () =>{
     conversation = new Conversation(await parseLog('C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III\\logs\\debug.log'), config);

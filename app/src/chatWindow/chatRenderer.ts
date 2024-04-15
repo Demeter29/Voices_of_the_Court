@@ -54,16 +54,19 @@ async function displayMessage(message: Message): Promise<HTMLDivElement>{
 
 function displayInteractions(interactions: InteractionResponse[]){
     
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
     for(const interaction of interactions){
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message');
+        
+        const interactionSpan = document.createElement('span');
+        interactionSpan.innerText = interaction.chatMessage+"\n";
+        interactionSpan.classList.add(interaction.chatMessageClass);
+        messageDiv.appendChild(interactionSpan);
 
-        messageDiv.classList.add(interaction.chatMessageClass);
-        messageDiv.innerText = interaction.chatMessage;
-
-        chatMessages.append(messageDiv);
+        
     }
     
+    chatMessages.append(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight; 
 }
 

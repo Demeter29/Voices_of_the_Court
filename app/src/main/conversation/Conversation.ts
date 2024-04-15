@@ -6,9 +6,10 @@ import { checkInteractions } from './checkInteractions.js';
 import { buildTextPrompt, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt } from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
 
-import {Message, MessageChunk, Setting, ResponseObject, ErrorMessage, Summary} from '../ts/conversation_interfaces.js';
+import {Message, MessageChunk, Setting, ResponseObject, ErrorMessage, Summary, Interaction} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
 
 export class Conversation{
@@ -21,6 +22,7 @@ export class Conversation{
     interactionApiConnection: ApiConnection;
     setting: Setting;
     description: string;
+    interactions: Interaction[];
     exampleMessages: Message[];
     summaries: Summary[];
     
@@ -48,6 +50,19 @@ export class Conversation{
             this.summaries = [];
             fs.writeFileSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
         }
+
+        //interactions
+
+        this.interactions = [];
+
+        let actionFiles = fs.readdirSync(`./public/actions/`).filter(file => path.extname(file) === ".js");
+
+        for(const file of actionFiles) {
+            console.log(file)
+            this.interactions.push(require(`../../../public/actions/${file}`));
+            console.log(`added interaction: `+file)
+        }
+
 
         
 

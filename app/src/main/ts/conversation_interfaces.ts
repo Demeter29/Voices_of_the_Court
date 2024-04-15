@@ -38,19 +38,26 @@ export interface Summary{
     content: string
 }
 
+export interface InteractionArgument{
+    name: string;
+    type: string;
+    desc: string
+}
+
 export interface Interaction{
     signature: string,
+    args: InteractionArgument[],
     description: string,
     group: string,
-    run: (arg1: Conversation) => void,
-    chatMessage: string,
+    check: () => boolean,
+    run: (arg1: Conversation, arg2: string[]) => void,
+    chatMessage: (arg1: string[]) => string,
     chatMessageClass: string
 }
 
 export interface InteractionResponse{
-    rationale: string,
-    action: string,
-    interactionGroup: string,
+    interactionName: string,
     chatMessage: string,
     chatMessageClass: string
 }
+

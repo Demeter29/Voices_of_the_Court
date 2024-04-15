@@ -4,13 +4,20 @@
 
 module.exports = (date, scene, location, player, ai) =>{
 
+let playerPersonaItems = [`full name(${player.fullName})`, nobleManOrWoman(player), titleAndVassalage(player), `age(${ai.age})`, marriage(player), `faith(${ai.faith})`, `culture(${ai.culture})`, personalityTraits(player)];
+let aiPersonaItems = [`full Name(${ai.fullName})`, nobleManOrWoman(ai), titleAndVassalage(ai), `age(${ai.age})`, greedines(ai), marriage(ai), `faith(${ai.faith})`, `culture(${ai.culture})`, personalityTraits(ai), listRelationsToPlayer(ai)];
+
+//remove "", null, undefined and 0. 
+playerPersonaItems = playerPersonaItems.filter(function(e){return e}); 
+aiPersonaItems = aiPersonaItems.filter(function(e){return e}); 
+
 let output = "";
 
 output+=`\n[date(${date}), location(${location}), scenario(${scenario()})]`
 
-output+= `\n[${player.shortName}'s Persona: full name(${player.fullName}), ${nobleManOrWoman(player)}, ${titleAndVassalage(player)}, age(${ai.age}), ${marriage(player)}, faith(${ai.faith}), culture(${ai.culture}), ${personalityTraits(player)}]`
+output+= `\n[${player.shortName}'s Persona: ${playerPersonaItems.join(", ")}]`;
 
-output+=`\n[${ai.shortName}'s Persona: full Name(${ai.fullName}), ${nobleManOrWoman(ai)}, ${titleAndVassalage(ai)}, age(${ai.age}), ${greedines(ai)}, ${marriage(ai)}, faith(${ai.faith}), culture(${ai.culture}), ${personalityTraits(ai)}, ${listRelationsToPlayer(ai)}]`
+output+=`\n[${ai.shortName}'s Persona: ${aiPersonaItems.join(", ")}]`;
 
 
 
@@ -62,7 +69,7 @@ function marriage(char){
 function personalityTraits(char){
     let traitNames = char.personalityTraits.map(trait => trait.name);
 
-    let output = "traits("
+    let output = "personality("
     output+= traitNames.join(", ");
     output+=")";
 

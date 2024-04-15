@@ -3,7 +3,7 @@
    "inputSequence": "[INST]\n",
    "outputSequence": "[/INST]\n" ,
     "parameters": {
-         "temperature": 0.9,
+         "temperature": 0.7,
          "max_tokens": 300,
          "frequency_penalty": 0.7,
          "presence_penalty": 0.7

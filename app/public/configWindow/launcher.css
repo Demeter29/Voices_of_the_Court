@@ -173,3 +173,11 @@ textarea{
   width: 100%;
   max-width: 100%;
 }
+
+.success-message{
+  color:green;
+}
+
+.error-message{
+  color:red
+}

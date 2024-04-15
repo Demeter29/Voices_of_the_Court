@@ -49,21 +49,13 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     }
     
 
-    if(conv.summaries.length === 0){
-        chatPrompt.push({
-            role: "system",
-            content: `This is the first time ${conv.gameData.aiName} and ${conv.gameData.playerName} speaks to eachother.`
-        }) 
-    }
-    else{
+    if(conv.summaries.length > 1){
         chatPrompt.push({
             role: "system",
             content: `The last time ${conv.gameData.aiName} and ${conv.gameData.playerName} spoke to eachother was in ${conv.summaries[0].date} (${getDateDifference(conv.summaries[0].date, conv.gameData.date)}).\nHere's a summary of that conversation: ${conv.summaries[0].content}`
         })
     }
 
-
-    
 
     chatPrompt.push({
         role: "system",

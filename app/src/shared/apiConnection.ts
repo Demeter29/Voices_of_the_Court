@@ -1,6 +1,11 @@
 import { Message, MessageChunk } from "../main/ts/conversation_interfaces";
 import OpenAI from "openai";
 
+export interface apiConnectionTestResult{
+    success: boolean,
+    errorMessage?: string,
+}
+
 export class ApiConnection{
     type: string;//openrouter, openai, ooba
     baseUrl: string;
@@ -112,5 +117,31 @@ export class ApiConnection{
             console.log(response);
             return response;
         }
+    }
+
+    async testConnection(): Promise<apiConnectionTestResult>{
+        let prompt: string | Message[];
+        if(this.isChat()){
+            prompt = [
+                {
+                    role: "user",
+                    content: "say hi"
+                }
+            ]
+        }else{
+            prompt = "say hi";
+        }
+
+        return this.complete(prompt, false, {max_tokens: 1}).then( (resp) =>{
+            console.log(resp)
+            if(resp){
+                return {success: true};
+            }
+            else{
+                return {success: false, errorMessage: "this is fuku"};
+            }
+        }).catch( (err) =>{
+            return {success: false, errorMessage: err}
+        });
     }
 }

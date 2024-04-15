@@ -20,6 +20,9 @@ let openrouterKeyInput: HTMLSelectElement = document.querySelector("#openrouter-
 let openrouterModelInput: HTMLInputElement = document.querySelector("#openrouter-model")!;
 let openrouterInstructModeCheckbox: HTMLInputElement = document.querySelector("#openrouter-instruct-mode")!;
 
+let testConnectionButton: HTMLButtonElement = document.querySelector("#connection-test-button")!;
+let testConnectionSpan: HTMLButtonElement = document.querySelector("#connection-test-span")!;
+
 let runPathButton: HTMLSelectElement = document.querySelector("#run-path-button")!;
 let runPathInput: HTMLSelectElement = document.querySelector("#run-path-input")!;
 
@@ -114,6 +117,23 @@ function displaySelectedApiBox(){
             break;
     }
 }
+
+testConnectionButton.addEventListener('click', async ()=>{
+    console.log("letsgo")
+    let apiConnection = new ApiConnection(config.textGenerationApiConnection);
+
+    let result = await apiConnection.testConnection()
+    if(result.success){
+        testConnectionSpan.innerText = "Connection success!";
+        testConnectionSpan.classList.remove("error-message");
+        testConnectionSpan.classList.add("success-message");
+    }
+    else{
+        testConnectionSpan.innerText = "Connection failed! \n"+result.errorMessage;
+        testConnectionSpan.classList.remove("success-message");
+        testConnectionSpan.classList.add("error-message");
+    }
+})
 
 
 
