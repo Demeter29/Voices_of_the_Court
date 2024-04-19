@@ -72,11 +72,14 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
             if(matchedInteraction.args.length === 0){
                 matchedInteraction.run(conv, []);
 
-                triggeredInteractions.push({
-                    interactionName: matchedInteraction.signature,
-                    chatMessage: parseVariables(matchedInteraction.chatMessage([]), conv.gameData),
-                    chatMessageClass: matchedInteraction.chatMessageClass
-                })
+                if(matchedInteraction.group != "emotion"){
+                    triggeredInteractions.push({
+                        interactionName: matchedInteraction.signature,
+                        chatMessage: parseVariables(matchedInteraction.chatMessage([]), conv.gameData),
+                        chatMessageClass: matchedInteraction.chatMessageClass
+                    })
+                }
+                
 
                 continue;
             }
@@ -114,11 +117,14 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
 
         matchedInteraction.run(conv, args);
 
-        triggeredInteractions.push({
-            interactionName: matchedInteraction.signature,
-            chatMessage: parseVariables(matchedInteraction.chatMessage(args), conv.gameData),
-            chatMessageClass: matchedInteraction.chatMessageClass
-        })
+        if(matchedInteraction.group != "emotion"){
+            triggeredInteractions.push({
+                interactionName: matchedInteraction.signature,
+                chatMessage: parseVariables(matchedInteraction.chatMessage(args), conv.gameData),
+                chatMessageClass: matchedInteraction.chatMessageClass
+            })
+        }
+        
         
     }
 

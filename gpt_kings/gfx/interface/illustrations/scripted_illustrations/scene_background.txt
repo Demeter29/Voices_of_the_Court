@@ -6,7 +6,7 @@ talk_background = {
 			global_var:talk_scene = flag:talk_scene_throneroom
 		}
 		
-		reference = "character_view/west.dds"		
+		reference = "scenes/throneroom_west.dds"		
 	}
 	
 	texture = {
@@ -14,7 +14,7 @@ talk_background = {
 			global_var:talk_scene = flag:talk_scene_garden
 		}
 		
-		reference = "activities/activity_playdate.dds"		
+		reference = "scenes/garden.dds"		
 	}
 	
 	texture = {
@@ -22,7 +22,7 @@ talk_background = {
 			global_var:talk_scene = flag:talk_scene_bedchamber
 		}
 		
-		reference = "event_scenes/bedchamber.dds"		
+		reference = "scenes/bedchamber.dds"		
 	}
 	
 	texture = {
@@ -30,7 +30,7 @@ talk_background = {
 			global_var:talk_scene = flag:talk_scene_dungeon
 		}
 		
-		reference = "event_scenes/dungeon.dds"		
+		reference = "scenes/dungeon.dds"		
 	}
 	
 	texture = {
@@ -38,7 +38,15 @@ talk_background = {
 			global_var:talk_scene = flag:talk_scene_feast
 		}
 		
-		reference = "activities/activity_feast.dds"	
+		reference = "scenes/feast.dds"	
+	}
+	
+	texture = {
+		trigger = {		
+			global_var:talk_scene = flag:talk_scene_armycamp
+		}
+		
+		reference = "scenes/armycamp.dds"	
 	}
 	
 

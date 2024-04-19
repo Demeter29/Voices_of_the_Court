@@ -9,13 +9,13 @@ module.exports = (date, scene, location, player, ai) => {
     msgs.push({
         role: "user",
         name: "example_"+player.shortName,
-        content: "Traits?"
+        content: "Personality?"
     });
 
     msgs.push({
         role: "assistant",
         name: "example_"+ai.shortName,
-        content: `*${ai.shortName}'s eyes lit up* My traits, my lord? *${ai.sheHe} takes a short pause thinking about the traits* Well, I am ${ai.personalityTraits[0].name}, ${traitMessageMap.get(ai.personalityTraits[0].name)} *${ai.sheHe} pauses again thinking about what else to say* I am also ${ai.personalityTraits[1].name}, ${traitMessageMap.get(ai.personalityTraits[1].name)} *she takes a big breath* and I am ${ai.personalityTraits[2].name}, ${traitMessageMap.get(ai.personalityTraits[2].name)}`
+        content: `*${ai.shortName}'s eyes lit up* My personality, my lord? *${ai.sheHe} takes a short pause thinking* Well, I am ${ai.personalityTraits[0].name}, ${traitMessageMap.get(ai.personalityTraits[0].name)} *${ai.sheHe} pauses again thinking about what else to say* I am also ${ai.personalityTraits[1].name}, ${traitMessageMap.get(ai.personalityTraits[1].name)} *she takes a big breath* and I am ${ai.personalityTraits[2].name}, ${traitMessageMap.get(ai.personalityTraits[2].name)}`
     });
 
     // opinion/relation

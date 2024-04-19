@@ -1,8 +1,144 @@
-﻿############################################################################################################################################################
-############################################################################################################################################################
+﻿conversation_animation = {
+	male = {
+	
+		default = { head = "idle" torso = "idle" }
+		
+		test = {
+			animation = { head = "throneRoom_bow1_entry" torso = "throneRoom_bow1_entry" }
+
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:test
+				}
+			}
+
+		}
+		
+
+		idle = {
+			animation = { head = "idle" torso = "idle" }
+
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:idle
+				}
+			}
+
+		}
+		
+		sad = {
+			animation = { head = "emotion_sadness" torso = "emotion_sadness" }
+		
+			portrait_modifier = {
+			animations = council_steward_decal
+		}
+			
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:sad
+				}
+			}
+		}
+		
+		happy = {
+			animation = { head = "emotion_happy" torso = "emotion_happy" }
+			
+			portrait_modifier = {
+				animations = emotion_happy_decal
+			}
+		
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:happy
+				}
+			}
+			
+		}
+		
+		love = {
+			animation = { head = "emotion_admiration" torso = "emotion_admiration" }
+			
+		
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:love
+				}
+			}
+			
+		}
+		
+		pain = {
+			animation = { head = "emotion_pain_entry" torso = "emotion_pain_entry" }
+			
+		
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:pain
+				}
+			}
+			
+		}
+		
+		worry = {
+			animation = { head = "emotion_worry" torso = "emotion_worry" }
+			
+		
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:worry
+				}
+			}
+			
+		}
+		
+		worry = {
+			animation = { head = "throneRoom_conversation2_entry" torso = "throneRoom_conversation2_entry" }
+			
+		
+			weight = {
+				base = 0
+
+				modifier = {
+					add = 100
+					global_var:talk_pose = flag:speaking
+				}
+			}
+			
+		}
+		
+		
+		
+	}
+
+	boy = male
+	female = male
+	girl = male
+}
 
 
-beach5 = {
+
+conversation_angry = {
 	male = {
 		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
 
@@ -26,7 +162,7 @@ beach5 = {
 	female = male
 	girl = boy
 }
-beach4 = {
+conversation_neutral = {
 	male = {
 		default ={ head = "AI_rational_entry" torso = "AI_rational_entry" }
 
@@ -70,7 +206,7 @@ beach1 = {
 	female = male
 	girl = boy
 }
-beach2 = {
+conversation_partner = {
 	male = {
 		default ={ head = "throneRoom_conversation1_entry" torso = "AI_rational_entry" }
 

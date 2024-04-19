@@ -73,7 +73,17 @@
 				value = flag:talk_scene_feast
 			}
 		}
+		if = {
+			limit = {
+				scope:talk_scene_armycamp = yes
+			}
+			set_global_variable = {
+				name = talk_scene
+				value = flag:talk_scene_armycamp
+			}
+		}
 		
+		##
 		
 		if = {
 			limit = {
@@ -83,6 +93,7 @@
 					scope:talk_scene_bedchamber = yes
 					scope:talk_scene_dungeon = yes
 					scope:talk_scene_feast = yes
+					scope:talk_scene_armycamp = yes
 				}
 			}
 			scope:actor = { 
@@ -139,6 +150,12 @@
 		is_shown = {can_talk_in_feast = yes}
 		flag = talk_scene_feast
 		localization = talk_scene_feast_string
+	}
+	
+	send_option = {
+		is_shown = {can_talk_in_armycamp = yes}
+		flag = talk_scene_armycamp
+		localization = talk_scene_armycamp_string
 	}
 	
 	send_option = {

@@ -4,12 +4,12 @@
 	"maxTokens": "2048",
 	"newTokens": "300",
 	"selectedDescScript": "pList.js",
-	"selectedExMsgScript": "aliChat.js",
+	"selectedExMsgScript": "empty.js",
 	"textGenerationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "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",
-		"model": "cognitivecomputations/dolphin-mixtral-8x7b",
+		"model": "cohere/command-r-plus",
 		"forceInstruct": false
 	},
 	"summarizationApiConnection": {
@@ -23,7 +23,7 @@
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "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",
-		"model": "mistralai/mixtral-8x7b-instruct",
+		"model": "openai/gpt-4-turbo",
 		"forceInstruct": false
 	},
 	"summarizationUseTextGenApi": false,

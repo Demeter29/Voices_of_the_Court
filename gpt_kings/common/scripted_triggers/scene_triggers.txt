@@ -58,3 +58,14 @@ can_talk_in_feast = {
 	}
 }
 
+can_talk_in_armycamp = {
+	OR = {
+		scope:actor = {
+			is_in_army = yes
+		}
+		scope:recipient = {
+			is_in_army = yes
+		}
+	}
+}
+

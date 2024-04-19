@@ -10,6 +10,7 @@ talk_scene_garden_string:0 "Meet in the garden"
 talk_scene_bedchamber_string:0 "Meet in the bedchamber"
 talk_scene_dungeon_string:0 "Meetin the dungeon"
 talk_scene_feast_string:0 "Meet in the feast"
+talk_scene_armycamp_string:0 "Meet in the army camp"
 talk_travel: "Travel"
 
 talk_event.1001.title:0 "Arrival"

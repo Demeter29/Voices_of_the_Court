@@ -19,10 +19,10 @@ window = {
 		texture = "[GetIllustration('talk_background').GetTexture(GetGlobalVariable('talk_second_scope').GetCharacter.MakeScope)]"
 	}
 	
-	beach1 = {
+	conversation_partner = {
 		datacontext = "[GetGlobalVariable('talk_second_scope').GetCharacter]"
 		parentanchor = bottom|hcenter
-		position = { 300 50}
+		position = { 450 50}
 	}
 
 	
