@@ -52,7 +52,7 @@ export class ApiConnection{
 
             let response: string = "";
             
-            console.log(stream)
+            console.log("stream: "+stream)
             if(stream){
                 console.log("steam::")
 

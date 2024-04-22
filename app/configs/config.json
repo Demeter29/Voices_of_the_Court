@@ -4,7 +4,7 @@
 	"maxTokens": "2048",
 	"newTokens": "300",
 	"selectedDescScript": "pList.js",
-	"selectedExMsgScript": "empty.js",
+	"selectedExMsgScript": "aliChat.js",
 	"textGenerationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
@@ -23,7 +23,7 @@
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "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",
-		"model": "openai/gpt-4-turbo",
+		"model": "mistralai/mixtral-8x7b-instruct",
 		"forceInstruct": false
 	},
 	"summarizationUseTextGenApi": false,

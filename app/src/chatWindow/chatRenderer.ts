@@ -150,13 +150,15 @@ ipcRenderer.on('stream-start', async (e, gameData)=>{
 })
 
 ipcRenderer.on('stream-message', (e, message: Message)=>{
-    replaceLastMessage(message);
     loadingDots.remove();
+    replaceLastMessage(message);
+    showLoadingDots();
     //@ts-ignore
 })
 
-ipcRenderer.on('stream-end', (e, message: Message)=>{
+ipcRenderer.on('stream-end', (e, response: ResponseObject)=>{
     chatInput.disabled = false;
+    displayInteractions(response.interactions);
     loadingDots.remove();
 })
 

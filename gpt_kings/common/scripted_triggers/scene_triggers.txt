@@ -69,3 +69,10 @@ can_talk_in_armycamp = {
 	}
 }
 
+can_talk_in_hunt = {
+	
+}
+
+can_talk_in_alley = {
+}
+

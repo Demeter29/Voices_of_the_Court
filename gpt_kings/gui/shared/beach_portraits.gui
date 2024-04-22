@@ -22,7 +22,7 @@ types PortraitTypes_Beach
 			using = portrait_base
 			alwaystransparent = yes
             block "portrait_texture" {
-                portrait_texture = "[Character.GetAnimatedPortrait('environment_event_standard', 'conversation_camera2', 'conversation_animation', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]"
+                portrait_texture = "[Character.GetAnimatedPortrait(GetIllustration('talk_background').GetEnvironment(GetGlobalVariable('talk_second_scope').GetCharacter), 'conversation_camera2', 'conversation_animation', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]"
             }
             block "mask" {
                 mask = "gfx/interface/tavern_gfx/mask_off.dds"

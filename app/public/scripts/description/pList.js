@@ -13,11 +13,13 @@ aiPersonaItems = aiPersonaItems.filter(function(e){return e});
 
 let output = "";
 
-output+=`\n[date(${date}), location(${location}), scenario(${scenario()})]`
+
 
 output+= `\n[${player.shortName}'s Persona: ${playerPersonaItems.join(", ")}]`;
 
 output+=`\n[${ai.shortName}'s Persona: ${aiPersonaItems.join(", ")}]`;
+
+output+=`\n[date(${date}), location(${location}), scenario(${scenario()})]`;
 
 
 
@@ -105,6 +107,16 @@ function scenario(){
             return `${ai.shortName} meets ${player.shortName} in the castle's garden.`;
         case "bedchamber":
             return `${ai.shortName} meets ${player.shortName} in their private bedchamber.`;
+        case "feast":
+            return `${ai.shortName} talks to ${player.shortName} during the feast hosted by ${player.shortName}.`;
+        case "army_camp":
+            return `${ai.shortName} meets ${player.shortName} in the army camp.`;
+        case "hunt":
+            return `${ai.shortName} meets ${player.shortName} while hunting in the foggy forest. Their weapons are bows.`;
+        case "dungeon":
+            return `${ai.shortName} meets ${player.shortName} in the dungeon, where ${ai.shortName} is held as a prisoner.`;
+        case "alley":
+            return `${ai.shortName} meets ${player.shortName} in the narrow alley, hidden from everyone`;
     }
 }
 

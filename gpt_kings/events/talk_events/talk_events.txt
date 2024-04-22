@@ -131,6 +131,10 @@ talk_event.9002 = {
         gui = "event_window_widget_talk_close"
         container = "custom_widgets_container"
     }
+	
+	immediate = {
+		remove_global_variable = talk_pose
+	}
 }
 
 ##

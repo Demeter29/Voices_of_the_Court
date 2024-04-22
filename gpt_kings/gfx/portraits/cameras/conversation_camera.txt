@@ -1,4 +1,4 @@
-###TODO: WHY THE FUCK DOESNT "conversation_camera" WORKS? MAKES NO FUCKING SENSE
+###TODO: WHY THE FUCK DOESNT "conversation_camera" WORK? MAKES NO FUCKING SENSE
 
 conversation_camera2 = {
 	camera = {
@@ -7,7 +7,7 @@ conversation_camera2 = {
 
 		look_at = {	0 110 0 } # L/R, U/D, F/B
 		#look_at_node = camera_torso_look_at
-		fov = 17
+		fov = 19
 		camera_near_far = { 10 5000 }
 	}
 

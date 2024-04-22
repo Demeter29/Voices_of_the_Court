@@ -1,0 +1,6 @@
+[
+	{
+		"date": "25 Apr 1095",
+		"content": " In the conversation between Rögnvaldr (the assistant) and King Robert (the user), King Robert inquired about the possibility of using quantum computing for cryptography purposes. Rögnvaldr explained that quantum computing can indeed be used for both breaking and creating cryptographic systems, but is not yet at a point where it can easily break current encryption algorithms. The assistant also mentioned that quantum key distribution, a form of quantum cryptography, can provide secure communication channels. However, Rögnvaldr stated that implementing such technology faces practical challenges like requiring quantum memories and having limited distance capabilities. King Robert then asked if there are any quantum-resistant algorithms available, and Rögnvaldr confirmed that there are, with the example of the McEliece cryptosystem being given. The conversation concluded with King Robert expressing interest in learning more about quantum cryptography and its potential impact on their kingdom's security measures."
+	}
+]

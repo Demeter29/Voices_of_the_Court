@@ -48,7 +48,7 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         })    
     }
     
-
+    /*
     if(conv.summaries.length > 1){
         chatPrompt.push({
             role: "system",
@@ -56,7 +56,7 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         })
     }
 
-
+    */
     chatPrompt.push({
         role: "system",
         content: "[Start a new chat]"

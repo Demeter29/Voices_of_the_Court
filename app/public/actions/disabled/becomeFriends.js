@@ -10,7 +10,7 @@ module.exports = {
         //
     },
     chatMessage: (args) =>{
-        return `{{aiName}} has became your friend.`
+        return `{{aiName}} has become your friend.`
     },
     chatMessageClass: "positive-interaction-message"
 }
