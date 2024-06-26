@@ -20,70 +20,7 @@
     
     <div class="container">
 
-      <div class="input-group">
-        <label for="connection-api">API</label>
-        <select name="connection-api" id="connection-api">
-          <option value="openai">OpenAI</option>
-          <option value="ooba">Text Gen WebUI (ooba)</option>
-          <option value="openrouter">OpenRouter</option>
-          <option disabled value="patreon">Patreon (soon!)</option>
-        </select> 
-      </div>
-
-      <div class="border" id="openai-menu">
-        <h2>OpenAI</h2>
-
-        <div class="input-group">
-          <label for="api-key">API Key</label>
-          <br>
-          <input type="text" id="openai-key">
-          <button type="button" id="openai-key-save">Save</button>
-        </div>
-        
-        <div class="input-group">
-          <label for="openai-model-select">Model</label>
-          <select id="openai-model-select">
-            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Recommended)</option>
-            <option value="gpt-4">GPT-4</option>
-          </select>
-        </div>
-        
-      </div>
-
-      <div class="border" id="ooba-menu">
-        <h2>Text-Gen-WebUI (Ooba)</h2>
-
-        <div class="input-group">
-          <label for="ooba-url">Server URL</label>
-          <br>
-          <input type="text" id="ooba-url">
-          <br>
-          <button type="button" id="ooba-url-connect">Connect</button>
-        </div>
-        
-      </div>
-
-      <div class="border" id="openrouter-menu">
-        <h2>OpenRouter</h2>
-
-        <div class="input-group">
-          <label for="api-key">API Key</label>
-          <br>
-          <input type="text" id="openrouter-key">
-          <button type="button" id="openrouter-key-save">Save</button>
-        </div>
-        
-        <div class="input-group">
-          <label for="openrouter-model">Model</label>
-          <input type="text" id="openrouter-model">
-          <input type="checkbox" id="openrouter-instruct-mode">
-          <label for="openrouter-instruct-mode">Force Instruct mode</label>
-        </div>
-
-        
-      </div>
-
-      <button type="button" id="connection-test-button">Test Connection</button> <span id="connection-test-span"></span>
+      <config-api-selector confID="textGenerationApiConnection"></config-api-selector>
 
       <div class="input-group">
         <label for="run-path-button">CK3 user folder path</label>
@@ -98,7 +35,7 @@
       
     </div>
 
-   
-    <script>require("../../dist/configWindow/connectionRenderer.js")</script>
+    <script>require("../../dist/configWindow/components/apiSelector.js")</script>
+    
   </body>
 </html>

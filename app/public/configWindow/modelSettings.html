@@ -6,6 +6,8 @@
   <title>GPT Kings</title>
   <link rel="stylesheet" href="launcher.css" />
 
+  
+
 </head>
 
 <body>
@@ -41,17 +43,11 @@
             </div>
             <div class="row">
               <div class="column">
-                <div class="input-group">
-                  <input type="checkbox" id="streaming-checkbox">
-                  <label for="streaming-checkbox">Streaming</label>
-                </div>
+                <config-checkbox confID="stream" label="stream messages"></config-checkbox>
               </div>
 
               <div class="column">
-                <div class="input-group">
-                  <input type="checkbox" id="clean-messages-checkbox">
-                  <label for="clean-messages-checkbox">Clean Messages</label>
-                </div>
+                <config-checkbox confID="cleanMessages" label="clean Messages"></config-checkbox>
               </div>
             </div>
           </div>
@@ -112,10 +108,10 @@
 
 
 
-
-
-
+  <script>require("../../dist/configWindow/components/ConfigCheckbox.js")</script>
   <script>require("../../dist/configWindow/modelSettingsRenderer.js")</script>
+  
+  
 </body>
 
 </html>

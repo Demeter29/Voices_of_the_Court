@@ -1,6 +1,6 @@
 {
 	"userFolderPath": "C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III",
-	"stream": false,
+	"stream": true,
 	"maxTokens": "2048",
 	"newTokens": "300",
 	"selectedDescScript": "pList.js",

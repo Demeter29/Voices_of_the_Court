@@ -8,6 +8,7 @@ import { GameData, parseLog } from "../shared/GameData.js";
 import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
 const fs = require('fs');
 const shell = require('electron').shell;
+require('source-map-support').install();
 
 
 
@@ -99,8 +100,10 @@ function streamRelay(msgChunk: MessageChunk): void{
     chatWindow.window.webContents.send('stream-message', streamMessage)
 }
 
-ipcMain.on('config-change', (e, newConfig) =>{
-    config = newConfig;
+ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
+    //@ts-ignore
+    config[confID] = newValue;
+    config.export();
     if(chatWindow.isShown){
         conversation.updateConfig(config);
     }
