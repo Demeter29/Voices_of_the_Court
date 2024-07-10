@@ -165,9 +165,9 @@ input[type='range']::-webkit-slider-runnable-track {
 
 
 .border hr{
-  margin: 0 -5% 0 -5%;
   border: 1px solid black;
 }
+
 
 textarea{
   width: 100%;

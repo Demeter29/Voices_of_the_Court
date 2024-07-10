@@ -6,6 +6,7 @@ import { ClipboardListener } from "./ClipboardListener.js";
 import { Conversation } from "./conversation/Conversation.js";
 import { GameData, parseLog } from "../shared/GameData.js";
 import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
+
 const fs = require('fs');
 const shell = require('electron').shell;
 require('source-map-support').install();
@@ -120,5 +121,10 @@ ipcMain.on("select-user-folder", (event) => {
         event.reply("select-user-folder-success", resp.filePaths[0]);
     });
 });
+
+ipcMain.on("open-folder", (event, path) => {
+    dialog.showSaveDialog(launcherWindow.window, { defaultPath: path, properties: []});
+});
+
 
 

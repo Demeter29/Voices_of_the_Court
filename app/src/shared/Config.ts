@@ -76,6 +76,7 @@ export class Config{
     interactionUseTextGenApi: boolean;
 
     interactionsEnableAll: boolean;
+    disabledInteractions: string[];
     interactionsModel: string;
     interactionsRelations: boolean;
 
@@ -109,6 +110,7 @@ export class Config{
         this.interactionUseTextGenApi = obj.interactionUseTextGenApi;
 
         this.interactionsEnableAll = obj.interactionsEnableAll;
+        this.disabledInteractions = obj.disabledInteractions;
         this.interactionsModel = obj.interactionsModel;
         this.interactionsRelations = obj.interactionsRelations;
 

@@ -2,6 +2,7 @@ import { ipcMain, ipcRenderer } from 'electron';
 import { Config } from '../../shared/Config';
 import fs from 'fs';
 import path from 'path';
+import { ApiConnection, apiConnectionTestResult } from '../../shared/apiConnection';
 
 const template = document.createElement("template");
 
@@ -78,12 +79,13 @@ function defineTemplate(label: string){
 
     
 
-class ApiSelctor extends HTMLElement{
+class ApiSelector extends HTMLElement{
     label: string;
     confID: string;
     shadow: any;
     typeSelector
     checkbox: any;
+    config: Config;
 
     openaiDiv: HTMLInputElement
     oobaDiv: HTMLInputElement
@@ -110,6 +112,8 @@ class ApiSelctor extends HTMLElement{
         super();
         this.label = this.getAttribute("label")!;
         this.confID = this.getAttribute("confID")!;
+
+        this.config = new Config();
 
         this.shadow = this.attachShadow({mode: "open"});
         template.innerHTML = defineTemplate(this.label);
@@ -148,18 +152,89 @@ class ApiSelctor extends HTMLElement{
     connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
-
         //@ts-ignore
-        this.typeSelector.value = config[confID].type;
-
+        this.typeSelector.value = this.config[confID].type;
         this.displaySelectedApiBox();
 
-        this.checkbox.addEventListener("change", (e: any) => {
+        //@ts-ignore
+        if(this.config[confID].type == "openai"){
+            //@ts-ignore
+            this.openaiKeyInput.value = this.config[confID].key;
+            //@ts-ignore
+            this.openaiModelSelect.value =  this.config[confID].model;
+        }
+        //@ts-ignore
+        else if(this.config[confID].type == "ooba"){
+            //@ts-ignore
+            this.oobaUrlInput.value = this.config[confID].key;
+        }
+        //@ts-ignore
+        else if(this.config[confID].type == "openrouter"){
+            //@ts-ignore
+            this.openrouterKeyInput.value = this.config[confID].key;
+            //@ts-ignore
+            this.openrouterModelInput.value = this.config[confID].model;
+            //@ts-ignore
+        }
+        //@ts-ignore
+        this.openrouterInstructModeCheckbox.checked = this.config[confID].forceInstruct;
+
+        this.typeSelector.addEventListener("change", (e: any) => {
             console.log(confID)
 
-            ipcRenderer.send('config-change', confID, this.checkbox.checked);
+            this.displaySelectedApiBox();
+
+            switch(this.typeSelector.value){
+                case 'openai': 
+                    this.saveOpenaiConfig();
+                break;
+                case 'ooba': 
+                    this.saveOobaConfig();
+                break;
+                case 'openrouter': 
+                    this.saveOpenrouterConfig();
+                break;
+            }
+
         });
+
+        this.openaiDiv.addEventListener("change", (e:any) =>{
+            this.saveOpenaiConfig();
+        })
+
+        this.oobaDiv.addEventListener("change", (e:any) =>{
+            this.saveOobaConfig();
+        })
+
+        this.openrouterDiv.addEventListener("change", (e:any) =>{
+            this.saveOpenrouterConfig();
+        })
+
+        this.testConnectionButton.addEventListener('click', async (e:any) =>{
+            //@ts-ignore
+            let con = new ApiConnection(this.config[this.confID]);
+
+            this.testConnectionSpan.innerText = "...";
+            this.testConnectionSpan.style.color = "white";
+
+            con.testConnection().then( (result) =>{
+
+                console.log(result)
+
+                if(result.success){
+                    this.testConnectionSpan.innerText = "Connection valid!";
+                    this.testConnectionSpan.style.color = "green";
+                }
+                else{
+                    this.testConnectionSpan.innerText = result.errorMessage!;
+                    this.testConnectionSpan.style.color = "red";
+                }
+                
+            });
+        })
+
+        
+        
     }
 
     displaySelectedApiBox(){
@@ -181,9 +256,55 @@ class ApiSelctor extends HTMLElement{
                 break;
         }
     }
+
+    saveOpenaiConfig(){
+        const newConf = {
+            type: "openai",
+            baseUrl: "https://api.openai.com/v1",
+            key: this.openaiKeyInput.value,
+            model: this.openaiModelSelect.value,
+            forceInstruct: this.openrouterInstructModeCheckbox.checked
+        }
+
+        ipcRenderer.send('config-change', this.confID, newConf);
+        //@ts-ignore
+        this.config[this.confID] = newConf;
+    }
+    
+
+    //OOBA DIV
+    saveOobaConfig(){
+        const newConf = {
+            type: "ooba",
+            baseUrl: this.oobaUrlInput.value,
+            key: "11111111111111111111",
+            model: "string",
+            forceInstruct: this.openrouterInstructModeCheckbox.checked
+        }
+
+        ipcRenderer.send('config-change', this.confID, newConf);
+        //@ts-ignore
+        this.config[this.confID] = newConf;
+    }
+    
+
+    //OPENROUTER DIV
+    saveOpenrouterConfig(){
+        const newConf = {
+            type: "openrouter",
+            baseUrl: "https://openrouter.ai/api/v1",
+            key: this.openrouterKeyInput.value,
+            model: this.openrouterModelInput.value,
+            forceInstruct: this.openrouterInstructModeCheckbox.checked
+        }
+        ipcRenderer.send('config-change', this.confID, newConf);
+        //@ts-ignore
+        this.config[this.confID] = newConf;
+    }   
+    
 }
 
 
 
 
-customElements.define("config-api-selector", ApiSelctor);
+customElements.define("config-api-selector", ApiSelector);

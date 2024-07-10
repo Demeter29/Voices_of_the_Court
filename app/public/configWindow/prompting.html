@@ -54,7 +54,7 @@
 
                 <h2>Scripts</h2>
       
-                <div class="border">
+                <div id="script-selectors" class="border">
       
                   <div class="input-group">
                     <button type="button">🔄 Reload files</button>
@@ -65,7 +65,7 @@
                     <select id="description-script-select">
       
                     </select>
-                    <button type="button">import</button>
+                    <open-folder-button path="public\scripts/description/"></open-folder-button>
                   </div>
       
                   <div class="input-group">
@@ -73,7 +73,7 @@
                     <select id="example-messages-script-select">
                       
                     </select>
-                    <button type="button">import</button>
+                    <open-folder-button path="public\scripts/example messages/"></open-folder-button>
                     
                   </div>
                   
@@ -87,6 +87,7 @@
     
    
 
+    <script>require("../../dist/configWindow/components/openFolderButton.js")</script>
     <script>require("../../dist/configWindow/promptingRenderer.js")</script>
   </body>
 </html>

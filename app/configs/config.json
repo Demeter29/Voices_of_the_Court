@@ -1,16 +1,16 @@
 {
 	"userFolderPath": "C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III",
-	"stream": true,
-	"maxTokens": "2048",
-	"newTokens": "300",
+	"stream": false,
+	"maxTokens": "2042",
+	"newTokens": "304",
 	"selectedDescScript": "pList.js",
 	"selectedExMsgScript": "aliChat.js",
 	"textGenerationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "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",
-		"model": "cohere/command-r-plus",
-		"forceInstruct": false
+		"key": "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",
+		"model": "mistralai/mixtral-8x7b-instruct",
+		"forceInstruct": true
 	},
 	"summarizationApiConnection": {
 		"type": "openrouter",
@@ -22,13 +22,18 @@
 	"interactionApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "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",
-		"model": "mistralai/mixtral-8x7b-instruct",
+		"key": "",
+		"model": "",
 		"forceInstruct": false
 	},
 	"summarizationUseTextGenApi": false,
-	"interactionUseTextGenApi": false,
-	"interactionsEnableAll": false,
+	"interactionUseTextGenApi": true,
+	"interactionsEnableAll": true,
+	"disabledInteractions": [
+		"aiGetsWounded",
+		"playerPaysGoldToAi",
+		"emotionWorry"
+	],
 	"cleanMessages": true,
 	"descInsertDepth": 4,
 	"debugMode": true,

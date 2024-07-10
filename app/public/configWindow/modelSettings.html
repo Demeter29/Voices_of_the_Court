@@ -33,12 +33,10 @@
           <div class="input-group">
             <div class="row">
               <div class="column">
-                <label for="max-tokens">Context size</label> <br>
-                <input type="number" value="2048" id="max-tokens-number" class="model-setting-number">
+                <config-number confID="maxTokens" label="max tokens" min="0" max="4084"></config-number>
               </div>
               <div class="column">
-                <label for="new-tokens">Max response length</label> <br>
-                <input type="number" value="2048" id="new-tokens-number" class="model-setting-number">
+                <config-number confID="newTokens" label="max response length" min="0" max="4084"></config-number>
               </div>
             </div>
             <div class="row">
@@ -109,6 +107,7 @@
 
 
   <script>require("../../dist/configWindow/components/ConfigCheckbox.js")</script>
+  <script>require("../../dist/configWindow/components/ConfigNumber.js")</script>
   <script>require("../../dist/configWindow/modelSettingsRenderer.js")</script>
   
   

@@ -5,32 +5,37 @@ import path from 'path';
 
 const template = document.createElement("template");
 
-function defineTemplate(label: string){
+function defineTemplate(label: string, min: number, max: number){
     return `
     <link rel="stylesheet" href="../../public/configWindow/launcher.css">
     <style>
     </style>
-    <input type="checkbox" name="awd" id="checkbox">
-    <label for="awd">${label}</label>`
+    <label for="awd">${label}</label><br>
+    <input type="number" name="awd" min=${min} max=${max}>`
+    
 }
 
     
 
-class ConfigCheckbox extends HTMLElement{
+class ConfigNumber extends HTMLElement{
     label: string;
     confID: string;
     shadow: any;
-    checkbox: any;
+    input: any;
+    min: number;
+    max: number;
 
     constructor(){
         super();
         this.label = this.getAttribute("label")!;
         this.confID = this.getAttribute("confID")!;
+        this.min =  parseInt(this.getAttribute("min")!);
+        this.max = parseInt(this.getAttribute("max")!);
 
         this.shadow = this.attachShadow({mode: "open"});
-        template.innerHTML = defineTemplate(this.label);
+        template.innerHTML = defineTemplate(this.label, this.min, this.max);
         this.shadow.append(template.content.cloneNode(true));
-        this.checkbox = this.shadow.querySelector("input");
+        this.input = this.shadow.querySelector("input");
 
         
 
@@ -38,7 +43,7 @@ class ConfigCheckbox extends HTMLElement{
 
 
     static get observedAttributes(){
-        return ["name", "confID", "label"]
+        return ["name", "confID", "label", "min", "max"]
     }
 
     connectedCallback(){
@@ -47,12 +52,12 @@ class ConfigCheckbox extends HTMLElement{
         let config = new Config();
 
         //@ts-ignore
-        this.checkbox.checked = config[confID];
+        this.input.value = config[confID];
 
-        this.checkbox.addEventListener("change", (e: any) => {
+        this.input.addEventListener("change", (e: any) => {
             console.log(confID)
 
-            ipcRenderer.send('config-change', confID, this.checkbox.checked);
+            ipcRenderer.send('config-change', confID, this.input.value);
         });
     }
 }
@@ -60,4 +65,4 @@ class ConfigCheckbox extends HTMLElement{
 
 
 
-customElements.define("config-checkbox", ConfigCheckbox);
+customElements.define("config-number", ConfigNumber);

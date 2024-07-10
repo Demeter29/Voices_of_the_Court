@@ -14,6 +14,8 @@ let jailbreakCheckbox: HTMLInputElement = document.querySelector("#jailbreak-che
 let descScriptSelect: any = document.querySelector("#description-script-select")!;
 let exMessagesScriptSelect: any = document.querySelector("#example-messages-script-select")!;
 
+let scriptSelectorsDiv: HTMLDivElement = document.querySelector("#script-selectors")!;
+
 //init
 
 let config = new Config();
@@ -37,21 +39,14 @@ togglePrompt(jailbreakCheckbox, jailbreakPromptText);
 
 //events
 
-document.addEventListener('change', (e) =>{
-    config.mainPrompt = mainPromptText.value;
-    config.summarizePrompt = summarizePromptText.value;
-    config.nsfwPrompt = nsfwPromptText.value;
-    config.jailbreakPrompt = jailbreakPromptText.value;
+descScriptSelect.addEventListener('change', () =>{
 
-    config.nsfwPromptEnable = nsfwCheckbox.checked;
-    config.jailbreakPromptEnable = jailbreakCheckbox.checked;
+    ipcRenderer.send('config-change', "selectedDescScript", descScriptSelect.value);
+})
 
-    config.selectedDescScript = descScriptSelect.value;
-    config.selectedExMsgScript = exMessagesScriptSelect.value;
+exMessagesScriptSelect.addEventListener('change', () =>{
 
-    config.export();
-
-    ipcRenderer.send('config-change', config);
+    ipcRenderer.send('config-change', "selectedExMsgScript", exMessagesScriptSelect.value);
 })
 
 nsfwCheckbox.addEventListener('change', () =>{
