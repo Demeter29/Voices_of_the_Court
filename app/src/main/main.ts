@@ -72,26 +72,33 @@ clipboardListener.on('GK:EFFECT_ACCEPTED', async () =>{
 
 ipcMain.on('message-send', async (e, message: Message) =>{
     conversation.pushMessage(message);
+    try{
+        if(config.stream){
+            streamMessage = {
+                role: "assistant",
+                name: conversation.gameData.aiName,
+                content: ""
+            }
     
-    if(config.stream){
-        streamMessage = {
-            role: "assistant",
-            name: conversation.gameData.aiName,
-            content: ""
+            chatWindow.window.webContents.send('stream-start');
+    
+            let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
+    
+            chatWindow.window.webContents.send('stream-end', response);
         }
-
-        chatWindow.window.webContents.send('stream-start');
-
-        let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
-
-        chatWindow.window.webContents.send('stream-end', response);
+        else{
+            let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
+    
+            
+            chatWindow.window.webContents.send('message-receive', response);
+        } 
     }
-    else{
-        let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
-
-        
-        chatWindow.window.webContents.send('message-receive', response);
+    catch(err){
+        console.log(err);
+        chatWindow.window.webContents.send('error-message', err);
     }
+    
+    
     
 });
 

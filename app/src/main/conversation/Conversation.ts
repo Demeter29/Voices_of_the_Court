@@ -25,6 +25,7 @@ export class Conversation{
     interactions: Interaction[];
     exampleMessages: Message[];
     summaries: Summary[];
+    textgenParameters: Object;
     
     constructor(gameData: GameData, config: Config){
         this.gameData = gameData;
@@ -32,6 +33,8 @@ export class Conversation{
         this.config = config;
         this.runFileManager = new RunFileManager(config.userFolderPath);
         this.runFileManager.clear();
+
+        this.textgenParameters = {temperature: config.temperature, frequency_penalty: config.frequency_penalty, presence_penalty: config.presence_penalty, top_p: config.top_p};
 
         delete require.cache[require.resolve(`../../../public/scripts/description/${config.selectedDescScript}`)];
         this.description = require(`../../../public/scripts/description/${config.selectedDescScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID)); 
@@ -51,17 +54,9 @@ export class Conversation{
             fs.writeFileSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
         }
 
-        //interactions
-
+    
         this.interactions = [];
-
-        let actionFiles = fs.readdirSync(`./public/actions/`).filter(file => path.extname(file) === ".js");
-
-        for(const file of actionFiles) {
-            console.log(file)
-            this.interactions.push(require(`../../../public/actions/${file}`));
-            console.log(`added interaction: `+file)
-        }
+        this.loadInteractions();
 
 
         
@@ -101,7 +96,8 @@ export class Conversation{
                 name: this.gameData.aiName,
                 content: await this.textGenApiConnection.complete(buildChatPrompt(this), this.config.stream, {
                     stop: [this.gameData.playerName+":", this.gameData.aiName+":", "you:", "user:"],
-                    ...this.setting.parameters
+                    max_tokens: this.config.maxTokens,
+                    ...this.textgenParameters,
                 },
                 streamRelay)
             };  
@@ -114,7 +110,7 @@ export class Conversation{
                 name: this.gameData.aiName,
                 content: await this.textGenApiConnection.complete(buildTextPrompt(this), this.config.stream, {
                     stop: [this.gameData.playerName+":", this.gameData.playerName+":", "you:", "user:"],
-                    ...this.setting.parameters
+                    ...this.textgenParameters
                 },
                 streamRelay)
             };
@@ -158,6 +154,9 @@ export class Conversation{
         this.config = config;
         this.runFileManager = new RunFileManager(config.userFolderPath);
 
+        this.textgenParameters = {temperature: config.temperature, frequency_penalty: config.frequency_penalty, presence_penalty: config.presence_penalty, top_p: config.top_p};
+
+        this.loadInteractions();
         
         this.setting = require(`../../../public/settings/openrouter/mistral.json`);
 
@@ -178,6 +177,24 @@ export class Conversation{
         }
 
 
+    }
+
+    async loadInteractions(){
+        this.interactions = [];
+
+        let actionFiles = fs.readdirSync(`./public/actions/`).filter(file => path.extname(file) === ".js");
+
+        for(const file of actionFiles) {
+            console.log(file)
+
+            if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
+                console.log(file)
+                continue;
+            }
+    
+            this.interactions.push(require(`../../../public/actions/${file}`));
+            console.log(`added interaction: `+file)
+        }
     }
 
 }

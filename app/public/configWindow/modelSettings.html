@@ -13,7 +13,6 @@
 <body>
   <div class="navbar">
     <ul>
-      <li><a href="status.html">Status</a></li>
       <li><a href="connection.html">Connection</a></li>
       <li><a href="prompting.html">Prompting</a></li>
       <li><a href="interactions.html">Interactions</a></li>
@@ -35,9 +34,6 @@
               <div class="column">
                 <config-number confID="maxTokens" label="max tokens" min="0" max="4084"></config-number>
               </div>
-              <div class="column">
-                <config-number confID="newTokens" label="max response length" min="0" max="4084"></config-number>
-              </div>
             </div>
             <div class="row">
               <div class="column">
@@ -56,45 +52,21 @@
       </div>
       <div class="column">
 
-        <h2>Parameters</h2>
+        <h2>parameters</h2>
 
         <div class="border">
-          <div class="input-group">
-            <label for="preset-select">Setting Preset</label>
-            <select id="preset-select">
-            </select>
-            <button type="button">import</button>
-          </div>
 
-          <div class="input-group">
-            <div class="temperatureDiv">
-              <label for="temperature-slider"> Temperature</label> <br>
-              <input type="range" min="0" max="2" step="0.01" value="1" id="temperature-slider"
-                class="model-setting-slider">
-              <label for="temperature-slider" class="model-setting-number" id="temperature-number">
-            </div>
+          <config-slider confID="temperature" label="Temperature"  min="0" max="2" step="0.01"></config-slider>
 
-            <div class="frequencyPDiv">
-              <label for="frequency-p-slider"> Frequency Penalty</label> <br>
-              <input type="range" min="-2" max="2" step="0.01" value="0" id="frequency-p-slider"
-                class="model-setting-slider">
-              <label for="frequency-p-slider" class="model-setting-number" id="frequency-p-number">
-            </div>
+          <config-slider confID="frequency_penalty" label="Frequency Penalty"  min="-2" max="2" step="0.01"></config-slider>
 
-            <div class="presencePDiv">
-              <label for="presence-p-slider"> Presence Penalty</label> <br>
-              <input type="range" min="-2" max="2" step="0.01" value="0" id="presence-p-slider"
-                class="model-setting-slider">
-              <label for="presence-p-slider" class="model-setting-number" id="presence-p-number">
-            </div>
+          <config-slider confID="presence_penalty" label="Presence Penalty"  min="-2" max="2" step="0.01"></config-slider>
+  
+          <config-slider confID="top_p" label="top P"  min="0" max="1" step="0.01"></config-slider>
 
-            <div class="topPDiv">
-              <label for="top-p-slider"> top P</label> <br>
-              <input type="range" min="0" max="1" step="0.01" value="1" id="top-p-slider" class="model-setting-slider">
-              <label for="top-p-slider" class="model-setting-number" id="top-p-number">
-            </div>
-          </div>
         </div>
+
+       
 
 
       </div>
@@ -108,6 +80,7 @@
 
   <script>require("../../dist/configWindow/components/ConfigCheckbox.js")</script>
   <script>require("../../dist/configWindow/components/ConfigNumber.js")</script>
+  <script>require("../../dist/configWindow/components/ConfigSlider.js")</script>
   <script>require("../../dist/configWindow/modelSettingsRenderer.js")</script>
   
   

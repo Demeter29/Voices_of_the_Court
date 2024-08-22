@@ -1,15 +1,19 @@
 {
 	"userFolderPath": "C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III",
 	"stream": false,
-	"maxTokens": "2042",
+	"maxTokens": 2040,
 	"newTokens": "304",
-	"selectedDescScript": "pList.js",
+	"temperature": 0.7,
+	"frequency_penalty": 0.05,
+	"presence_penalty": -0.05,
+	"top_p": 0.53,
+	"selectedDescScript": "descriptive.js",
 	"selectedExMsgScript": "aliChat.js",
 	"textGenerationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "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",
-		"model": "mistralai/mixtral-8x7b-instruct",
+		"model": "aetherwiing/mn-starcannon-12b",
 		"forceInstruct": true
 	},
 	"summarizationApiConnection": {
@@ -22,17 +26,23 @@
 	"interactionApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "",
-		"model": "",
+		"key": "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",
+		"model": "meta-llama/llama-3.1-70b-instruct",
 		"forceInstruct": false
 	},
 	"summarizationUseTextGenApi": false,
-	"interactionUseTextGenApi": true,
+	"interactionUseTextGenApi": false,
 	"interactionsEnableAll": true,
 	"disabledInteractions": [
+		"emotionWorry",
+		"emotionSad",
+		"emotionPain",
+		"emotionHappy",
 		"aiGetsWounded",
-		"playerPaysGoldToAi",
-		"emotionWorry"
+		"becomeCloseFriends",
+		"improveOpinionOfPlayer",
+		"lowerOpinionOfPlayer",
+		"undressAi"
 	],
 	"cleanMessages": true,
 	"descInsertDepth": 4,

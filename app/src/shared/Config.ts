@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { ApiConnection } from './apiConnection';
-
+/*
 interface openaiParameters {
     max_tokens: number,
     temperature: number,
@@ -53,10 +53,10 @@ interface oobaParameters {
     min_length: number,
     num_beams: number,
     length_penalty: number,
-    early_stopping: boolean,
+    early_stop_ping: boolean,
 }
 
-
+*/
 
 export class Config{
     userFolderPath: string;
@@ -64,6 +64,11 @@ export class Config{
     stream: boolean;
     maxTokens: number;
     newTokens: number;
+
+    temperature: number;
+    frequency_penalty: number;
+    presence_penalty: number;
+    top_p: number;
 
     selectedDescScript: string;
     selectedExMsgScript: string;
@@ -99,6 +104,12 @@ export class Config{
         this.stream = obj.stream;
         this.maxTokens = obj.maxTokens;
         this.newTokens = obj.newTokens;
+
+        this.temperature = obj.temperature;
+        this.frequency_penalty = obj.frequency_penalty;
+        this.presence_penalty = obj.presence_penalty;
+        this.top_p = obj.top_p;
+
         this.selectedDescScript = obj.selectedDescScript;
         this.selectedExMsgScript = obj.selectedExMsgScript;
 

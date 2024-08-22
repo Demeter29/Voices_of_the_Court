@@ -22,7 +22,13 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
     let triggeredInteractions: InteractionResponse[] = [];
     
     
-    let response = await conv.interactionApiConnection.complete(buildInteractionChatPrompt(conv, availableInteractions), false, {} );
+    let response;
+    if(conv.interactionApiConnection.isChat()){
+        response = await conv.interactionApiConnection.complete(buildInteractionChatPrompt(conv, availableInteractions), false, {} );
+    }
+    else{
+        throw "Instruct api is not supported by interactions";
+    }
 
     //console.log("LLM Interaction response: "+response);
 

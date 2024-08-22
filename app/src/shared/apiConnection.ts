@@ -51,10 +51,15 @@ export class ApiConnection{
             })
 
             let response: string = "";
+
+            //@ts-ignore
+            if(completion["error"]){
+                //@ts-ignore
+                throw completion.error.message;
+            }
             
             console.log("stream: "+stream)
             if(stream){
-                console.log("steam::")
 
                 // @ts-ignore
                 for await(const chunk of completion){
@@ -69,7 +74,6 @@ export class ApiConnection{
                 response = completion.choices[0].message.content;
             }
 
-            console.log(response);
             return response;
         }
         else{
@@ -94,6 +98,12 @@ export class ApiConnection{
             }
 
             let response: string = "";
+
+            //@ts-ignore
+            if(completion["error"]){
+                //@ts-ignore
+                throw completion.error.message;
+            }
 
             if(stream){
                 // @ts-ignore

@@ -57,7 +57,7 @@ class ConfigNumber extends HTMLElement{
         this.input.addEventListener("change", (e: any) => {
             console.log(confID)
 
-            ipcRenderer.send('config-change', confID, this.input.value);
+            ipcRenderer.send('config-change', confID, parseInt(this.input.value));
         });
     }
 }
