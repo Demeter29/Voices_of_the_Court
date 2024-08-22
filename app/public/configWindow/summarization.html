@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GPT Kings</title>
+    <link rel="stylesheet" href="launcher.css" />
+    
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li><a href="connection.html">Connection</a></li>
+        <li><a href="prompting.html">Prompting</a></li>
+        <li><a href="interactions.html">Interactions</a></li>
+        <li class="active"><a href="summarization.html">Summarization</a></li>
+        <li><a href="modelSettings.html">Model Settings</a></li>
+        <li><a href="userSettings.html">User Settings</a></li>
+      </ul> 
+    </div>
+    
+    <div class="container">
+
+        <config-checkbox id="use-connection-api" confID="summarizationUseTextGenApi" label="Use the same API as in the connection tab"></config-checkbox>
+
+        <div class="border">   
+            <config-api-selector id="api-selector" confID="summarizationApiConnection"></config-api-selector>      
+        </div>
+
+        
+             
+    </div>
+
+    <script>require("../../dist/configWindow/components/apiSelector.js")</script>
+    <script>require("../../dist/configWindow/components/configCheckbox.js")</script>
+    <script>require("../../dist/configWindow/summarizationRenderer.js")</script>
+    
+    
+  </body>
+</html>

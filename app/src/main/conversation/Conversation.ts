@@ -42,6 +42,10 @@ export class Conversation{
         delete require.cache[require.resolve(`../../../public/scripts/example messages/${config.selectedExMsgScript}`)];
         this.exampleMessages= require(`../../../public/scripts/example messages/${config.selectedExMsgScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID));
 
+        if (!fs.existsSync(`./public/conversation_summaries`)){
+            fs.mkdirSync(`./public/conversation_summaries`);
+        }
+
         if (!fs.existsSync(`./public/conversation_summaries/${this.gameData.playerID}`)){
             fs.mkdirSync(`./public/conversation_summaries/${this.gameData.playerID}`);
         }
