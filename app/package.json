@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && electron .",
+    "start": "npm run build && electron . --prod",
     "go": "electron .",
     "package": "electron-forge package",
     "make": "electron-forge make",

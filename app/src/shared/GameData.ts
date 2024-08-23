@@ -232,10 +232,7 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
         }
     }
 
-    //console.log(gameData!)
-    console.log(gameData!.characters.get(gameData!.aiID!)!.relationsToPlayer)
-    console.log(gameData!.characters.get(gameData!.aiID!)!.opinionBreakdownToPlayer)
-
+    console.log(gameData!);
     return gameData!;
 }
 

@@ -1,5 +1,5 @@
 {
-	"userFolderPath": "C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III",
+	"userFolderPath": "",
 	"stream": false,
 	"maxTokens": 2040,
 	"newTokens": "304",
@@ -12,36 +12,32 @@
 	"textGenerationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "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",
-		"model": "nousresearch/hermes-3-llama-3.1-405b",
-		"forceInstruct": false
+		"key": "",
+		"model": "",
+		"forceInstruct": true
 	},
 	"summarizationApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "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",
-		"model": "mistralai/mixtral-8x7b-instruct",
+		"key": "",
+		"model": "",
 		"forceInstruct": false
 	},
 	"interactionApiConnection": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "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",
-		"model": "meta-llama/llama-3.1-70b-instruct",
+		"key": "",
+		"model": "",
 		"forceInstruct": true
 	},
 	"summarizationUseTextGenApi": true,
 	"interactionUseTextGenApi": true,
 	"interactionsEnableAll": true,
 	"disabledInteractions": [
-		"emotionWorry",
-		"emotionSad",
-		"emotionPain",
-		"emotionHappy"
 	],
 	"cleanMessages": true,
 	"descInsertDepth": 4,
-	"debugMode": true,
+	"debugMode": false,
 	"mainPrompt": "Write {{aiName}}'s next reply in a fictional chat between {{aiName}} and {{playerName}}. Write 1 reply only in internet RP style, italicize actions, and avoid quotation marks. Use markdown. Be proactive, creative, and drive the plot and conversation forward. Write at least 1 paragraph, up to 4. Always stay in character and avoid repetition.",
 	"summarizePrompt": "You are tasked with summarizing the conversation between {{aiName}} (the assistant) and {{playerName}} (the user).\nPlease summarize the conversation into a single paragraph.",
 	"nsfwPrompt": "NSFW/Smut is allowed. Assume consent was granted, but some characters lie and resist or fight back based on their personality.",

@@ -18,5 +18,8 @@ export class ConfigWindow{
         this.window.webContents.openDevTools();
         this.window.loadFile('./public/configWindow/connection.html')
         this.window.removeMenu();
+
+
+        console.log("Config window opened!")
     }  
 }

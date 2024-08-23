@@ -17,20 +17,20 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
     //TODO
     availableInteractions = conv.interactions;
 
-    console.log(availableInteractions)
-
     let triggeredInteractions: InteractionResponse[] = [];
     
     
     let response;
     if(conv.interactionApiConnection.isChat()){
-        response = await conv.interactionApiConnection.complete(buildInteractionChatPrompt(conv, availableInteractions), false, {} );
+        let prompt = buildInteractionChatPrompt(conv, availableInteractions);
+        console.log(prompt);
+        response = await conv.interactionApiConnection.complete(prompt, false, {} );
     }
     else{
-        throw "Instruct api is not supported by interactions";
+        let prompt = convertChatToTextPrompt(buildInteractionChatPrompt(conv, availableInteractions) );
+        console.log(prompt);
+        response = await conv.interactionApiConnection.complete(prompt, false, {} );
     }
-
-    //console.log("LLM Interaction response: "+response);
 
     response = response.replace(/(\r\n|\n|\r)/gm, "");
 
@@ -70,10 +70,8 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
 
         const matchedInteraction: Interaction = matchedInteractions[0];
 
-        console.log("air: "+actionInResponse)
         //validate args
         const argsString = /\(([^)]+)\)/.exec(actionInResponse);
-        console.log(argsString);
         if(argsString == null){
             if(matchedInteraction.args.length === 0){
                 matchedInteraction.run(conv, []);
@@ -104,7 +102,6 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
         let isValidInteraction = true;
         for(let i =0; i<args.length;i++){
 
-            console.log(args)
             if(matchedInteraction.args[0].type === "number"){
                 if(isNaN(Number(args[0]))){
                     console.log("Interaction warning: argument was not the valid type");
@@ -210,6 +207,15 @@ function buildInteractionChatPrompt(conv: Conversation, interactions: Interactio
         role: "system",
         content: content
     });
+
+    return output;
+}
+
+function convertChatToTextPrompt(messages: Message[]): string{
+    let output: string = "";
+    for(let msg of messages){
+        output += msg.content+"\n";
+    }
 
     return output;
 }

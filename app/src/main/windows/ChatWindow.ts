@@ -34,7 +34,7 @@ export class ChatWindow{
         this.window.on('close', ()=>{app.quit()}); //TODO
 
         this.isShown = false;
-        console.log("chat window opened")
+        
 
     
 
@@ -42,6 +42,7 @@ export class ChatWindow{
 
         ipcMain.on('chat-stop', () =>{this.hide()})
         
+        console.log("Chat window opened!")
     }
 
     show(){
@@ -49,13 +50,15 @@ export class ChatWindow{
         this.isShown = true;
         //window loses focus forever when alt-tabbed.
         this.interval = setInterval(()=>{OverlayController.activateOverlay()}, 500);
+
+        console.log("Chat window showed!")
     }
 
     hide(){
         OverlayController.focusTarget();
         this.isShown = false;
         clearInterval(this.interval);
-
+        console.log("Chat window hidden!")
     }
 }
 

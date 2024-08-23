@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 module.exports = {
   packagerConfig: {
     //"asar":true
@@ -5,12 +7,7 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
-      name: '@electron-forge/maker-squirrel',
-      config: {},
-    },
-    {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
     },
     {
       name: '@electron-forge/maker-deb',
@@ -21,4 +18,16 @@ module.exports = {
       config: {},
     },
   ],
+  hooks: {
+    packageAfterExtract: async (forgeConfig, buildPath, electronVersion, platform, arch) => {
+      fs.cpSync('./configs', buildPath+"/configs", {recursive: true});
+      fs.cpSync('./public', buildPath+"/public", {recursive: true});
+
+      fs.rm(buildPath+"/resources/app/configs", { recursive: true, force: true }, err =>{});
+      fs.rm(buildPath+"/resources/app/public", { recursive: true, force: true }, err =>{});
+
+    }
+  }
+
+
 };

@@ -75,10 +75,14 @@ refreshInteractionsButton.addEventListener('click', ()=>{
 
 async function loadInteractions(){
 
+    interactionsDiv.replaceChildren();
+
+    await sleep(250)
+
     let fileNames = fs.readdirSync('./public/actions').filter(file => path.extname(file) === '.js');
     
 
-    interactionsDiv.innerHTML = '';
+    
 
     for(const fileName of fileNames){
 
@@ -117,3 +121,8 @@ async function loadInteractions(){
 
 
 
+function sleep(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }

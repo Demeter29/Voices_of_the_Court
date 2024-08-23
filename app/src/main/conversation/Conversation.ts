@@ -82,6 +82,8 @@ export class Conversation{
         else{
             this.interactionApiConnection = new ApiConnection(config.interactionApiConnection);
         }
+
+        console.log(this.config.toSafeConfig());
     }
 
     pushMessage(message: Message): void{           
@@ -91,7 +93,6 @@ export class Conversation{
     async generateNewAIMessage(streamRelay: (arg1: MessageChunk)=> void): Promise<ResponseObject>{
         let responseMessage: Message;
 
-        console.log("Text Gen:");
         if(this.textGenApiConnection.isChat()){
             
 
@@ -155,6 +156,7 @@ export class Conversation{
 
     updateConfig(config: Config){
         console.log("config updated!")
+        console.log(this.config);
         this.config = config;
         this.runFileManager = new RunFileManager(config.userFolderPath);
 
@@ -189,15 +191,13 @@ export class Conversation{
         let actionFiles = fs.readdirSync(`./public/actions/`).filter(file => path.extname(file) === ".js");
 
         for(const file of actionFiles) {
-            console.log(file)
 
             if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
-                console.log(file)
                 continue;
             }
     
             this.interactions.push(require(`../../../public/actions/${file}`));
-            console.log(`added interaction: `+file)
+            console.log(`loaded interaction: `+file)
         }
     }
 

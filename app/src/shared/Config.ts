@@ -141,72 +141,18 @@ export class Config{
         fs.writeFileSync('./configs/config.json', JSON.stringify(this, null, '\t'))
     }
 
+    toSafeConfig(): Config{
+        let output: Config = JSON.parse(JSON.stringify(this));
+        output.textGenerationApiConnection.key= "<hidden>";
+        output.interactionApiConnection.key = "<hidden>";
+        output.summarizationApiConnection.key = "<hidden>";
+        output.textGenerationApiConnection.baseUrl= "<hidden>";
+        output.interactionApiConnection.baseUrl = "<hidden>";
+        output.summarizationApiConnection.baseUrl = "<hidden>";
+
+        return output;
+    }
+
 }
-
-
-
-/*
-
-// Connection
-export function readConnectionConfig(){ 
-    return JSON.parse(fs.readFileSync('./configs/connection.config.json').toString())
-};
-
-export function writeConnectionConfig(config: Object){
-    fs.writeFileSync('./configs/connection.config.json', JSON.stringify(config))
-}
-
-//Interactions
-
-export function readInteractionConfigs(){
-    return JSON.parse(fs.readFileSync('./configs/interactions.config.json').toString())
-}
-
-export function writeInteractionConfigs(config : Object){
-    fs.writeFileSync('./configs/interactions.config.json', JSON.stringify(config))
-}
-
-//OpenAi
-
-export function readOpenAIConfig(){
-    return JSON.parse(fs.readFileSync('./configs/openai.config.json').toString())
-}
-
-export function writeOpenAIConfig(config: Object){
-    fs.writeFileSync('./configs/openai.config.json', JSON.stringify(config))
-}
-
-export function resetOpenAIConfig(){
-    let defParams = JSON.parse(fs.readFileSync('./configs/default/default_parameters.openai.config.json').toString());
-    //console.log(defParams)
-    let conf = readOpenAIConfig();
-    conf.parameters = defParams;
-    fs.writeFileSync('./configs/openai.config.json', JSON.stringify(conf))
-}
-
-export function writeOAIApiKeyToConfig(apiKey: string){
-    let oaiConf = readOpenAIConfig();
-    oaiConf.api_key = apiKey;
-    fs.writeFileSync('./configs/openai.config.json', JSON.stringify(oaiConf))
-}
-
-export function writeOAIModelToConfig(model: string){
-    let oaiConf = readOpenAIConfig();
-    oaiConf.model = model;
-    fs.writeFileSync('./configs/openai.config.json', JSON.stringify(oaiConf))
-}
-
-// Ooba
-
-export function readOobaConfig(){
-    return JSON.parse(fs.readFileSync('./configs/ooba.config.json').toString())
-}
-
-export function writeOobaConfig(config: Object){
-    fs.writeFileSync('./configs/ooba.config.json', JSON.stringify(config))
-}
-
-*/
-
 
 
