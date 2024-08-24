@@ -7,6 +7,8 @@ export class RunFileManager{
 
     constructor(userFolderPath: string){
         this.path = userFolderPath+"\\run\\gpt_kings.txt";
+
+        this.createRunFolder(userFolderPath);
     }
 
     write(text: string): void{
@@ -24,6 +26,16 @@ export class RunFileManager{
         console.log("Run File cleared")
     }
     
-    
-}
+    async createRunFolder(userFolderPath: string){
 
+        if(userFolderPath && !fs.existsSync(userFolderPath+'\\run')){
+            try{
+                fs.mkdirSync(userFolderPath+"\\run");
+            }
+            catch(err){
+                console.log("RunFileManager error: "+err)
+            }
+            
+        }
+    }
+}

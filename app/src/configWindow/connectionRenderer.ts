@@ -23,7 +23,7 @@ else{
     if (fs.existsSync(defaultPath)) {
         runPathInput.value = defaultPath;
         config.userFolderPath = defaultPath;
-        config.export();
+        ipcRenderer.send('config-change', "userFolderPath", runPathInput.value);
     }
     
 }

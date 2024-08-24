@@ -126,6 +126,11 @@ leaveButton.addEventListener("click", ()=>{
 
 //IPC Events
 
+ipcRenderer.on('chat-show', () =>{
+    initChat();
+    document.body.style.display = '';
+})
+
 ipcRenderer.on('chat-start', (e, gameData: GameData) =>{
     playerName = gameData.playerName;
     aiName = gameData.aiName;

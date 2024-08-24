@@ -1,8 +1,9 @@
-var fs = require('fs');
+var afterExtractScript = require("./build/afterExtractScript.js");
+var afterCopyScript = require("./build/afterCopyScript.js");
 
 module.exports = {
   packagerConfig: {
-     icon: './public/assets/icon.ico'
+     icon: './build/icons/icon.ico',
     //"asar":true
   },
   rebuildConfig: {},
@@ -20,14 +21,14 @@ module.exports = {
     },
   ],
   hooks: {
-    packageAfterExtract: async (forgeConfig, buildPath, electronVersion, platform, arch) => {
-      fs.cpSync('./configs', buildPath+"/configs", {recursive: true});
-      fs.cpSync('./public', buildPath+"/public", {recursive: true});
+    packageAfterExtract: (forgeConfig, buildPath, electronVersion, platform, arch) => {
+        afterExtractScript(forgeConfig, buildPath, electronVersion, platform, arch);
+    },
 
-      fs.rm(buildPath+"/resources/app/configs", { recursive: true, force: true }, err =>{});
-      fs.rm(buildPath+"/resources/app/public", { recursive: true, force: true }, err =>{});
+    packageAfterCopy: (forgeConfig, buildPath, electronVersion, platform, arch) => {
+      afterCopyScript(forgeConfig, buildPath, electronVersion, platform, arch);
+  },
 
-    }
   }
 
 

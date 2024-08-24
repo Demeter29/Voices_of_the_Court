@@ -94,15 +94,19 @@ app.on('ready',  async () => {
 let conversation: Conversation;
 
 clipboardListener.on('GK:IN', async () =>{
+    chatWindow.show();
+    chatWindow.window.webContents.send('chat-show');
     try{ 
-        config = new Config();
         console.log("New conversation started!");
         conversation = new Conversation(await parseLog(config.userFolderPath+'\\logs\\debug.log'), config);
-        chatWindow.show();
         chatWindow.window.webContents.send('chat-start', conversation.gameData);
     }catch(err){
         console.log("==GK:IN ERROR==");
-        console.log(err)
+        console.log(err);
+
+        if(chatWindow.isShown){
+            chatWindow.window.webContents.send('error-message', err);
+        }
     }
 })
 
@@ -164,7 +168,12 @@ ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
 })
 
 ipcMain.on('chat-stop', () =>{
-    conversation.summarize();
+    chatWindow.hide();
+
+    if(conversation && conversation.isOpen){
+        conversation.summarize();
+    }
+    
 })
 
 

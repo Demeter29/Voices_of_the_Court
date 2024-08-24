@@ -13,6 +13,7 @@ import {Message, MessageChunk, Setting, ResponseObject, ErrorMessage, Summary, I
 import { RunFileManager } from '../RunFileManager.js';
 
 export class Conversation{
+    isOpen: boolean;
     gameData: GameData;
     messages: Message[];
     config: Config;
@@ -28,6 +29,7 @@ export class Conversation{
     textgenParameters: Object;
     
     constructor(gameData: GameData, config: Config){
+        this.isOpen = true;
         this.gameData = gameData;
         this.messages = [];
         this.config = config;
@@ -142,6 +144,7 @@ export class Conversation{
     }
 
     async summarize(){
+        this.isOpen = false;
         this.runFileManager.write("trigger_event = talk_event.9002");
         setTimeout(()=>{
             this.runFileManager.clear();
