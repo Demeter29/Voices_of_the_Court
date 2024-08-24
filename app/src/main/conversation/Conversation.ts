@@ -3,7 +3,7 @@ import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection } from '../../shared/apiConnection.js';
 import { checkInteractions } from './checkInteractions.js';
-import { buildTextPrompt, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt } from './promptBuilder.js';
+import { convertChatToText, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt } from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
 import fs from 'fs';
@@ -36,26 +36,27 @@ export class Conversation{
 
         this.textgenParameters = {temperature: config.temperature, frequency_penalty: config.frequency_penalty, presence_penalty: config.presence_penalty, top_p: config.top_p};
 
-        delete require.cache[require.resolve(`../../../public/scripts/description/${config.selectedDescScript}`)];
-        this.description = require(`../../../public/scripts/description/${config.selectedDescScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID)); 
 
-        delete require.cache[require.resolve(`../../../public/scripts/example messages/${config.selectedExMsgScript}`)];
-        this.exampleMessages= require(`../../../public/scripts/example messages/${config.selectedExMsgScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID));
+        delete require.cache[require.resolve(process.cwd()+`/custom/scripts/description/${config.selectedDescScript}`)];
+        this.description = require(process.cwd()+`/custom/scripts/description/${config.selectedDescScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID)); 
 
-        if (!fs.existsSync(`./public/conversation_summaries`)){
-            fs.mkdirSync(`./public/conversation_summaries`);
+        delete require.cache[require.resolve(process.cwd()+`/custom/scripts/example messages/${config.selectedExMsgScript}`)];
+        this.exampleMessages= require(process.cwd()+`/custom/scripts/example messages/${config.selectedExMsgScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID));
+
+        if (!fs.existsSync(process.cwd()+`/conversation_summaries`)){
+            fs.mkdirSync(process.cwd()+`/conversation_summaries`);
         }
 
-        if (!fs.existsSync(`./public/conversation_summaries/${this.gameData.playerID}`)){
-            fs.mkdirSync(`./public/conversation_summaries/${this.gameData.playerID}`);
+        if (!fs.existsSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}`)){
+            fs.mkdirSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}`);
         }
         
-        if(fs.existsSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`)){
-            this.summaries = JSON.parse(fs.readFileSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, 'utf8'));
+        if(fs.existsSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`)){
+            this.summaries = JSON.parse(fs.readFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, 'utf8'));
         }
         else{
             this.summaries = [];
-            fs.writeFileSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
+            fs.writeFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
         }
 
     
@@ -108,13 +109,15 @@ export class Conversation{
             };  
             
         }
+        //instruct
         else{
 
             responseMessage = {
                 role: "assistant",
                 name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(buildTextPrompt(this), this.config.stream, {
-                    stop: [this.gameData.playerName+":", this.gameData.playerName+":", "you:", "user:"],
+                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config.inputSequence, this.config.outputSequence), this.config.stream, {
+                    stop: [this.config.inputSequence, this.config.outputSequence],
+                    max_tokens: this.config.maxTokens,
                     ...this.textgenParameters
                 },
                 streamRelay)
@@ -144,6 +147,10 @@ export class Conversation{
             this.runFileManager.clear();
         }, 500);
 
+        if(this.messages.length < 2){
+            return;
+        }
+
         let summary = {
             date: this.gameData.date,
             content: await summarize(this)
@@ -151,12 +158,12 @@ export class Conversation{
 
         this.summaries.unshift(summary)
 
-        fs.writeFileSync(`./public/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
+        fs.writeFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
     }
 
     updateConfig(config: Config){
         console.log("config updated!")
-        console.log(this.config);
+        console.log(config.toSafeConfig());
         this.config = config;
         this.runFileManager = new RunFileManager(config.userFolderPath);
 
@@ -188,7 +195,7 @@ export class Conversation{
     async loadInteractions(){
         this.interactions = [];
 
-        let actionFiles = fs.readdirSync(`./public/actions/`).filter(file => path.extname(file) === ".js");
+        let actionFiles = fs.readdirSync(`${process.cwd()}/custom/actions/`).filter(file => path.extname(file) === ".js");
 
         for(const file of actionFiles) {
 
@@ -196,7 +203,7 @@ export class Conversation{
                 continue;
             }
     
-            this.interactions.push(require(`../../../public/actions/${file}`));
+            this.interactions.push(require(`${process.cwd()}/custom/actions/${file}`));
             console.log(`loaded interaction: `+file)
         }
     }

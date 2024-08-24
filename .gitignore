@@ -1,5 +1,6 @@
 /app/node_modules
 /app/dist
-/app/build
+/app/out
 /app/configs/app.config.json
 /app/conversations
+/app/configs/config.json

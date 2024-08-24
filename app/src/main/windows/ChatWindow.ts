@@ -29,7 +29,7 @@ export class ChatWindow{
             this.window,
             'Crusader Kings III',
           )
-          this.window.webContents.openDevTools({ mode: 'detach', activate: false })
+          //this.window.webContents.openDevTools({ mode: 'detach', activate: false })
     
         this.window.on('close', ()=>{app.quit()}); //TODO
 

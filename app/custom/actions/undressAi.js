@@ -10,6 +10,7 @@ module.exports = {
                 flag = is_naked
                 days = 1
             }
+        }
     `);
     },
     chatMessage: (args) =>{

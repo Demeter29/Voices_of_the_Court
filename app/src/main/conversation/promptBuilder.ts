@@ -3,6 +3,29 @@ import { parseVariables } from "./parseVariables";
 import { Message } from "../ts/conversation_interfaces";
 import { GameData, Memory } from "../../shared/GameData";
 
+export function convertChatToText(chat: Message[], inputSeq: string, outputSeq: string): string{
+    let output: string = "";
+
+    for(let msg of chat){
+        
+        switch(msg.role){
+            case "system":
+                    output += msg.content+"\n";
+                break;
+            case "user":
+                output += `${inputSeq}\n${msg.name}: ${msg.content}\n`;
+                break;
+                case "assistant":
+                    output += `${outputSeq}\n${msg.name}: ${msg.content}\n`;
+                    break;
+        }
+    }
+
+    output+=outputSeq
+    return output;
+}
+
+/*
 export function buildTextPrompt(conv: Conversation): string {
         let output: string = "";
 
@@ -27,6 +50,7 @@ export function buildTextPrompt(conv: Conversation): string {
 
         return output;
 }
+*/
 
 export function buildChatPrompt(conv: Conversation): Message[]{
 
@@ -36,19 +60,15 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         role: "system",
         content: parseVariables(conv.setting.mainPrompt, conv.gameData)
     })
+
+    chatPrompt.push({
+        role: "system",
+        content: "[example messages]"
+    })
     
     chatPrompt = chatPrompt.concat(conv.exampleMessages);
 
-    const memoriesString: string = getNumberOfMemoriesString(conv.gameData, 10);
-
-    if(memoriesString.length>0){
-        chatPrompt.push({
-            role: "system",
-            content: memoriesString
-        })    
-    }
     
-    /*
     if(conv.summaries.length > 1){
         chatPrompt.push({
             role: "system",
@@ -56,7 +76,6 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         })
     }
 
-    */
     chatPrompt.push({
         role: "system",
         content: "[Start a new chat]"
@@ -68,9 +87,21 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     };
     
 
+
+    let memoryMessage: Message = {
+        role: "system",
+        content: createMemoryString(conv)
+    }
+
+    
+
+    
+
     let messagesWithDesc = insertMessageAtDepth(conv.messages, descMessage, conv.config.descInsertDepth);
 
-    chatPrompt = chatPrompt.concat(messagesWithDesc);
+    let messagesWithMemory = insertMessageAtDepth(messagesWithDesc, memoryMessage, 5);
+
+    chatPrompt = chatPrompt.concat(messagesWithMemory);
 
     return chatPrompt;
 }
@@ -126,14 +157,14 @@ export function convertMessagesToString(messages: Message[], inputSeq: string, o
     return output;
 }
 
-function insertMessageAtDepth(messages: Message[], messageToInsert: Message, depth: number): Message[] {
+function insertMessageAtDepth(messages: Message[], messageToInsert: Message, insertDepth: number): Message[] {
 
     let outputMessages = messages.slice(0); //pass by value
-    if(outputMessages.length < depth){
+    if(outputMessages.length < insertDepth){
         outputMessages.unshift(messageToInsert);
     }
     else{
-        outputMessages.splice(outputMessages.length - depth + 1, 0, messageToInsert);
+        outputMessages.splice(outputMessages.length - insertDepth + 1, 0, messageToInsert);
     }
 
     return outputMessages;
@@ -187,12 +218,12 @@ function getDateDifference(pastDate: string, todayDate: string): string{
 
 
 
-function getNumberOfMemoriesString(gameData: GameData, num: number): string{
+function createMemoryString(conv: Conversation): string{
 
     let allMemories: Memory[] = [];
 
-    allMemories =allMemories.concat(gameData.characters.get(gameData.playerID)!.memories);
-    allMemories = allMemories.concat(gameData.characters.get(gameData.aiID)!.memories);
+    allMemories =allMemories.concat(conv.gameData.characters.get(conv.gameData.playerID)!.memories);
+    allMemories = allMemories.concat(conv.gameData.characters.get(conv.gameData.aiID)!.memories);
 
     allMemories.sort((a, b) => (a.relevanceWeight - b.relevanceWeight));
     
@@ -205,10 +236,22 @@ function getNumberOfMemoriesString(gameData: GameData, num: number): string{
         output = "These are the significant events that has happened to the characters:"
     }
 
-    while(allMemories.length>0 && num-- > 0){
+    let tokenCount = 0;
+    while(allMemories.length>0){
         const memory: Memory = allMemories.pop()!;
 
-        output += `\n${memory.creationDate}: ${memory.desc}`;
+        let memoryLine = `${memory.creationDate}: ${memory.desc}`;
+
+        let memoryLineTokenCount = conv.textGenApiConnection.calculateTokensFromText(memoryLine);
+
+        if(tokenCount + memoryLineTokenCount > conv.config.maxMemoryTokens){
+            break;
+        }
+        else{
+            output+="\n"+memoryLine;
+            tokenCount+=memoryLineTokenCount;
+        }
+
     }
 
     return output;

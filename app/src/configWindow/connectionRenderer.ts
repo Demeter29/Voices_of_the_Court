@@ -30,13 +30,10 @@ else{
 
 
 
-document.addEventListener('change', () =>{
-    
-    config.userFolderPath =  runPathInput.value;
+runPathInput.addEventListener("change", (e: any) => {
 
-    ipcRenderer.send('config-change', config);
-    config.export();
-})
+    ipcRenderer.send('config-change', "userFolderPath", runPathInput.value);
+});
 
 
 runPathButton.addEventListener("click", async ()=>{
@@ -47,6 +44,7 @@ ipcRenderer.on('select-user-folder-success', (event, path) =>{
     if(!path || path == "") return;
 
     runPathInput.value = path;
+    ipcRenderer.send('config-change', "userFolderPath", runPathInput.value);
 
 })
 

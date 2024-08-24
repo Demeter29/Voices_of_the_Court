@@ -62,8 +62,10 @@ export class Config{
     userFolderPath: string;
 
     stream: boolean;
+    context: number;
     maxTokens: number;
     newTokens: number;
+    maxMemoryTokens: number;
 
     temperature: number;
     frequency_penalty: number;
@@ -72,6 +74,9 @@ export class Config{
 
     selectedDescScript: string;
     selectedExMsgScript: string;
+
+    inputSequence: string;
+    outputSequence: string;
 
     textGenerationApiConnection: ApiConnection;
     summarizationApiConnection: ApiConnection;
@@ -102,8 +107,10 @@ export class Config{
 
         this.userFolderPath = obj.userFolderPath;
         this.stream = obj.stream;
+        this.context = obj.context;
         this.maxTokens = obj.maxTokens;
         this.newTokens = obj.newTokens;
+        this.maxMemoryTokens = obj.maxMemoryTokens;
 
         this.temperature = obj.temperature;
         this.frequency_penalty = obj.frequency_penalty;
@@ -112,6 +119,9 @@ export class Config{
 
         this.selectedDescScript = obj.selectedDescScript;
         this.selectedExMsgScript = obj.selectedExMsgScript;
+
+        this.inputSequence = obj.inputSequence;
+        this.outputSequence = obj.outputSequence;
 
         this.textGenerationApiConnection = new ApiConnection(obj.textGenerationApiConnection);
         this.summarizationApiConnection = new ApiConnection(obj.summarizationApiConnection);

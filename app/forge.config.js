@@ -2,6 +2,7 @@ var fs = require('fs');
 
 module.exports = {
   packagerConfig: {
+     icon: './public/assets/icon.ico'
     //"asar":true
   },
   rebuildConfig: {},

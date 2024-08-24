@@ -11,6 +11,25 @@ import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conver
 const fs = require('fs');
 const shell = require('electron').shell;
 
+if (require('electron-squirrel-startup')) {
+    app.quit();
+}
+
+process.on("rejectionHandled", function(err){
+    console.log('=== REJECTION HANDLED ===');
+    console.error( err )
+});
+
+process.on('uncaughtException', function(err) {
+    console.log('=== UNCAUGHT EXCEPTION ===');
+    console.log(err);
+  });
+
+process.on('unhandledRejection', (error, p) => {
+    console.log('=== UNHANDLED REJECTION ===');
+    console.log(error);
+});
+
 //logging
 var util = require('util');
 
@@ -28,18 +47,15 @@ console.log = function(d) { //
 
 
 if(process.argv[2] == '--dev'){
-    console.log("dev")
+    console.log("dev mode")
     require('source-map-support').install();
 }else{
-    console.log("prod")
+    console.log("product mode")
 }
 
 
 
 
-if (require('electron-squirrel-startup')) {
-    app.quit();
-}
 
 let launcherWindow: ConfigWindow;
 let chatWindow: ChatWindow;
@@ -78,11 +94,16 @@ app.on('ready',  async () => {
 let conversation: Conversation;
 
 clipboardListener.on('GK:IN', async () =>{
-    console.log("New conversation started!");
-    conversation = new Conversation(await parseLog('C:\\Users\\gabor\\Documents\\Paradox Interactive\\Crusader Kings III\\logs\\debug.log'), config);
-    chatWindow.show();
-    chatWindow.window.webContents.send('chat-start', conversation.gameData);
-    
+    try{ 
+        config = new Config();
+        console.log("New conversation started!");
+        conversation = new Conversation(await parseLog(config.userFolderPath+'\\logs\\debug.log'), config);
+        chatWindow.show();
+        chatWindow.window.webContents.send('chat-start', conversation.gameData);
+    }catch(err){
+        console.log("==GK:IN ERROR==");
+        console.log(err)
+    }
 })
 
 clipboardListener.on('GK:EFFECT_ACCEPTED', async () =>{

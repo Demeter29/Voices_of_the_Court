@@ -1,6 +1,8 @@
 import { Message, MessageChunk } from "../main/ts/conversation_interfaces";
 import OpenAI from "openai";
 
+import tiktoken from "js-tiktoken";
+
 export interface apiConnectionTestResult{
     success: boolean,
     errorMessage?: string,
@@ -74,6 +76,7 @@ export class ApiConnection{
                 response = completion.choices[0].message.content;
             }
 
+            console.log(response);
             return response;
         }
         else{
@@ -154,4 +157,37 @@ export class ApiConnection{
             return {success: false, errorMessage: err}
         });
     }
+
+    calculateTokensFromText(text: string): number{
+    
+        const enc = tiktoken.getEncoding("cl100k_base");
+          return enc.encode(text).length;
+    }
+
+    calculateTokensFromMessage(msg: Message): number{
+    
+        const enc = tiktoken.getEncoding("cl100k_base");
+
+        let sum = enc.encode(msg.role).length + enc.encode(msg.content).length
+
+        if(msg.name){
+            sum += enc.encode(msg.name).length;
+        }
+
+        return sum;
+    }
+
+    calculateTokensFromChat(chat: Message[]): number{
+    
+        const enc = tiktoken.getEncoding("cl100k_base");
+        
+        let sum=0;
+        for(let msg of chat){
+           sum += this.calculateTokensFromMessage(msg);
+        }
+
+        return sum;
+    }
+
+   
 }

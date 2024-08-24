@@ -1,6 +1,6 @@
 {
   "name": "gpt_kings",
-  "productName": "gpt_kings",
+  "productName": "Voices of the Court",
   "version": "1.0.0",
   "description": "A chatbot mod for Crusader Kings 3",
   "main": "dist/main/main.js",
@@ -26,6 +26,7 @@
     "electron-build": "^0.0.3",
     "electron-overlay-window": "^3.3.0",
     "electron-squirrel-startup": "^1.0.0",
+    "js-tiktoken": "^1.0.14",
     "marked": "^11.1.0",
     "openai": "^4.24.1",
     "papaparse": "^5.4.1"

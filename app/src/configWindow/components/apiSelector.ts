@@ -29,7 +29,6 @@ function defineTemplate(label: string){
         <label for="api-key">API Key</label>
         <br>
         <input type="text" id="openai-key">
-        <button type="button" id="openai-key-save">Save</button>
         </div>
     
         <div class="input-group">
@@ -49,7 +48,6 @@ function defineTemplate(label: string){
         <br>
         <input type="text" id="ooba-url">
         <br>
-        <button type="button" id="ooba-url-connect">Connect</button>
         </div>
     
     </div>
@@ -61,7 +59,6 @@ function defineTemplate(label: string){
         <label for="api-key">API Key</label>
         <br>
         <input type="text" id="openrouter-key">
-        <button type="button" id="openrouter-key-save">Save</button>
         </div>
     
         <div class="input-group">
@@ -216,6 +213,7 @@ class ApiSelector extends HTMLElement{
 
             this.testConnectionSpan.innerText = "...";
             this.testConnectionSpan.style.color = "white";
+
 
             con.testConnection().then( (result) =>{
 

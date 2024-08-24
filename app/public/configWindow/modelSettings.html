@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>GPT Kings</title>
+  <title>Voices of the Court</title>
   <link rel="stylesheet" href="launcher.css" />
 
   
@@ -33,10 +33,13 @@
           <div class="input-group">
             <div class="row">
               <div class="column">
-                <config-number confID="maxTokens" label="max tokens" min="0" max="4084"></config-number>
+                <config-number confID="maxTokens" label="max new tokens" min="0" max="4084"></config-number>
+              </div>
+              <div class="column">
+                <config-number confID="maxMemoryTokens" label="max memory tokens" min="0" max="4084"></config-number>
               </div>
             </div>
-
+            
             <hr>
 
             <div class="row">

@@ -1,8 +1,10 @@
 {
 	"userFolderPath": "",
 	"stream": false,
-	"maxTokens": 2040,
+	"maxTokens": 500,
+	"context": 4000,
 	"newTokens": "304",
+	"maxMemoryTokens": 600,
 	"temperature": 0.7,
 	"frequency_penalty": 0.05,
 	"presence_penalty": -0.05,
@@ -14,7 +16,7 @@
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": true
+		"forceInstruct": false
 	},
 	"summarizationApiConnection": {
 		"type": "openrouter",
@@ -28,12 +30,14 @@
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": true
+		"forceInstruct": false
 	},
 	"summarizationUseTextGenApi": true,
 	"interactionUseTextGenApi": true,
 	"interactionsEnableAll": true,
 	"disabledInteractions": [
+		"undressAi",
+		"intercourse"
 	],
 	"cleanMessages": true,
 	"descInsertDepth": 4,

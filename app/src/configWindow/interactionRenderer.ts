@@ -1,4 +1,4 @@
-import { ipcMain, ipcRenderer, dialog} from 'electron';
+import { ipcMain, ipcRenderer, dialog, app} from 'electron';
 import { Config } from '../shared/Config';
 import  {OpenAI}  from "openai";
 import { ApiConnection } from '../shared/apiConnection';
@@ -73,13 +73,19 @@ refreshInteractionsButton.addEventListener('click', ()=>{
     loadInteractions();
 })
 
+let interactionsPath: string;
+if(fs.existsSync(__dirname+'/../../custom/actions')){
+    interactionsPath = __dirname+'/../../custom/actions';
+}else{
+    interactionsPath = __dirname+'\\..\\..\\..\\..\\custom\\actions';
+};
+
 async function loadInteractions(){
 
     interactionsDiv.replaceChildren();
 
     await sleep(250)
-
-    let fileNames = fs.readdirSync('./public/actions').filter(file => path.extname(file) === '.js');
+    let fileNames = fs.readdirSync(interactionsPath).filter(file => path.extname(file) === '.js'); 
     
 
     
@@ -87,7 +93,7 @@ async function loadInteractions(){
     for(const fileName of fileNames){
 
         
-        let file  = require(`../../public/actions/${fileName}`);
+        let file  = require(`${interactionsPath}/${fileName}`);
         
         let element = document.createElement("div");
 

@@ -28,10 +28,10 @@ jailbreakPromptText.value = config.jailbreakPrompt;
 nsfwCheckbox.checked = config.nsfwPromptEnable;
 jailbreakCheckbox.checked = config.jailbreakPromptEnable;
 
-populateSelectWithFileNames(descScriptSelect, './public/scripts/description', '.js');
+populateSelectWithFileNames(descScriptSelect, './custom/scripts/description', '.js');
 descScriptSelect.value = config.selectedDescScript;
 
-populateSelectWithFileNames(exMessagesScriptSelect, './public/scripts/example messages', '.js');
+populateSelectWithFileNames(exMessagesScriptSelect, './custom/scripts/example messages', '.js');
 exMessagesScriptSelect.value = config.selectedExMsgScript;
 
 togglePrompt(nsfwCheckbox, nsfwPromptText);
