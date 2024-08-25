@@ -14,6 +14,5 @@ export async function summarize(conv: Conversation): Promise<string>{
         })
     }
 
-    console.log(summarization)
     return summarization;
 }

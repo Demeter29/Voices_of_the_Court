@@ -9,7 +9,7 @@ import { summarize } from './summarize.js';
 import fs from 'fs';
 import path from 'path';
 
-import {Message, MessageChunk, Setting, ResponseObject, ErrorMessage, Summary, Interaction} from '../ts/conversation_interfaces.js';
+import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Interaction} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
 
 export class Conversation{
@@ -21,7 +21,6 @@ export class Conversation{
     textGenApiConnection: ApiConnection;
     summarizationApiConnection: ApiConnection;
     interactionApiConnection: ApiConnection;
-    setting: Setting;
     description: string;
     interactions: Interaction[];
     exampleMessages: Message[];
@@ -67,8 +66,6 @@ export class Conversation{
 
 
         
-
-        this.setting = require(`../../../public/settings/openrouter/mistral.json`);
 
         this.textGenApiConnection = new ApiConnection(config.textGenerationApiConnection);
 
@@ -174,7 +171,6 @@ export class Conversation{
 
         this.loadInteractions();
         
-        this.setting = require(`../../../public/settings/openrouter/mistral.json`);
 
         this.textGenApiConnection = new ApiConnection(config.textGenerationApiConnection);
 

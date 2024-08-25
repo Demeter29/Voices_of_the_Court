@@ -92,8 +92,11 @@ export class Config{
 
 
     cleanMessages: boolean;
-    descInsertDepth: number;
     debugMode: boolean;
+
+    summariesInsertDepth: number;
+    memoriesInsertDepth: number;
+    descInsertDepth: number;
 
     mainPrompt: string;
     summarizePrompt: string;
@@ -136,8 +139,12 @@ export class Config{
         this.interactionsRelations = obj.interactionsRelations;
 
         this.cleanMessages = obj.cleanMessages;
-        this.descInsertDepth = obj.descInsertDepth;
+        
         this.debugMode = obj.debugMode;
+
+        this.summariesInsertDepth = obj.summariesInsertDepth;
+        this.memoriesInsertDepth = obj.memoriesInsertDepth;
+        this.descInsertDepth = obj.descInsertDepth;
 
         this.mainPrompt =  obj.mainPrompt;
         this.summarizePrompt =  obj.summarizePrompt;

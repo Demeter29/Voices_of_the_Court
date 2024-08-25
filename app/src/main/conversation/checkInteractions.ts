@@ -23,12 +23,10 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
     let response;
     if(conv.interactionApiConnection.isChat()){
         let prompt = buildInteractionChatPrompt(conv, availableInteractions);
-        console.log(prompt);
         response = await conv.interactionApiConnection.complete(prompt, false, {} );
     }
     else{
         let prompt = convertChatToTextPrompt(buildInteractionChatPrompt(conv, availableInteractions) );
-        console.log(prompt);
         response = await conv.interactionApiConnection.complete(prompt, false, {} );
     }
 

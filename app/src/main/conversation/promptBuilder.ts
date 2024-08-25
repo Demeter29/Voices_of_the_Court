@@ -58,7 +58,7 @@ export function buildChatPrompt(conv: Conversation): Message[]{
 
     chatPrompt.push({
         role: "system",
-        content: parseVariables(conv.setting.mainPrompt, conv.gameData)
+        content: parseVariables(conv.config.mainPrompt, conv.gameData)
     })
 
     chatPrompt.push({
@@ -69,39 +69,63 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     chatPrompt = chatPrompt.concat(conv.exampleMessages);
 
     
-    if(conv.summaries.length > 1){
-        chatPrompt.push({
-            role: "system",
-            content: `The last time ${conv.gameData.aiName} and ${conv.gameData.playerName} spoke to eachother was in ${conv.summaries[0].date} (${getDateDifference(conv.summaries[0].date, conv.gameData.date)}).\nHere's a summary of that conversation: ${conv.summaries[0].content}`
-        })
-    }
+    
 
     chatPrompt.push({
         role: "system",
         content: "[Start a new chat]"
     })
 
+    let messages = conv.messages.slice(0); //pass by value
+
+    let correctedSummariesInsertDepth = conv.config.summariesInsertDepth;
+    let correctedMemoriesInsertDepth = conv.config.memoriesInsertDepth;
+    let correctedDescInsertDepth = conv.config.descInsertDepth;
+
+    if(conv.config.summariesInsertDepth > conv.config.memoriesInsertDepth){
+        correctedMemoriesInsertDepth++;
+    }
+    if(conv.config.summariesInsertDepth > conv.config.descInsertDepth){
+        correctedDescInsertDepth++;
+    }
+    if(conv.config.memoriesInsertDepth > conv.config.descInsertDepth){
+        correctedDescInsertDepth++;
+    }
+
+    if(conv.summaries.length > 0){
+        let summaryString = "Here are the date and summary of previous conversations between them:\n"
+
+        for(let summary of conv.summaries){
+            summaryString += `${summary.date} (${getDateDifference(summary.date, conv.gameData.date)}): ${summary.content}\n`;
+        }
+
+        let summariesMessage: Message = {
+            role: "system",
+            content: summaryString
+        } 
+
+        insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);
+    }
+
     const descMessage: Message = {
         role: "system",
         content: conv.description
     };
-    
 
-
-    let memoryMessage: Message = {
+    const memoryMessage: Message = {
         role: "system",
         content: createMemoryString(conv)
     }
 
     
-
+    if(memoryMessage.content){
+        insertMessageAtDepth(messages, memoryMessage, correctedMemoriesInsertDepth);
+    }
     
 
-    let messagesWithDesc = insertMessageAtDepth(conv.messages, descMessage, conv.config.descInsertDepth);
+    insertMessageAtDepth(messages, descMessage, correctedDescInsertDepth);
 
-    let messagesWithMemory = insertMessageAtDepth(messagesWithDesc, memoryMessage, 5);
-
-    chatPrompt = chatPrompt.concat(messagesWithMemory);
+    chatPrompt = chatPrompt.concat(messages);
 
     return chatPrompt;
 }
@@ -112,7 +136,7 @@ export function buildSummarizeTextPrompt(conv: Conversation): string{
     let output = convertMessagesToString(conv.messages, "", "")
     
 
-    output+= conv.setting.inputSequence + parseVariables(conv.config.summarizePrompt, conv.gameData) + "\n" +conv.setting.outputSequence;
+    output+= conv.config.inputSequence + parseVariables(conv.config.summarizePrompt, conv.gameData) + "\n" +conv.config.outputSequence;
 
     return output;
 }
@@ -159,15 +183,14 @@ export function convertMessagesToString(messages: Message[], inputSeq: string, o
 
 function insertMessageAtDepth(messages: Message[], messageToInsert: Message, insertDepth: number): Message[] {
 
-    let outputMessages = messages.slice(0); //pass by value
-    if(outputMessages.length < insertDepth){
-        outputMessages.unshift(messageToInsert);
+    if(messages.length < insertDepth){
+        messages.unshift(messageToInsert);
     }
     else{
-        outputMessages.splice(outputMessages.length - insertDepth + 1, 0, messageToInsert);
+        messages.splice(messages.length - insertDepth, 0, messageToInsert);
     }
 
-    return outputMessages;
+    return messages;
 }
 
 function getDateDifference(pastDate: string, todayDate: string): string{

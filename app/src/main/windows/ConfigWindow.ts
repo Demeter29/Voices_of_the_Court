@@ -5,8 +5,8 @@ export class ConfigWindow{
 
     constructor(){
         this.window = new BrowserWindow({
-            width: 800,
-            height: 600,
+            width: 900,
+            height: 650,
             minWidth: 800,
             minHeight: 600,
             webPreferences: {
