@@ -5,9 +5,9 @@ export class ConfigWindow{
 
     constructor(){
         this.window = new BrowserWindow({
-            width: 900,
-            height: 650,
-            minWidth: 800,
+            width: 850,
+            height: 600,
+            minWidth: 850,
             minHeight: 600,
             webPreferences: {
             nodeIntegration: true,
@@ -15,7 +15,7 @@ export class ConfigWindow{
             }       
         })
 
-        //this.window.webContents.openDevTools();
+        this.window.webContents.openDevTools();
         this.window.loadFile('./public/configWindow/connection.html')
         this.window.removeMenu();
 

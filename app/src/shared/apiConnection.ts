@@ -60,6 +60,7 @@ export class ApiConnection{
                 throw completion.error.message;
             }
             
+
             if(stream){
 
                 // @ts-ignore

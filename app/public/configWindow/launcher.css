@@ -6,7 +6,7 @@ html{
 }
 
 body{
-  padding: 0;
+  margin:0px;
 }
 
 ::-webkit-scrollbar {
@@ -189,7 +189,7 @@ textarea{
 
 
 /* Tooltip text */
-.tooltip .tooltiptext {
+.tooltipTop .tooltiptextTop {
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -202,6 +202,13 @@ textarea{
   z-index: 1;
 
   bottom: 100%;
+  left: 50%;
+  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.tooltipBottom .tooltiptextTop {
+  width: 120px;
+  top: 100%;
   left: 50%;
   margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 }
