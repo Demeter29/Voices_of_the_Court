@@ -5,11 +5,14 @@ import { Conversation } from "../conversation/Conversation.js";
 import {GameData} from "../../shared/GameData.js";
 import fs from 'fs';
 import { ConfigWindow } from "./ConfigWindow.js";
+import ActiveWindow from '@paymoapp/active-window';
+
+ActiveWindow.initialize();
 
 export class ChatWindow{
     window: BrowserWindow;
     isShown: boolean;
-    interval: any;
+    windowWatchId: number;
 
     constructor(){
         this.window = new BrowserWindow({
@@ -21,6 +24,7 @@ export class ChatWindow{
             }       
         })
         
+        this.windowWatchId = 0;
 
         this.window.loadFile('./public/chatWindow/chat.html')
         this.window.removeMenu();
@@ -29,16 +33,11 @@ export class ChatWindow{
             this.window,
             'Crusader Kings III',
           )
-          this.window.webContents.openDevTools({ mode: 'detach', activate: false })
+          //this.window.webContents.openDevTools({ mode: 'detach', activate: false })
     
         this.window.on('close', ()=>{app.quit()}); //TODO
 
         this.isShown = false;
-        
-
-    
-
-        //this.clipboardListener.on('GK:IN', (clipboard) =>{this.show(clipboard)});
 
         ipcMain.on('chat-stop', () =>{this.hide()})
         
@@ -46,19 +45,30 @@ export class ChatWindow{
     }
 
     show(){
+        console.log("Chat window showed!");
         OverlayController.activateOverlay();
         this.isShown = true;
-        //window loses focus forever when alt-tabbed.
-        this.interval = setInterval(()=>{OverlayController.activateOverlay()}, 500);
 
-        console.log("Chat window showed!")
+        this.windowWatchId = ActiveWindow.subscribe( (winInfo) =>{
+            if(winInfo?.title == "GPT Kings" || winInfo?.title == "Crusader Kings III" ){
+
+                OverlayController.activateOverlay();
+                this.window.webContents.send('chat-show');
+                
+            }else{
+                this.window.webContents.send('chat-hide');
+            }
+        })
+
+        
     }
 
     hide(){
+        console.log("Chat window hidden!");
         OverlayController.focusTarget();
         this.isShown = false;
-        clearInterval(this.interval);
-        console.log("Chat window hidden!")
+
+        ActiveWindow.unsubscribe(this.windowWatchId);
     }
 }
 

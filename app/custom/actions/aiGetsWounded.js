@@ -6,8 +6,8 @@ module.exports = {
     check: (conv) =>{
         return true;
     },
-    run: (conv) => {
-        conv.runFileManager.append(
+    run: (gameData, runFileManager) => {
+        runFileManager.append(
             `global_var:talk_second_scope = {
                 add_trait = wounded_1
             }`

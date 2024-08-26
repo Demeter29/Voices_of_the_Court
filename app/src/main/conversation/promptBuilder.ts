@@ -95,9 +95,13 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     if(conv.summaries.length > 0){
         let summaryString = "Here are the date and summary of previous conversations between them:\n"
 
+        conv.summaries.reverse();
+
         for(let summary of conv.summaries){
             summaryString += `${summary.date} (${getDateDifference(summary.date, conv.gameData.date)}): ${summary.content}\n`;
         }
+
+        conv.summaries.reverse();
 
         let summariesMessage: Message = {
             role: "system",
@@ -126,6 +130,13 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     insertMessageAtDepth(messages, descMessage, correctedDescInsertDepth);
 
     chatPrompt = chatPrompt.concat(messages);
+
+    if(conv.config.enableSuffixPrompt){
+        chatPrompt.push({
+            role: "system",
+            content: conv.config.suffixPrompt
+        })
+    }
 
     return chatPrompt;
 }

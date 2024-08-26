@@ -6,8 +6,8 @@ module.exports = {
     check: (conv) =>{
         return true;
     },
-    run: (conv) => {
-        conv.runFileManager.append(
+    run: (gameData, runFileManager) => {
+        runFileManager.append(
             `set_global_variable = {
 				name = talk_pose
 				value = flag:pain

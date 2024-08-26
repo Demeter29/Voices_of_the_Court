@@ -1,4 +1,5 @@
-import { Conversation } from "../conversation/Conversation";
+import { RunFileManager } from "../RunFileManager";
+import { GameData } from "../../shared/GameData";
 
 export interface Message {
     role: 'system' | 'user' | 'assistant';
@@ -50,7 +51,7 @@ export interface Interaction{
     description: string,
     group: string,
     check: () => boolean,
-    run: (arg1: Conversation, arg2: string[]) => void,
+    run: (arg1: GameData, arg2: RunFileManager, arg3: string[]) => void,
     chatMessage: (arg1: string[]) => string,
     chatMessageClass: string
 }

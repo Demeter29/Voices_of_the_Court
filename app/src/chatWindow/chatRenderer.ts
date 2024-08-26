@@ -29,6 +29,11 @@ async function initChat(){
 }
 
 async function displayMessage(message: Message): Promise<HTMLDivElement>{
+
+    if(message.content.startsWith(message.name+":")){
+        message.content = message.content.slice(message.name!.length+1);
+    }
+
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
     switch (message.role){
@@ -76,7 +81,7 @@ function displayErrorMessage(error: string){
     messageDiv.classList.add('message');
 
     messageDiv.classList.add('error-message');
-    messageDiv.innerText = `Error message: ${error}`;
+    messageDiv.innerText = error;
     chatMessages.append(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -121,21 +126,26 @@ function hideChat(){
 
 leaveButton.addEventListener("click", ()=>{
     hideChat();
+    chatMessages.innerHTML = '';
+    chatInput.innerHTML = '';
     ipcRenderer.send('chat-stop');
 });
 
 //IPC Events
 
 ipcRenderer.on('chat-show', () =>{
-    initChat();
     document.body.style.display = '';
 })
 
-ipcRenderer.on('chat-start', (e, gameData: GameData) =>{
+ipcRenderer.on('chat-hide', () =>{
+    hideChat();
+})
+
+ipcRenderer.on('chat-start', (e, gameData: GameData) =>{   
     playerName = gameData.playerName;
     aiName = gameData.aiName;
-    document.body.style.display = '';
     initChat();
+    document.body.style.display = '';
 })
 
 ipcRenderer.on('message-receive', async (e, responseObject: ResponseObject)=>{

@@ -2,6 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 
 export type Trait = {
+    category: string,
     name: string,
     desc: string
 }
@@ -38,9 +39,13 @@ export type Character = {
     house: string,
     isRuler: boolean,
     firstName: string,
+    capitalLocation: string,
+    topLiege: string,
+    prowess: number,
+    isKnight: boolean,
 
     memories: Memory[],
-    personalityTraits: Trait[],
+    traits: Trait[],
     relationsToPlayer: string[],
     opinionBreakdownToPlayer: OpinionModifier[]
 }
@@ -121,11 +126,7 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
                     gameData!.characters.get(rootID)!.memories.push(memory);
                 break;
                 case "trait":
-                    switch (data[1]){
-                        case "personality":
-                            gameData!.characters.get(rootID)!.personalityTraits.push(parseTrait(data));
-                        break;
-                    }
+                    gameData!.characters.get(rootID)!.traits.push(parseTrait(data));
                 break;
                 case "relations":
                     
@@ -180,16 +181,20 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             sexuality: removeTooltip(data[8]),
             personality: data[9],
             greed: Number(data[10]),
-            isIndependentRuler: !!data[11],
+            isIndependentRuler: !!Number(data[11]),
             liege: data[12],
             consort: data[13],
             culture: data[14],
             faith: data[15],
             house: data[16],
-            isRuler: !!data[17],
+            isRuler: !!Number(data[17]),
             firstName: data[18],
+            capitalLocation: data[19],
+            topLiege: data[20],
+            prowess: Number(data[21]),
+            isKnight: !!Number(data[22]),
             memories: [],
-            personalityTraits: [],
+            traits: [],
             relationsToPlayer: [],
             opinionBreakdownToPlayer: []
         }
@@ -206,8 +211,9 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
     
     function parseTrait(data: string[]): Trait{
         return {
+            category: data[1],
             name: data[2],
-            desc: data[3]
+            desc: data[3],
         }
     }
 

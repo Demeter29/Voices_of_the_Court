@@ -1,7 +1,7 @@
 {
-  "name": "gpt_kings",
+  "name": "voices_of_the_court",
   "productName": "Voices of the Court",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "A chatbot mod for Crusader Kings 3",
   "main": "dist/main/main.js",
   "build": {
@@ -14,14 +14,15 @@
     "build": "tsc",
     "start": "npm run build && electron . --prod",
     "go": "electron .",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "package": "npm run build && electron-forge package",
+    "make": "npm run build && electron-forge make",
+    "publish": "npm run build && electron-forge publish"
   },
   "keywords": [],
   "author": "Durond",
   "license": "MIT",
   "dependencies": {
+    "@paymoapp/active-window": "^2.1.1",
     "dompurify": "^3.0.8",
     "electron-build": "^0.0.3",
     "electron-overlay-window": "^3.3.0",

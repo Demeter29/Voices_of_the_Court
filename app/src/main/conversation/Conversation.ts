@@ -31,19 +31,8 @@ export class Conversation{
         this.isOpen = true;
         this.gameData = gameData;
         this.messages = [];
-        this.config = config;
-        this.runFileManager = new RunFileManager(config.userFolderPath);
-        this.runFileManager.clear();
 
-        this.textgenParameters = {temperature: config.temperature, frequency_penalty: config.frequency_penalty, presence_penalty: config.presence_penalty, top_p: config.top_p};
-
-
-        delete require.cache[require.resolve(process.cwd()+`/custom/scripts/description/${config.selectedDescScript}`)];
-        this.description = require(process.cwd()+`/custom/scripts/description/${config.selectedDescScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID)); 
-
-        delete require.cache[require.resolve(process.cwd()+`/custom/scripts/example messages/${config.selectedExMsgScript}`)];
-        this.exampleMessages= require(process.cwd()+`/custom/scripts/example messages/${config.selectedExMsgScript}`)(gameData.date, gameData.scene, gameData.location, gameData.characters.get(gameData.playerID), gameData.characters.get(gameData.aiID));
-
+        this.summaries = [];
         if (!fs.existsSync(process.cwd()+`/conversation_summaries`)){
             fs.mkdirSync(process.cwd()+`/conversation_summaries`);
         }
@@ -60,30 +49,19 @@ export class Conversation{
             fs.writeFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
         }
 
-    
+        this.config = config;
+
+        //TODO: wtf
+        this.runFileManager = new RunFileManager(config.userFolderPath);
+        this.textGenApiConnection = new ApiConnection({});
+        this.summarizationApiConnection = new ApiConnection({});
+        this.interactionApiConnection = new ApiConnection({});
+        this.description = "";
         this.interactions = [];
-        this.loadInteractions();
-
-
+        this.exampleMessages = [],
+        this.textgenParameters = [];
         
-
-        this.textGenApiConnection = new ApiConnection(config.textGenerationApiConnection);
-
-        if(this.config.summarizationUseTextGenApi){
-            this.summarizationApiConnection = this.textGenApiConnection;
-        }
-        else{
-            this.summarizationApiConnection = new ApiConnection(config.summarizationApiConnection);
-        }
-        
-        if(this.config.interactionUseTextGenApi){;
-            this.interactionApiConnection = this.textGenApiConnection;
-        }
-        else{
-            this.interactionApiConnection = new ApiConnection(config.interactionApiConnection);
-        }
-
-        console.log(this.config.toSafeConfig());
+        this.loadConfig();
     }
 
     pushMessage(message: Message): void{           
@@ -100,7 +78,7 @@ export class Conversation{
                 role: "assistant",
                 name: this.gameData.aiName,
                 content: await this.textGenApiConnection.complete(buildChatPrompt(this), this.config.stream, {
-                    stop: [this.gameData.playerName+":", this.gameData.aiName+":", "you:", "user:"],
+                    //stop: [this.gameData.playerName+":", this.gameData.aiName+":", "you:", "user:"],
                     max_tokens: this.config.maxTokens,
                     ...this.textgenParameters,
                 },
@@ -147,7 +125,8 @@ export class Conversation{
             this.runFileManager.clear();
         }, 500);
 
-        if(this.messages.length < 2){
+        if(this.messages.length < 6){
+            console.log("Not enough messages for summarization, no summary have been saved from this conversation!");
             return;
         }
 
@@ -163,32 +142,51 @@ export class Conversation{
 
     updateConfig(config: Config){
         console.log("config updated!")
-        console.log(config.toSafeConfig());
-        this.config = config;
-        this.runFileManager = new RunFileManager(config.userFolderPath);
+        this.loadConfig();
+    }
 
-        this.textgenParameters = {temperature: config.temperature, frequency_penalty: config.frequency_penalty, presence_penalty: config.presence_penalty, top_p: config.top_p};
+    loadConfig(){
+        this.textgenParameters = [];
 
+        console.log(this.config.toSafeConfig());
+
+        this.runFileManager = new RunFileManager(this.config.userFolderPath);
+        this.runFileManager.clear();
+
+        this.textgenParameters = {temperature: this.config.temperature, frequency_penalty: this.config.frequency_penalty, presence_penalty: this.config.presence_penalty, top_p: this.config.top_p};
+
+        this.description = "";
+        this.exampleMessages = [];
+        try{
+            delete require.cache[require.resolve(process.cwd()+`/custom/scripts/description/${this.config.selectedDescScript}`)];
+            this.description = require(process.cwd()+`/custom/scripts/description/${this.config.selectedDescScript}`)(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
+        }catch(err){
+            throw new Error("description script error, your used description script file is not valid! error message:\n"+err);
+        }
+        try{
+            delete require.cache[require.resolve(process.cwd()+`/custom/scripts/example messages/${this.config.selectedExMsgScript}`)];
+            this.exampleMessages= require(process.cwd()+`/custom/scripts/example messages/${this.config.selectedExMsgScript}`)(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
+        }catch(err){
+            throw new Error("example messages script error, your used example messages file is not valid! error message:\n"+err);
+        }
+    
         this.loadInteractions();
-        
 
-        this.textGenApiConnection = new ApiConnection(config.textGenerationApiConnection);
+        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnection);
 
         if(this.config.summarizationUseTextGenApi){
             this.summarizationApiConnection = this.textGenApiConnection;
         }
         else{
-            this.summarizationApiConnection = new ApiConnection(config.summarizationApiConnection);
+            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnection);
         }
         
         if(this.config.interactionUseTextGenApi){;
             this.interactionApiConnection = this.textGenApiConnection;
         }
         else{
-            this.interactionApiConnection = new ApiConnection(config.interactionApiConnection);
+            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnection);
         }
-
-
     }
 
     async loadInteractions(){

@@ -64,7 +64,6 @@ export class Config{
     stream: boolean;
     context: number;
     maxTokens: number;
-    newTokens: number;
     maxMemoryTokens: number;
 
     temperature: number;
@@ -100,10 +99,8 @@ export class Config{
 
     mainPrompt: string;
     summarizePrompt: string;
-    nsfwPrompt: string;
-    jailbreakPrompt: string;
-    nsfwPromptEnable: boolean;
-    jailbreakPromptEnable: boolean;
+    suffixPrompt: string;
+    enableSuffixPrompt: boolean;
 
     constructor(){
         const obj = JSON.parse(fs.readFileSync('./configs/config.json').toString());
@@ -112,7 +109,6 @@ export class Config{
         this.stream = obj.stream;
         this.context = obj.context;
         this.maxTokens = obj.maxTokens;
-        this.newTokens = obj.newTokens;
         this.maxMemoryTokens = obj.maxMemoryTokens;
 
         this.temperature = obj.temperature;
@@ -148,10 +144,9 @@ export class Config{
 
         this.mainPrompt =  obj.mainPrompt;
         this.summarizePrompt =  obj.summarizePrompt;
-        this.nsfwPrompt =  obj.nsfwPrompt;
-        this.jailbreakPrompt =  obj.jailbreakPrompt;
-        this.nsfwPromptEnable = obj.nsfwPromptEnable;
-        this.jailbreakPromptEnable = obj.jailbreakPromptEnable;
+        this.suffixPrompt =  obj.suffixPrompt;
+        this.enableSuffixPrompt =  obj.enableSuffixPrompt;
+        
     }
 
     export(){

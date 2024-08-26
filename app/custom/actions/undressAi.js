@@ -3,8 +3,8 @@ module.exports = {
     args: [],
     description: `execute when {{aiName}} gets undressed either willingly or forcefully against her wish.`,
     group: "",
-    run: (conv) => {
-        conv.runFileManager.append(`
+    run: (gameData, runFileManager) => {
+        runFileManager.append(`
         global_var:talk_second_scope = {
             add_character_flag = {
                 flag = is_naked

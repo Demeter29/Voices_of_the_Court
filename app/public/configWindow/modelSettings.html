@@ -48,7 +48,7 @@
               </div>
 
               <div class="column">
-                <config-checkbox confID="cleanMessages" label="clean Messages"></config-checkbox> <tooltip-text>The mod will try to remove parts of the messages that shouldn't be there, like emojis </tooltip-text>
+                <config-checkbox confID="cleanMessages" label="clean Messages"></config-checkbox> <tooltip-text side="top">The mod will try to remove parts of the messages that shouldn't be there, like emojis </tooltip-text>
               </div>
             </div>
             <hr>
@@ -77,13 +77,13 @@
 
         <div class="border">
 
-          <config-slider confID="temperature" label="Temperature"  min="0" max="2" step="0.01"></config-slider>
+          <config-slider confID="temperature" label="Temperature"  min="0" max="2" step="0.01" default="1"></config-slider>
 
-          <config-slider confID="frequency_penalty" label="Frequency Penalty"  min="-2" max="2" step="0.01"></config-slider>
+          <config-slider confID="frequency_penalty" label="Frequency Penalty"  min="-2" max="2" step="0.01" default="0"></config-slider>
 
-          <config-slider confID="presence_penalty" label="Presence Penalty"  min="-2" max="2" step="0.01"></config-slider>
+          <config-slider confID="presence_penalty" label="Presence Penalty"  min="-2" max="2" step="0.01" default="0"></config-slider>
   
-          <config-slider confID="top_p" label="top P"  min="0" max="1" step="0.01"></config-slider>
+          <config-slider confID="top_p" label="top P"  min="0" max="1" step="0.01" default="1"></config-slider>
 
         </div>
 

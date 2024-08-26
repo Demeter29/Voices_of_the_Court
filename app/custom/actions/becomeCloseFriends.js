@@ -6,7 +6,7 @@ module.exports = {
     check: (conv) => {
         return getConversationOpinionValue(opinionBreakdown)>30
     },
-    run: (conv) => {
+    run: (gameData, runFileManager) => {
         //
     },
     chatMessage: (args) =>{

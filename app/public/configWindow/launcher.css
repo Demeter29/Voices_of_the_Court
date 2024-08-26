@@ -187,9 +187,13 @@ textarea{
   display: inline-block;
 }
 
+.tooltiptext{
+  width:2000%;
+}
+
 
 /* Tooltip text */
-.tooltipTop .tooltiptextTop {
+.tooltip .tooltiptext {
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -201,21 +205,18 @@ textarea{
   position: absolute;
   z-index: 1;
 
+  left: 50%;
+  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.tooltip-top .tooltiptext-top {
   bottom: 100%;
-  left: 50%;
-  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 }
 
-.tooltipBottom .tooltiptextTop {
-  width: 120px;
+.tooltip-bottom .tooltiptext-bottom {
   top: 100%;
-  left: 50%;
-  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
 }
 
-.tooltiptext{
-  width:2000%;
-}
 
 
 .tooltip:hover .tooltiptext {

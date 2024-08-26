@@ -2,18 +2,48 @@
 //Script version: v1
 //NOTE: trait descriptions are not included, you should use this with an exMessages script that includes them, like aliChat.
 
+/*
+id: Number(data[0]),
+            shortName: data[1],
+            fullName: data[2],
+            primaryTitle: data[3],
+            sheHe: data[4],
+            age: Number(data[5]),
+            gold: Number(data[6]),
+            opinionOfPlayer: Number(data[7]),
+            sexuality: removeTooltip(data[8]),
+            personality: data[9],
+            greed: Number(data[10]),
+            isIndependentRuler: !!Number(data[11]),
+            liege: data[12],
+            consort: data[13],
+            culture: data[14],
+            faith: data[15],
+            house: data[16],
+            isRuler: !!Number(data[17]),
+            firstName: data[18],
+            capitalLocation: data[19],
+            topLiege: data[20],
+            prowess: Number(data[21]),
+            isKnight: !!Number(data[22]),
+            memories: [],
+            personalityTraits: [],
+            relationsToPlayer: [],
+            opinionBreakdownToPlayer: []
+*/
+
 module.exports = (date, scene, location, player, ai) =>{
 
-let playerPersonaItems = [`full name(${player.fullName})`, nobleManOrWoman(player), titleAndVassalage(player), `age(${ai.age})`, marriage(player), `faith(${ai.faith})`, `culture(${ai.culture})`, personalityTraits(player)];
-let aiPersonaItems = [`full Name(${ai.fullName})`, nobleManOrWoman(ai), titleAndVassalage(ai), `age(${ai.age})`, greedines(ai), marriage(ai), `faith(${ai.faith})`, `culture(${ai.culture})`, personalityTraits(ai), listRelationsToPlayer(ai)];
+let playerPersonaItems = [`full name(${player.fullName})`, nobleManOrWoman(player), titleAndVassalage(player), `age(${ai.age})`, marriage(player), `faith(${ai.faith})`, `culture(${ai.culture})`, otherTraits(player), personalityTraits(player)];
+let aiPersonaItems = [`full Name(${ai.fullName})`, nobleManOrWoman(ai), titleAndVassalage(ai), `age(${ai.age})`, greedines(ai), marriage(ai), `faith(${ai.faith})`, `culture(${ai.culture})`, otherTraits(ai), personalityTraits(ai), listRelationsToPlayer(ai)];
+
 
 //remove "", null, undefined and 0. 
 playerPersonaItems = playerPersonaItems.filter(function(e){return e}); 
 aiPersonaItems = aiPersonaItems.filter(function(e){return e}); 
 
+
 let output = "";
-
-
 
 output+= `\n[${player.shortName}'s Persona: ${playerPersonaItems.join(", ")}]`;
 
@@ -68,8 +98,22 @@ function marriage(char){
     }
 }
 
+function otherTraits(char){
+    let otherTraits = char.traits.filter((trait) => trait.category != "Personality Trait");
+
+    let traitNames = otherTraits.map(trait => trait.name);
+
+    let output = "traits("
+    output+= traitNames.join(", ");
+    output+=")";
+
+    return output;
+}
+
 function personalityTraits(char){
-    let traitNames = char.personalityTraits.map(trait => trait.name);
+    let personalityTraits = filterTraitsToCategory(char.traits, "Personality Trait");
+
+    let traitNames = personalityTraits.map(trait => trait.name);
 
     let output = "personality("
     output+= traitNames.join(", ");
@@ -86,7 +130,7 @@ function titleAndVassalage(char){
         return `independent ruler of ${char.primaryTitle}`;
     }
     else{
-        return `ruler of ${char.primaryTitle} under the vassalage of ${char.liege}`;
+        return `ruler of ${char.primaryTitle}, under the vassalage of ${char.liege}`;
     }
 }
 
@@ -121,4 +165,11 @@ function scenario(){
 }
 
 
+}
+
+
+//help functions
+
+function filterTraitsToCategory(traits, category){
+    return traits.filter((trait) => trait.category == category);
 }

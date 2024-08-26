@@ -35,7 +35,7 @@ function defineTemplate(label: string){
         <label for="openai-model-select">Model</label>
         <select id="openai-model-select">
             <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Recommended)</option>
-            <option value="gpt-4">GPT-4</option>
+            <option value="gpt-4o">GPT-4-o</option>
         </select>
         </div>
     </div>

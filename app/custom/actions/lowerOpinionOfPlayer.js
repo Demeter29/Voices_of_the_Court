@@ -12,12 +12,12 @@ module.exports = {
     check: (conv) =>{
         getConversationOpinionValue(conv.gameData.opinionBreakdownToPlayer)>-50;
     },
-    run: (conv, args) => {
-        let conversationOpinion = getConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID).opinionBreakdownToPlayer)
+    run: (gameData, runFileManager, args) => {
+        let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
         if(conversationOpinion>-50){
-            changeConversationOpinionValue(conv.gameData.characters.get(conv.gameData.aiID).opinionBreakdownToPlayer, conversationOpinion-5)
+            changeConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer, conversationOpinion-5)
 
-            conv.runFileManager.append(
+            runFileManager.append(
                 `global_var:talk_second_scope = {
                     add_opinion = {
                         target = global_var:talk_first_scope

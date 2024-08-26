@@ -5,13 +5,13 @@ import path from 'path';
 
 const template = document.createElement("template");
 
-function defineTemplate(){
+function defineTemplate(side:string){
     return `
     <link rel="stylesheet" href="../../public/configWindow/launcher.css"/>
     <style>
     </style>
-    <div class="tooltip"> <img src="../../public/assets/tooltip2.png" height="15" wdith="15">
-        <span class="tooltiptext"><slot></slot></span>
+    <div class="tooltip tooltip-${side}"> <img src="../../public/assets/tooltip2.png" height="15" wdith="15">
+        <span class="tooltiptext tooltiptext-${side}"><slot></slot></span>
     </div>
     `
 }
@@ -20,11 +20,13 @@ function defineTemplate(){
 
 class Tooltip extends HTMLElement{
     shadow: any;
+    side: string;
 
     constructor(){
         super();
+        this.side = this.getAttribute("side")!;
         this.shadow = this.attachShadow({mode: "open"});
-        template.innerHTML = defineTemplate();
+        template.innerHTML = defineTemplate(this.side);
         this.shadow.append(template.content.cloneNode(true));
 
         
@@ -33,7 +35,7 @@ class Tooltip extends HTMLElement{
 
 
     static get observedAttributes(){
-        return []
+        return ["side"]
     }
 
     connectedCallback(){

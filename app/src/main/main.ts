@@ -100,6 +100,7 @@ clipboardListener.on('GK:IN', async () =>{
         console.log("New conversation started!");
         conversation = new Conversation(await parseLog(config.userFolderPath+'\\logs\\debug.log'), config);
         chatWindow.window.webContents.send('chat-start', conversation.gameData);
+        
     }catch(err){
         console.log("==GK:IN ERROR==");
         console.log(err);

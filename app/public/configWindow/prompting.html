@@ -27,33 +27,27 @@
                 <div class="border" id="prompt-options">
                     
                     <div class="input-group">
-                        <label for="main-prompt">main</label><br>
-                        <textarea id="main-prompt" rows="6"></textarea>
+                        Main prompt
+                        <config-textarea confID="mainPrompt" rows="6"></config-textarea>
                     </div>
 
                     <div class="input-group">
-                        <label for="summarize-prompt">Summarization</label><br>
-                        <textarea id="summarize-prompt" rows="6" ></textarea>
+                      Summarize prompt
+                      <config-textarea confID="summarizePrompt" rows="6"></config-textarea>
                     </div>
 
                     <div class="input-group">
-                        <input type="checkbox" id="nsfw-checkbox">
-                        <label for="nsfw-prompt">NSFW</label><br>
-                        <textarea id="nsfw-prompt" rows="6" ></textarea>
-                    </div>
-
-                    <div class="input-group">
-                        <input type="checkbox" id="jailbreak-checkbox">
-                        <label for="jailbreak-promot">Jailbreak</label><br>
-                        <textarea id="jailbreak-prompt" rows="6" ></textarea>
+                        <config-checkbox id="suffix-prompt-checkbox" confID="enableSuffixPrompt" label="Suffix prompt"></config-checkbox> <tooltip-text side="top">If enabled, suffix prompt is inserted as the last (system) message before sending the API request, it's useful for jailbreaking, or instructing the model on how to format the response message.</tooltip-text>
+                        <config-textarea id="suffix-prompt-textarea" confID="suffixPrompt" rows="6"></config-textarea> 
                     </div>
                 </div>
                 
             </div>
             <div class="column">
 
-                <h2 style="display: inline;">Scripts</h2> <tooltip-text>Some prompts are too advanced to be made up by static texts, they require script files that dynamically writes the prompts based on the ingame variables.</tooltip-text>
-      
+              <br></br>
+                <h2 style="display: inline;">Scripts</h2> <tooltip-text side="bottom">Some prompts are too advanced to be made up by static texts, they require script files that dynamically writes the prompts based on the ingame variables.</tooltip-text>
+                <br></br>
                 <div id="script-selectors" class="border">
       
                   <div class="input-group">
@@ -88,6 +82,8 @@
 
     <script>require("../../dist/configWindow/components/openFolderButton.js")</script>
     <script>require("../../dist/configWindow/components/tooltip.js")</script>
+    <script>require("../../dist/configWindow/components/configCheckbox.js")</script>
+    <script>require("../../dist/configWindow/components/configTextarea.js")</script>
     <script>require("../../dist/configWindow/promptingRenderer.js")</script>
   </body>
 </html>

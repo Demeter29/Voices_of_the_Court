@@ -72,7 +72,7 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
         const argsString = /\(([^)]+)\)/.exec(actionInResponse);
         if(argsString == null){
             if(matchedInteraction.args.length === 0){
-                matchedInteraction.run(conv, []);
+                matchedInteraction.run(conv.gameData, conv.runFileManager, []);
 
                 if(matchedInteraction.group != "emotion"){
                     triggeredInteractions.push({
@@ -116,7 +116,7 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
             continue;
         }
 
-        matchedInteraction.run(conv, args);
+        matchedInteraction.run(conv.gameData, conv.runFileManager, args);
 
         if(matchedInteraction.group != "emotion"){
             triggeredInteractions.push({

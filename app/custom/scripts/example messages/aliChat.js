@@ -5,6 +5,23 @@ module.exports = (date, scene, location, player, ai) => {
 
     let msgs = [];
 
+    let personalityTraits = ai.traits.filter( (trait) => trait.category == "Personality Trait");
+
+    if(personalityTraits.length == 0){
+        return {}
+    }
+
+    let output="";
+    if(personalityTraits.length > 0){
+        output += `*${ai.shortName}'s eyes lit up* My personality, my lord? *${ai.sheHe} takes a short pause thinking* Well, I am ${personalityTraits[0].name}, ${traitMessageMap.get(personalityTraits[0].name)}`;
+    }
+    if(personalityTraits.length > 1){
+        output += `*${ai.sheHe} pauses again thinking about what else to say* I am also ${personalityTraits[1].name}, ${traitMessageMap.get(personalityTraits[1].name)}`;
+    }
+    if(personalityTraits.length > 2){
+        output += `*she takes a big breath* and I am ${personalityTraits[2].name}, ${traitMessageMap.get(personalityTraits[2].name)}`;
+    }
+
     //traits
     msgs.push({
         role: "user",
@@ -15,21 +32,8 @@ module.exports = (date, scene, location, player, ai) => {
     msgs.push({
         role: "assistant",
         name: ai.shortName,
-        content: `*${ai.shortName}'s eyes lit up* My personality, my lord? *${ai.sheHe} takes a short pause thinking* Well, I am ${ai.personalityTraits[0].name}, ${traitMessageMap.get(ai.personalityTraits[0].name)} *${ai.sheHe} pauses again thinking about what else to say* I am also ${ai.personalityTraits[1].name}, ${traitMessageMap.get(ai.personalityTraits[1].name)} *she takes a big breath* and I am ${ai.personalityTraits[2].name}, ${traitMessageMap.get(ai.personalityTraits[2].name)}`
+        content: output
     });
-
-    // opinion/relation
-    /*
-    msgs.push({
-        role: "user",
-        content: "what do you think of me?"
-    });
-
-    msgs.push({
-        role: "assistant",
-        content: "*she is taken back by the question* I am married to you, my lord. My opinion of you is very good *A smile draws upon her mouth*."
-    });
-    */
 
     return msgs;
 }

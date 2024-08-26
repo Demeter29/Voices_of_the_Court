@@ -9,8 +9,17 @@ module.exports = {
     ],
     description: `execute when {{playerName}} pays gold to {{aiName}} and {{aiName}} accepts it.`,
     group: "",
-    run: (conv) => {
-        //
+    run: (gameData, runFileManager) => {
+        runFileManager.append(`
+            global_var:talk_second_scope = {
+            add_gold = 50;
+            }
+
+            global_var:talk_first_scope = {
+                        remove_short_term_gold = 50;
+            }
+        `);
+        
     },
     chatMessage: (args) =>{
         return `You paid ${args[0]} gold to {{aiName}}`

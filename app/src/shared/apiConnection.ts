@@ -41,8 +41,21 @@ export class ApiConnection{
             dangerouslyAllowBrowser: true,
         })
 
-        console.log(prompt);
+        //OPENAI DOESNT ALLOW spaces inside message.name so we have to put them inside the Message content.
+        if(this.type = "openai"){
+            for(let i=0;i<prompt.length;i++){
+                 //@ts-ignore
+                 if(prompt[i].name){
+                    //@ts-ignore
+                    prompt[i].content = prompt[i].name + ": "+prompt[i].content;
 
+                    //@ts-ignore
+                    delete prompt[i].name;
+                }
+            }
+        }   
+        console.log(prompt);
+        
         if(this.isChat()){
             let completion = await openai.chat.completions.create({
                 model: this.model,
@@ -66,8 +79,10 @@ export class ApiConnection{
                 // @ts-ignore
                 for await(const chunk of completion){
                     let msgChunk: MessageChunk = chunk.choices[0].delta;
-                    streamRelay!(msgChunk);
-                    response += msgChunk.content;
+                    if(msgChunk.content){
+                        streamRelay!(msgChunk);
+                        response += msgChunk.content;
+                    }   
                 }
                 
             }
@@ -138,15 +153,14 @@ export class ApiConnection{
             prompt = [
                 {
                     role: "user",
-                    content: "say hi"
+                    content: "ping"
                 }
             ]
         }else{
-            prompt = "say hi";
+            prompt = "ping";
         }
 
         return this.complete(prompt, false, {max_tokens: 1}).then( (resp) =>{
-            console.log(resp)
             if(resp){
                 return {success: true};
             }
