@@ -6,7 +6,7 @@ export class RunFileManager{
     path: string;
 
     constructor(userFolderPath: string){
-        this.path = userFolderPath+"\\run\\gpt_kings.txt";
+        this.path = userFolderPath+"\\run\\votc.txt";
 
         this.createRunFolder(userFolderPath);
     }

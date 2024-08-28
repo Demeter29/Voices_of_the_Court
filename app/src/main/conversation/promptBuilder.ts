@@ -109,6 +109,8 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         } 
 
         insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);
+
+        return messages;
     }
 
     const descMessage: Message = {
@@ -170,6 +172,29 @@ export function buildSummarizeChatPrompt(conv: Conversation): Message[]{
     return output;
 }
 
+export function buildResummarizeChatPrompt(conv: Conversation, messagesToSummarize: Message[]): Message[]{
+    let prompt: Message[] = [];
+
+    if(conv.currentSummary){
+        prompt.push({
+            role: "system",
+            content: "Summary of this conversation that happened before the messages:"+conv.currentSummary
+        })
+    }
+    
+
+    prompt.push({
+        role: "system",
+        content: convertMessagesToString(messagesToSummarize, "", "")
+    })
+
+    prompt.push({
+        role: "system",
+        content: parseVariables(conv.config.summarizePrompt, conv.gameData)
+    })
+
+    return prompt;
+}
 
 
 

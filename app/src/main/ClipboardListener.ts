@@ -9,7 +9,7 @@ export class ClipboardListener extends EventEmitter{
     constructor(){
         super();
         let clipboardText = clipboard.readText();
-        if(clipboardText.startsWith('GK:')){
+        if(clipboardText.startsWith('VOTC:')){
             clipboard.writeText('');
             this.previousClipboard = '';
         }
@@ -41,14 +41,14 @@ export class ClipboardListener extends EventEmitter{
         let currentClipboard = clipboard.readText();
         if(this.previousClipboard == currentClipboard) return;
 
-        if(currentClipboard.startsWith('GK:')){
+        if(currentClipboard.startsWith('VOTC:')){
             let command = currentClipboard.split(':')[1];
             switch (command){
                 case "IN":
-                    this.emit('GK:IN');
+                    this.emit('VOTC:IN');
                 break;
                 case "EFFECT_ACCEPTED":
-                    this.emit('GK:EFFECT_ACCEPTED');
+                    this.emit('VOTC:EFFECT_ACCEPTED');
             }
             
             

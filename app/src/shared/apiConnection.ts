@@ -1,26 +1,58 @@
 import { Message, MessageChunk } from "../main/ts/conversation_interfaces";
 import OpenAI from "openai";
+const contextLimits = require("../../public/contextLimits.json");
 
 import tiktoken from "js-tiktoken";
+import { ApiConnectionConfig } from "./Config";
 
 export interface apiConnectionTestResult{
     success: boolean,
     errorMessage?: string,
 }
 
+export interface Parameters{
+    temperature: number,
+	frequency_penalty: number,
+	presence_penalty: number,
+	top_p: number,
+}
+
 export class ApiConnection{
-    type: string;//openrouter, openai, ooba
+    type: string; //openrouter, openai, ooba
     baseUrl: string;
     key: string;
     model: string;
-    forceInstruct: boolean //only used by openrouter
+    forceInstruct: boolean ;//only used by openrouter
+    parameters: Parameters;
+    context: number;
+    
 
-    constructor(parameters: any){
-        this.type = parameters.type;
-        this.baseUrl = parameters.baseUrl;
-        this.key = parameters.key;
-        this.model = parameters.model;
-        this.forceInstruct = parameters.forceInstruct;
+    constructor(connectionConfig: any){
+        this.type = connectionConfig.type;
+        this.baseUrl = connectionConfig.baseUrl;
+        this.key = connectionConfig.key;
+        this.model = connectionConfig.model;
+        this.forceInstruct = connectionConfig.forceInstruct;
+        this.parameters = connectionConfig.parameters;
+
+        let modelName = this.model
+        console.log("==HERE");
+        console.log(connectionConfig)
+        if(modelName && modelName.includes("/")){
+            modelName = modelName.split("/").pop()!;
+        }
+
+        if(connectionConfig.overwriteContext){
+            console.log("Overwriting context size!");
+            this.context = connectionConfig.customContext;
+        }
+        else if(contextLimits[modelName]){
+            this.context = contextLimits[modelName]
+        }
+        else{
+            console.log(`Warning: couldn't find ${this.model}'s context limit. context overwrite value will be used!`);
+            this.context = connectionConfig.customContext;
+        }
     }
 
     isChat(): boolean {
@@ -42,7 +74,8 @@ export class ApiConnection{
         })
 
         //OPENAI DOESNT ALLOW spaces inside message.name so we have to put them inside the Message content.
-        if(this.type = "openai"){
+        if(this.type == "openai"){
+            console.log("akurva")
             for(let i=0;i<prompt.length;i++){
                  //@ts-ignore
                  if(prompt[i].name){
@@ -62,6 +95,7 @@ export class ApiConnection{
                 //@ts-ignore
                 messages: prompt,
                 stream: stream,
+                ...this.parameters,
                 ...otherArgs
             })
 
@@ -103,6 +137,7 @@ export class ApiConnection{
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,
+                    ...this.parameters,
                     ...otherArgs
                 })
             }
@@ -111,6 +146,7 @@ export class ApiConnection{
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,
+                    ...this.parameters,
                     ...otherArgs
                 });
             }

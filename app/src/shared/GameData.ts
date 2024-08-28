@@ -98,9 +98,9 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
            continue;
         }
 
-        if(line.includes("GK:IN")){
+        if(line.includes("VOTC:IN")){
 
-            //0: GK:IN, 1: dataType, 3: rootID 4...: data
+            //0: VOTC:IN, 1: dataType, 3: rootID 4...: data
             let data = line.split("/;/")
 
             const dataType = data[1];

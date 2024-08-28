@@ -93,7 +93,7 @@ app.on('ready',  async () => {
 
 let conversation: Conversation;
 
-clipboardListener.on('GK:IN', async () =>{
+clipboardListener.on('VOTC:IN', async () =>{
     chatWindow.show();
     chatWindow.window.webContents.send('chat-show');
     try{ 
@@ -102,7 +102,7 @@ clipboardListener.on('GK:IN', async () =>{
         chatWindow.window.webContents.send('chat-start', conversation.gameData);
         
     }catch(err){
-        console.log("==GK:IN ERROR==");
+        console.log("==VOTC:IN ERROR==");
         console.log(err);
 
         if(chatWindow.isShown){
@@ -111,7 +111,7 @@ clipboardListener.on('GK:IN', async () =>{
     }
 })
 
-clipboardListener.on('GK:EFFECT_ACCEPTED', async () =>{
+clipboardListener.on('VOTC:EFFECT_ACCEPTED', async () =>{
     if(conversation){
         conversation.runFileManager.clear();
     }

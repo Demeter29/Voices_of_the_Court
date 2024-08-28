@@ -4,34 +4,56 @@
 	"maxTokens": 500,
 	"context": 4000,
 	"maxMemoryTokens": 600,
-	"temperature": 1,
-	"frequency_penalty": 0.0,
-	"presence_penalty": 0.0,
-	"top_p": 1,
+	"percentOfContextToSummarize": 20,
 	"selectedDescScript": "pList.js",
 	"selectedExMsgScript": "aliChat.js",
 	"inputSequence": "[INST]",
     "outputSequence": "[/INST]",
-	"textGenerationApiConnection": {
+	"textGenerationApiConnectionConfig": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": false
+		"forceInstruct": false,
+		"overwriteContext": false,
+		"customContext": 4096,
+		"parameters": {
+			"temperature": 1,
+			"frequency_penalty": 0.0,
+			"presence_penalty": 0.0,
+			"top_p": 1
+		}
+		
 	},
-	"summarizationApiConnection": {
+	"summarizationApiConnectionConfig": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": false
+		"forceInstruct": false,
+		"overwriteContext": false,
+		"customContext": 4096,
+		"parameters": {
+			"temperature": 0.2,
+			"frequency_penalty": 0.0,
+			"presence_penalty": 0.0,
+			"top_p": 1
+		}
 	},
-	"interactionApiConnection": {
+	"interactionApiConnectionConfig": {
 		"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": false
+		"forceInstruct": false,
+		"overwriteContext": false,
+		"customContext": 4096,
+		"parameters": {
+			"temperature": 0.2,
+			"frequency_penalty": 0.0,
+			"presence_penalty": 0.0,
+			"top_p": 1
+		}
 	},
 	"summarizationUseTextGenApi": true,
 	"interactionUseTextGenApi": true,

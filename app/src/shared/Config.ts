@@ -1,62 +1,16 @@
 import fs from 'fs';
-import { ApiConnection } from './apiConnection';
-/*
-interface openaiParameters {
-    max_tokens: number,
-    temperature: number,
-    frequency_penalty: number,
-    presence_penalty: number,
-    top_p: number
+import { Parameters, ApiConnection } from './apiConnection';
+
+export interface ApiConnectionConfig{
+    type: string; //openrouter, openai, ooba
+    baseUrl: string;
+    key: string;
+    model: string;
+    forceInstruct: boolean ;//only used by openrouter
+    overwriteContext: boolean;
+    customContext: number,
+    parameters: Parameters;
 }
-
-interface openRouterParameters {
-    max_tokens: number,
-    temperature: number;
-    frequency_penalty: number;
-    presence_penalty: number;
-    repetition_penalty: number;
-    top_k: number;
-    top_p: number;
-    min_p: number,
-    min_k: number;
-
-}
-
-//docs: https://github.com/oobabooga/text-generation-webui/wiki/03-%E2%80%90-Parameters-Tab
-interface oobaParameters {
-    max_new_tokens: number;
-    temperature: number,
-    top_p: number,
-    //min_p
-    top_k: number,
-    //repetition_penalty
-    //presence_penalty
-    //frequency_penalty
-    repetition_penalty_range: number,
-    typical_p: number,
-    tfs: number,
-    top_a: number,
-    epsilon_cutoff: number,
-    eta_cutoff: number,
-    //guidance_scale
-    //Negative prompt
-    penalty_alpha: number,
-    mirostat_mode: number,
-    mirostat_tau: number,
-    mirostat_eta: number,
-    //dynamic_temperature
-    //temperature_last
-    do_sample: boolean,
-    //Seed
-    encoder_repetition_penalty: number,
-    no_repeat_ngram_size: number,
-    min_length: number,
-    num_beams: number,
-    length_penalty: number,
-    early_stop_ping: boolean,
-}
-
-*/
 
 export class Config{
     userFolderPath: string;
@@ -65,6 +19,7 @@ export class Config{
     context: number;
     maxTokens: number;
     maxMemoryTokens: number;
+    percentOfContextToSummarize: number;
 
     temperature: number;
     frequency_penalty: number;
@@ -77,9 +32,9 @@ export class Config{
     inputSequence: string;
     outputSequence: string;
 
-    textGenerationApiConnection: ApiConnection;
-    summarizationApiConnection: ApiConnection;
-    interactionApiConnection: ApiConnection;
+    textGenerationApiConnectionConfig: ApiConnectionConfig;
+    summarizationApiConnectionConfig: ApiConnectionConfig;
+    interactionApiConnectionConfig: ApiConnectionConfig;
 
     summarizationUseTextGenApi: boolean;
     interactionUseTextGenApi: boolean;
@@ -110,6 +65,7 @@ export class Config{
         this.context = obj.context;
         this.maxTokens = obj.maxTokens;
         this.maxMemoryTokens = obj.maxMemoryTokens;
+        this.percentOfContextToSummarize = obj.percentOfContextToSummarize;
 
         this.temperature = obj.temperature;
         this.frequency_penalty = obj.frequency_penalty;
@@ -122,9 +78,9 @@ export class Config{
         this.inputSequence = obj.inputSequence;
         this.outputSequence = obj.outputSequence;
 
-        this.textGenerationApiConnection = new ApiConnection(obj.textGenerationApiConnection);
-        this.summarizationApiConnection = new ApiConnection(obj.summarizationApiConnection);
-        this.interactionApiConnection = new ApiConnection(obj.interactionApiConnection);
+        this.textGenerationApiConnectionConfig = obj.textGenerationApiConnectionConfig;
+        this.summarizationApiConnectionConfig = obj.summarizationApiConnectionConfig;
+        this.interactionApiConnectionConfig = obj.interactionApiConnectionConfig;
 
         this.summarizationUseTextGenApi = obj.summarizationUseTextGenApi;
         this.interactionUseTextGenApi = obj.interactionUseTextGenApi;
@@ -154,13 +110,14 @@ export class Config{
     }
 
     toSafeConfig(): Config{
+        //pass by value
         let output: Config = JSON.parse(JSON.stringify(this));
-        output.textGenerationApiConnection.key= "<hidden>";
-        output.interactionApiConnection.key = "<hidden>";
-        output.summarizationApiConnection.key = "<hidden>";
-        output.textGenerationApiConnection.baseUrl= "<hidden>";
-        output.interactionApiConnection.baseUrl = "<hidden>";
-        output.summarizationApiConnection.baseUrl = "<hidden>";
+        output.textGenerationApiConnectionConfig.key= "<hidden>";
+        output.interactionApiConnectionConfig.key = "<hidden>";
+        output.summarizationApiConnectionConfig.key = "<hidden>";
+        output.textGenerationApiConnectionConfig.baseUrl= "<hidden>";
+        output.interactionApiConnectionConfig.baseUrl = "<hidden>";
+        output.summarizationApiConnectionConfig.baseUrl = "<hidden>";
 
         return output;
     }
