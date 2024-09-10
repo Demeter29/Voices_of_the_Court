@@ -168,6 +168,16 @@ ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
     
 })
 
+ipcMain.on('config-change-nested', (e, outerConfID: string, innerConfID: string, newValue: any) =>{
+    //@ts-ignore
+    config[outerConfID][innerConfID] = newValue;
+    config.export();
+    if(chatWindow.isShown){
+        conversation.updateConfig(config);
+    }
+    
+})
+
 ipcMain.on('chat-stop', () =>{
     chatWindow.hide();
 

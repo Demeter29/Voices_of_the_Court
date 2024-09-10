@@ -264,7 +264,12 @@ class ApiSelector extends HTMLElement{
             forceInstruct: this.openrouterInstructModeCheckbox.checked
         }
 
-        ipcRenderer.send('config-change', this.confID, newConf);
+        //ipcRenderer.send('config-change', this.confID, newConf);
+        ipcRenderer.send('config-change-nested', this.confID, "type", newConf.type);
+        ipcRenderer.send('config-change-nested', this.confID, "baseUrl", newConf.baseUrl);
+        ipcRenderer.send('config-change-nested', this.confID, "key", newConf.key);
+        ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
+        ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
         this.config[this.confID] = newConf;
     }
@@ -280,7 +285,12 @@ class ApiSelector extends HTMLElement{
             forceInstruct: this.openrouterInstructModeCheckbox.checked
         }
 
-        ipcRenderer.send('config-change', this.confID, newConf);
+        //ipcRenderer.send('config-change', this.confID, newConf);
+        ipcRenderer.send('config-change-nested', this.confID, "type", newConf.type);
+        ipcRenderer.send('config-change-nested', this.confID, "baseUrl", newConf.baseUrl);
+        ipcRenderer.send('config-change-nested', this.confID, "key", newConf.key);
+        ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
+        ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
         this.config[this.confID] = newConf;
     }
@@ -295,7 +305,12 @@ class ApiSelector extends HTMLElement{
             model: this.openrouterModelInput.value,
             forceInstruct: this.openrouterInstructModeCheckbox.checked
         }
-        ipcRenderer.send('config-change', this.confID, newConf);
+        //ipcRenderer.send('config-change', this.confID, newConf);
+        ipcRenderer.send('config-change-nested', this.confID, "type", newConf.type);
+        ipcRenderer.send('config-change-nested', this.confID, "baseUrl", newConf.baseUrl);
+        ipcRenderer.send('config-change-nested', this.confID, "key", newConf.key);
+        ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
+        ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
         this.config[this.confID] = newConf;
     }   

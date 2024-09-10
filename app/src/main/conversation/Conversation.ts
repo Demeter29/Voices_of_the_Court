@@ -11,6 +11,7 @@ import path from 'path';
 
 import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Interaction, InteractionResponse} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
+const contextLimits = require("../../../public/contextLimits.json");
 
 export class Conversation{
     isOpen: boolean;
@@ -26,6 +27,7 @@ export class Conversation{
     exampleMessages: Message[];
     summaries: Summary[];
     currentSummary: string;
+    contextSize: number;
     
     constructor(gameData: GameData, config: Config){
         this.isOpen = true;
@@ -60,6 +62,7 @@ export class Conversation{
         this.description = "";
         this.interactions = [];
         this.exampleMessages = [],
+        this.contextSize = 0;
         
         this.loadConfig();
     }
@@ -75,8 +78,8 @@ export class Conversation{
         let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
         console.log(`current tokens: ${currentTokens}`);
 
-        if(currentTokens > this.textGenApiConnection.context){
-            console.log(`Context limit hit, resummarizing conversation! limit:${this.textGenApiConnection.context}`);
+        if(currentTokens > this.contextSize){
+            console.log(`Context limit hit, resummarizing conversation! limit:${this.contextSize}`);
             await this.resummarize();
         }
 
@@ -135,8 +138,8 @@ export class Conversation{
     }
 
     async resummarize(){
-        let tokensToSummarize = this.textGenApiConnection.context * (this.config.percentOfContextToSummarize / 100)
-        console.log(`context: ${this.textGenApiConnection.context} percent to summarize: ${this.config.percentOfContextToSummarize} tokens to summarize: ${tokensToSummarize}`)
+        let tokensToSummarize = this.contextSize * (this.config.percentOfContextToSummarize / 100)
+        console.log(`context: ${this.contextSize} percent to summarize: ${this.config.percentOfContextToSummarize} tokens to summarize: ${tokensToSummarize}`)
             let tokenSum = 0;
             let messagesToSummarize: Message[] = [];
 
@@ -218,6 +221,25 @@ export class Conversation{
         }
         else{
             this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig);
+        }
+
+        //get context size
+        let modelName = this.textGenApiConnection.model
+        console.log("==HERE");
+        if(modelName && modelName.includes("/")){
+            modelName = modelName.split("/").pop()!;
+        }
+
+        if(this.config.overwriteContext){
+            console.log("Overwriting context size!");
+            this.contextSize = this.config.customContext;
+        }
+        else if(contextLimits[modelName]){
+            this.contextSize = contextLimits[modelName]
+        }
+        else{
+            console.log(`Warning: couldn't find ${this.textGenApiConnection.model}'s context limit. context overwrite value will be used!`);
+            this.contextSize = this.config.customContext;
         }
     }
 

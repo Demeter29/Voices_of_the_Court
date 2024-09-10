@@ -125,5 +125,6 @@
     "llama-3-70b-instruct": 8192,
     "soliloquy-l3": 24576,
     "llama-3-8b-instruct:nitro": 8192,
-    "llama-3-70b-instruct:nitro": 8192
+    "llama-3-70b-instruct:nitro": 8192,
+    "hermes-3-llama-3.1-405b": 131072
 }

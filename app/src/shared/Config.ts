@@ -1,14 +1,15 @@
 import fs from 'fs';
 import { Parameters, ApiConnection } from './apiConnection';
 
+
+
 export interface ApiConnectionConfig{
     type: string; //openrouter, openai, ooba
     baseUrl: string;
     key: string;
     model: string;
     forceInstruct: boolean ;//only used by openrouter
-    overwriteContext: boolean;
-    customContext: number,
+    
     parameters: Parameters;
 }
 
@@ -20,6 +21,9 @@ export class Config{
     maxTokens: number;
     maxMemoryTokens: number;
     percentOfContextToSummarize: number;
+
+    overwriteContext: boolean;
+    customContext: number;
 
     temperature: number;
     frequency_penalty: number;
@@ -66,6 +70,9 @@ export class Config{
         this.maxTokens = obj.maxTokens;
         this.maxMemoryTokens = obj.maxMemoryTokens;
         this.percentOfContextToSummarize = obj.percentOfContextToSummarize;
+
+        this.overwriteContext = obj.overwriteContext;
+        this.customContext =  obj.customContext,
 
         this.temperature = obj.temperature;
         this.frequency_penalty = obj.frequency_penalty;

@@ -3,6 +3,8 @@
 	"stream": false,
 	"maxTokens": 500,
 	"context": 4000,
+	"overwriteContext": false,
+	"customContext": 4096,
 	"maxMemoryTokens": 600,
 	"percentOfContextToSummarize": 20,
 	"selectedDescScript": "pList.js",
@@ -14,9 +16,7 @@
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
-		"forceInstruct": false,
-		"overwriteContext": false,
-		"customContext": 4096,
+		"forceInstruct": false,	
 		"parameters": {
 			"temperature": 1,
 			"frequency_penalty": 0.0,
@@ -31,8 +31,6 @@
 		"key": "",
 		"model": "",
 		"forceInstruct": false,
-		"overwriteContext": false,
-		"customContext": 4096,
 		"parameters": {
 			"temperature": 0.2,
 			"frequency_penalty": 0.0,
@@ -46,8 +44,6 @@
 		"key": "",
 		"model": "",
 		"forceInstruct": false,
-		"overwriteContext": false,
-		"customContext": 4096,
 		"parameters": {
 			"temperature": 0.2,
 			"frequency_penalty": 0.0,
