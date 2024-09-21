@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer } from "electron";
+import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater } from "electron";
 import {ConfigWindow} from './windows/ConfigWindow.js';
 import {ChatWindow} from './windows/ChatWindow.js';
 import { Config } from '../shared/Config.js';
@@ -6,9 +6,9 @@ import { ClipboardListener } from "./ClipboardListener.js";
 import { Conversation } from "./conversation/Conversation.js";
 import { GameData, parseLog } from "../shared/GameData.js";
 import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
-
-
-const fs = require('fs');
+import path from 'path';
+import { existsSync } from "original-fs";
+import fs from 'fs';
 const shell = require('electron').shell;
 
 if (require('electron-squirrel-startup')) {
@@ -43,6 +43,18 @@ console.log = function(d) { //
     var currentDate = `[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] `;
     log_file.write(currentDate + util.format(util.inspect(d, {depth: Infinity})) + '\n');
 };
+
+//check config files
+
+let userDataPath = path.join(app.getPath('userData'), 'votc-data');
+
+if(!existsSync(userDataPath)){
+    fs.mkdirSync(userDataPath);
+
+    
+}
+
+require('update-electron-app')();
 
 
 

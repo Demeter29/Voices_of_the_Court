@@ -18,4 +18,4 @@ https://discord.gg/yYtS2zFdKw
 
 # Installing
 
-The project is still in development, so there is no installer yet, 
+The project is still in development, so there is no installer yet.

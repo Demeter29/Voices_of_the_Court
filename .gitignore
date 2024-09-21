@@ -2,6 +2,6 @@
 /dist
 /out
 /configs/app.config.json
-/conversations
+/conversation_summaries
 /configs/config.json
 /debug.log
