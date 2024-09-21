@@ -73,19 +73,10 @@
       </div>
       <div class="column">
 
-        <h2>parameters</h2>
+        <h2>Text-generation parameters</h2>
 
-        <div class="border">
 
-          <config-slider confID="temperature" label="Temperature"  min="0" max="2" step="0.01" default="1"></config-slider>
-
-          <config-slider confID="frequency_penalty" label="Frequency Penalty"  min="-2" max="2" step="0.01" default="0"></config-slider>
-
-          <config-slider confID="presence_penalty" label="Presence Penalty"  min="-2" max="2" step="0.01" default="0"></config-slider>
-  
-          <config-slider confID="top_p" label="top P"  min="0" max="1" step="0.01" default="1"></config-slider>
-
-        </div>
+        <parameters-box confID="textGenerationApiConnectionConfig" tempDefault="0.7" freqPenDefault ="0" presPenDefault="0" topPDefault="1"></parameters-box>
 
        
 
@@ -102,6 +93,7 @@
   <script>require("../../dist/configWindow/components/ConfigCheckbox.js")</script>
   <script>require("../../dist/configWindow/components/ConfigNumber.js")</script>
   <script>require("../../dist/configWindow/components/ConfigSlider.js")</script>
+    <script>require("../../dist/configWindow/components/ParametersBox.js")</script>
   <script>require("../../dist/configWindow/components/tooltip.js")</script>
   <script>require("../../dist/configWindow/modelSettingsRenderer.js")</script>
   

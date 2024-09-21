@@ -76,11 +76,9 @@ class ConfigSlider extends HTMLElement{
         })
 
         this.slider.addEventListener("change", (e: any) => {
-            console.log(confID)
 
             this.number.value = this.slider.value;
 
-            ipcRenderer.send('config-change', confID, parseFloat(this.number.value));
         });
 
         this.number.addEventListener("change", (e: any) => {
@@ -88,15 +86,17 @@ class ConfigSlider extends HTMLElement{
 
             this.slider.value = this.number.value;
 
-            ipcRenderer.send('config-change', confID, parseFloat(this.number.value));
         });
 
         this.button.addEventListener("click", (e: any) => {
-            this.number.value = this.default;
-            this.slider.value = this.default;
+            this.changeValue(this.default)
 
-            ipcRenderer.send('config-change', confID, this.default);
         })
+    }
+
+    changeValue(newValue: number){
+        this.slider.value = newValue;
+        this.number.value = newValue;
     }
 }
 

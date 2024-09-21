@@ -54,9 +54,6 @@ if(!existsSync(userDataPath)){
     
 }
 
-require('update-electron-app')();
-
-
 
 if(process.argv[2] == '--dev'){
     console.log("dev mode")
@@ -181,6 +178,9 @@ ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
 })
 
 ipcMain.on('config-change-nested', (e, outerConfID: string, innerConfID: string, newValue: any) =>{
+    
+    console.log(newValue);
+
     //@ts-ignore
     config[outerConfID][innerConfID] = newValue;
     config.export();
