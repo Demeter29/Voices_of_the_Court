@@ -1,7 +1,7 @@
 {
   "name": "voices_of_the_court",
-  "productName": "Voices of the Court",
-  "version": "0.3.0",
+  "productName": "Voices_of_the_Court",
+  "version": "0.2.5",
   "description": "A chatbot mod for Crusader Kings 3",
   "main": "dist/main/main.js",
   "build": {

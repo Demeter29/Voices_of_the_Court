@@ -53,7 +53,7 @@ export function buildTextPrompt(conv: Conversation): string {
 */
 
 export function buildChatPrompt(conv: Conversation): Message[]{
-
+    console.log("hey")
     let chatPrompt: Message[]  = [];
 
     chatPrompt.push({
@@ -109,8 +109,7 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         } 
 
         insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);
-
-        return messages;
+        
     }
 
     const descMessage: Message = {

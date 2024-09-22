@@ -10,13 +10,17 @@ export async function checkUserData(){
 
     if(!existsSync(userPath)){
         console.log('userdata votc folder not found!')
-        fs.cpSync(path.join(process.cwd(), "default_userdata"), userPath, {recursive: true});
+        fs.cpSync(path.join(__dirname, "..", "..", "default_userdata"), userPath, {recursive: true});
         console.log('userdata votc default folder created!');
 
         return;
     }
 
     //folder already exist:
+
+    fs.cp(path.join(__dirname, "..", "..", "default_userdata", 'configs', 'default_config.json'), path.join(userPath, 'configs', 'default_config.json'), (err) => {
+        if(err) throw err;
+    });
 
     //validate config
     const configPath = path.join(userPath, "configs", "config.json");
@@ -40,7 +44,7 @@ export async function checkUserData(){
     //validate conv summaries
 
     //validate script files
-    const defaultScriptsPath = path.join(process.cwd(), "default_userdata", "scripts");
+    const defaultScriptsPath = path.join(__dirname, "..", "..", "default_userdata", "scripts");
     const userDataScriptsPath= path.join(userPath, "scripts");
 
     fs.cp(path.join(defaultScriptsPath, 'actions', 'standard'), path.join(userDataScriptsPath, 'actions', 'standard'), {recursive: true}, (err) => {

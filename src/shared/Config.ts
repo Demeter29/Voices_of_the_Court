@@ -19,7 +19,6 @@ export class Config{
     userFolderPath: string;
 
     stream: boolean;
-    context: number;
     maxTokens: number;
     maxMemoryTokens: number;
     percentOfContextToSummarize: number;
@@ -60,7 +59,6 @@ export class Config{
        
         this.userFolderPath = obj.userFolderPath;
         this.stream = obj.stream;
-        this.context = obj.context;
         this.maxTokens = obj.maxTokens;
         this.maxMemoryTokens = obj.maxMemoryTokens;
         this.percentOfContextToSummarize = obj.percentOfContextToSummarize;

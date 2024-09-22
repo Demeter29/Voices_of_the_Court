@@ -51,7 +51,7 @@ if(app.isPackaged){
     const feed = `${server}/Demeter29/GPT_Kings/${process.platform}-${process.arch}/${app.getVersion()}`
     //@ts-ignore
     autoUpdater.setFeedURL(feed);
-
+    console.log("searching")
     autoUpdater.checkForUpdates();
     
     setInterval(() => {
@@ -59,6 +59,7 @@ if(app.isPackaged){
       }, 5 * 60 * 1000)    
 
       autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+        console.log("gotca")
         const dialogOpts = {
           type: 'info',
           buttons: ['Restart', 'Later'],

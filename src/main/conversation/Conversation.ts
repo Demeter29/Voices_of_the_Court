@@ -196,17 +196,18 @@ export class Conversation{
         this.description = "";
         this.exampleMessages = [];
 
-        const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description');
+        const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description', this.config.selectedDescScript);
+        console.log(require(path.join(descriptionPath)))
         try{
-            delete require.cache[require.resolve(path.join(descriptionPath, this.config.selectedDescScript))];
-            this.description = require(path.join(descriptionPath, this.config.selectedDescScript))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
+            delete require.cache[require.resolve(path.join(descriptionPath))];
+            this.description = require(path.join(descriptionPath))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
         }catch(err){
             throw new Error("description script error, your used description script file is not valid! error message:\n"+err);
         }
-        const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages');
+        const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages', this.config.selectedExMsgScript);
         try{
-            delete require.cache[require.resolve(path.join(exampleMessagesPath, this.config.selectedExMsgScript))];
-            this.exampleMessages= require(path.join(exampleMessagesPath, this.config.selectedExMsgScript))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
+            delete require.cache[require.resolve(path.join(exampleMessagesPath))];
+            this.exampleMessages= require(path.join(exampleMessagesPath))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
         }catch(err){
             throw new Error("example messages script error, your used example messages file is not valid! error message:\n"+err);
         }
