@@ -1,8 +1,8 @@
-[3:22:46] 'product mode'
-[3:22:46] '["userFolderPath","stream","context","maxTokens","maxMemoryTokens","percentOfContextToSummarize","overwriteContext","customContext","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
-[3:22:46] '["userFolderPath","stream","maxTokens","context","overwriteContext","customContext","maxMemoryTokens","percentOfContextToSummarize","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
-[3:22:46] "userdata config file didn't match default config file. deleting config file"
-[3:22:46] 'App ready!'
-[3:22:46] 'Config window opened!'
-[3:22:46] 'Chat window opened!'
-[3:22:46] 'nopeee'
+[4:23:16] 'product mode'
+[4:23:16] '["userFolderPath","stream","context","maxTokens","maxMemoryTokens","percentOfContextToSummarize","overwriteContext","customContext","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
+[4:23:16] '["userFolderPath","stream","maxTokens","context","overwriteContext","customContext","maxMemoryTokens","percentOfContextToSummarize","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
+[4:23:16] "userdata config file didn't match default config file. deleting config file"
+[4:23:16] 'App ready!'
+[4:23:17] 'Config window opened!'
+[4:23:17] 'Chat window opened!'
+[4:23:17] 'nopeee'

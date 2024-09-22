@@ -45,6 +45,36 @@ console.log = function(d) { //
     log_file.write(currentDate + util.format(util.inspect(d, {depth: Infinity})) + '\n');
 };
 
+//updating
+if(app.isPackaged){
+    const server = 'https://update.electronjs.org';
+    const feed = `${server}/Demeter29/GPT_Kings/${process.platform}-${process.arch}/${app.getVersion()}`
+    //@ts-ignore
+    autoUpdater.setFeedURL(feed);
+
+    autoUpdater.checkForUpdates();
+    
+    setInterval(() => {
+        autoUpdater.checkForUpdates()
+      }, 5 * 60 * 1000)    
+
+      autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+        const dialogOpts = {
+          type: 'info',
+          buttons: ['Restart', 'Later'],
+          title: 'Application Update',
+          message: process.platform === 'win32' ? releaseNotes : releaseName,
+          detail:
+            'A new version has been downloaded. Restart the application to apply the updates.'
+        }
+      
+        dialog.showMessageBox(dialogOpts).then((returnValue) => {
+          if (returnValue.response === 0) autoUpdater.quitAndInstall()
+        })
+    })
+}
+
+
 //check config files
 
 
