@@ -61,10 +61,10 @@ class ConfigSlider extends HTMLElement{
         return ["confID", "label", "min", "max", "step", "default"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
+        let config = await ipcRenderer.invoke('get-config');
 
         //@ts-ignore
         this.slider.value = config[confID];

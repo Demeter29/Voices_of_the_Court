@@ -50,10 +50,10 @@ class ConfigTextarea extends HTMLElement{
         return ["confID", "rows", "cols", "placeholder"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
+        let config = await ipcRenderer.invoke('get-config');
 
         //@ts-ignore
         this.textarea.value = config[confID];

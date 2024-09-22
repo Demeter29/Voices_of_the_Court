@@ -1,3 +1,4 @@
+import { app } from 'electron';
 import { GameData } from '../../shared/GameData.js';
 import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
@@ -12,6 +13,8 @@ import path from 'path';
 import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Interaction, InteractionResponse} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
 const contextLimits = require("../../../public/contextLimits.json");
+
+const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
 export class Conversation{
     isOpen: boolean;
@@ -36,20 +39,20 @@ export class Conversation{
         this.currentSummary = "";
 
         this.summaries = [];
-        if (!fs.existsSync(process.cwd()+`/conversation_summaries`)){
-            fs.mkdirSync(process.cwd()+`/conversation_summaries`);
+        if (!fs.existsSync(path.join(userDataPath, 'conversation_summaries'))){
+            fs.mkdirSync(path.join(userDataPath, 'conversation_summaries'));
         }
 
-        if (!fs.existsSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}`)){
-            fs.mkdirSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}`);
+        if (!fs.existsSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString()))){
+            fs.mkdirSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString()));
         }
         
-        if(fs.existsSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`)){
-            this.summaries = JSON.parse(fs.readFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, 'utf8'));
+        if(fs.existsSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString(), this.gameData.aiID.toString()+".json"))){
+            this.summaries = JSON.parse(fs.readFileSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString(), this.gameData.aiID.toString()+".json"), 'utf8'));
         }
         else{
             this.summaries = [];
-            fs.writeFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
+            fs.writeFileSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString(), this.gameData.aiID.toString()+".json"), JSON.stringify(this.summaries, null, '\t'));
         }
 
         this.config = config;
@@ -175,7 +178,7 @@ export class Conversation{
 
         this.summaries.unshift(summary)
 
-        fs.writeFileSync(`${process.cwd()}/conversation_summaries/${this.gameData.playerID}/${this.gameData.aiID}.json`, JSON.stringify(this.summaries, null, '\t'));
+        fs.writeFileSync(path.join(userDataPath, 'conversation_summaries', this.gameData.playerID.toString(), this.gameData.aiID.toString()+".json"), JSON.stringify(this.summaries, null, '\t'));
     }
 
     updateConfig(config: Config){
@@ -192,15 +195,18 @@ export class Conversation{
 
         this.description = "";
         this.exampleMessages = [];
+
+        const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description');
         try{
-            delete require.cache[require.resolve(process.cwd()+`/custom/scripts/description/${this.config.selectedDescScript}`)];
-            this.description = require(process.cwd()+`/custom/scripts/description/${this.config.selectedDescScript}`)(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
+            delete require.cache[require.resolve(path.join(descriptionPath, this.config.selectedDescScript))];
+            this.description = require(path.join(descriptionPath, this.config.selectedDescScript))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
         }catch(err){
             throw new Error("description script error, your used description script file is not valid! error message:\n"+err);
         }
+        const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages');
         try{
-            delete require.cache[require.resolve(process.cwd()+`/custom/scripts/example messages/${this.config.selectedExMsgScript}`)];
-            this.exampleMessages= require(process.cwd()+`/custom/scripts/example messages/${this.config.selectedExMsgScript}`)(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
+            delete require.cache[require.resolve(path.join(exampleMessagesPath, this.config.selectedExMsgScript))];
+            this.exampleMessages= require(path.join(exampleMessagesPath, this.config.selectedExMsgScript))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
         }catch(err){
             throw new Error("example messages script error, your used example messages file is not valid! error message:\n"+err);
         }
@@ -246,16 +252,28 @@ export class Conversation{
     async loadInteractions(){
         this.interactions = [];
 
-        let actionFiles = fs.readdirSync(`${process.cwd()}/custom/actions/`).filter(file => path.extname(file) === ".js");
+        const actionsPath = path.join(userDataPath, 'scripts', 'actions');
+        let standardActionFiles = fs.readdirSync(path.join(actionsPath, 'standard')).filter(file => path.extname(file) === ".js");
+        let customActionFiles = fs.readdirSync(path.join(actionsPath, 'custom')).filter(file => path.extname(file) === ".js");
 
-        for(const file of actionFiles) {
+        for(const file of standardActionFiles) {
 
             if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
                 continue;
             }
     
-            this.interactions.push(require(`${process.cwd()}/custom/actions/${file}`));
-            console.log(`loaded interaction: `+file)
+            this.interactions.push(require(path.join(actionsPath, 'standard', file)));
+            console.log(`loaded standard interaction: `+file)
+        }
+
+        for(const file of customActionFiles) {
+
+            if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
+                continue;
+            }
+    
+            this.interactions.push(require(path.join(actionsPath, 'custom', file)));
+            console.log(`loaded custom interaction: `+file)
         }
     }
 

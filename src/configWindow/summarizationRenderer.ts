@@ -12,12 +12,22 @@ let apiSelector: HTMLElement = document.querySelector("#api-selector")!;
 
 
 //init
-toggleApiSelector();
 
-useConnectionAPI.addEventListener('change', () =>{
-    
+init();
+
+async function init(){
+    let config = await ipcRenderer.invoke('get-config');
+
     toggleApiSelector();
-})
+
+    useConnectionAPI.addEventListener('change', () =>{
+        
+        toggleApiSelector();
+    })
+}
+
+
+
 
 function toggleApiSelector(){
     //@ts-ignore

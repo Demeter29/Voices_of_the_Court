@@ -16,20 +16,46 @@ let interactionsDiv: HTMLDivElement = document.querySelector("#interaction-group
 
 let refreshInteractionsButton: HTMLButtonElement = document.querySelector("#refresh-interactions")!;
 
+let config;
+let disabledInteractions:string[];
+let interactionsPath: string;
 
-//init
-toggleApiSelector();
-toggleInteractions();
+init();
 
-enableInteractions.addEventListener('change', () =>{
+async function init(){
+    config = await ipcRenderer.invoke('get-config');
+
     
-    toggleInteractions();
-})
+     disabledInteractions= config!.disabledInteractions;
 
-useConnectionAPI.addEventListener('change', () =>{
+    loadInteractions();
+
+    refreshInteractionsButton.addEventListener('click', ()=>{
+        loadInteractions();
+    })
+
+    let userDataPath = await ipcRenderer.invoke('get-userdata-path');
     
+    interactionsPath = path.join(userDataPath, 'scripts', 'actions');
+
+
+        //init
     toggleApiSelector();
-})
+    toggleInteractions();
+
+    enableInteractions.addEventListener('change', () =>{
+        
+        toggleInteractions();
+    })
+
+    useConnectionAPI.addEventListener('change', () =>{
+        
+        toggleApiSelector();
+    })
+
+}
+
+
 
 
 function toggleApiSelector(){
@@ -63,37 +89,23 @@ function toggleInteractions(){
 
 
 
-let config = new Config();
 
-let disabledInteractions = config.disabledInteractions;
-
-loadInteractions();
-
-refreshInteractionsButton.addEventListener('click', ()=>{
-    loadInteractions();
-})
-
-let interactionsPath: string;
-if(fs.existsSync(__dirname+'/../../custom/actions')){
-    interactionsPath = __dirname+'/../../custom/actions';
-}else{
-    interactionsPath = __dirname+'\\..\\..\\..\\..\\custom\\actions';
-};
 
 async function loadInteractions(){
 
     interactionsDiv.replaceChildren();
 
     await sleep(250)
-    let fileNames = fs.readdirSync(interactionsPath).filter(file => path.extname(file) === '.js'); 
+    let standardFileNames = fs.readdirSync(path.join(interactionsPath, 'standard')).filter(file => path.extname(file) === '.js'); 
+    let customFileNames = fs.readdirSync(path.join(interactionsPath, 'custom')).filter(file => path.extname(file) === '.js'); 
     
 
     
 
-    for(const fileName of fileNames){
+    for(const fileName of standardFileNames){
 
         
-        let file  = require(`${interactionsPath}/${fileName}`);
+        let file  = require(path.join(interactionsPath, 'standard', fileName));
         
         let element = document.createElement("div");
 
@@ -115,13 +127,45 @@ async function loadInteractions(){
                 }
             }
             else{
+                //@ts-ignore
                 disabledInteractions = disabledInteractions.filter(e => e !== file.signature);
             }
             console.log(disabledInteractions)
             ipcRenderer.send('config-change', "disabledInteractions", disabledInteractions);
-        });
+        });     
+    }
+
+    for(const fileName of customFileNames){
+
         
+        let file  = require(path.join(interactionsPath, 'custom', fileName));
         
+        let element = document.createElement("div");
+
+        let isChecked = !disabledInteractions.includes(file.signature);
+
+        element.innerHTML = `
+        <input type="checkbox" id="${file.signature}" ${isChecked? "checked" : ""}>
+        <label>${file.signature}</label>
+        `
+
+        interactionsDiv.appendChild(element);
+
+        element.addEventListener("change", (e: any)=>{
+            //@ts-ignore
+            if(element.querySelector(`#${file.signature}`)!.checked == false){
+                console.log("dsa")
+                if(!disabledInteractions.includes(file.signature)){
+                    disabledInteractions.push(file.signature);
+                }
+            }
+            else{
+                //@ts-ignore
+                disabledInteractions = disabledInteractions.filter(e => e !== file.signature);
+            }
+            console.log(disabledInteractions)
+            ipcRenderer.send('config-change', "disabledInteractions", disabledInteractions);
+        });     
     }
 }
 

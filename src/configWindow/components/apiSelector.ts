@@ -82,7 +82,6 @@ class ApiSelector extends HTMLElement{
     shadow: any;
     typeSelector
     checkbox: any;
-    config: Config;
 
     openaiDiv: HTMLInputElement
     oobaDiv: HTMLInputElement
@@ -110,7 +109,7 @@ class ApiSelector extends HTMLElement{
         this.label = this.getAttribute("label")!;
         this.confID = this.getAttribute("confID")!;
 
-        this.config = new Config();
+        
 
         this.shadow = this.attachShadow({mode: "open"});
         template.innerHTML = defineTemplate(this.label);
@@ -146,35 +145,37 @@ class ApiSelector extends HTMLElement{
         return ["name", "confID", "label"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
+        let config = await ipcRenderer.invoke('get-config');
+
         //@ts-ignore
-        this.typeSelector.value = this.config[confID].type;
+        this.typeSelector.value = config[confID].type;
         this.displaySelectedApiBox();
 
         //@ts-ignore
-        if(this.config[confID].type == "openai"){
+        if(config[confID].type == "openai"){
             //@ts-ignore
-            this.openaiKeyInput.value = this.config[confID].key;
+            this.openaiKeyInput.value = config[confID].key;
             //@ts-ignore
-            this.openaiModelSelect.value =  this.config[confID].model;
+            this.openaiModelSelect.value =  config[confID].model;
         }
         //@ts-ignore
-        else if(this.config[confID].type == "ooba"){
+        else if(config[confID].type == "ooba"){
             //@ts-ignore
-            this.oobaUrlInput.value = this.config[confID].key;
+            this.oobaUrlInput.value = config[confID].key;
         }
         //@ts-ignore
-        else if(this.config[confID].type == "openrouter"){
+        else if(config[confID].type == "openrouter"){
             //@ts-ignore
-            this.openrouterKeyInput.value = this.config[confID].key;
+            this.openrouterKeyInput.value = config[confID].key;
             //@ts-ignore
-            this.openrouterModelInput.value = this.config[confID].model;
+            this.openrouterModelInput.value = config[confID].model;
             //@ts-ignore
         }
         //@ts-ignore
-        this.openrouterInstructModeCheckbox.checked = this.config[confID].forceInstruct;
+        this.openrouterInstructModeCheckbox.checked = config[confID].forceInstruct;
 
         this.typeSelector.addEventListener("change", (e: any) => {
             console.log(confID)
@@ -209,7 +210,8 @@ class ApiSelector extends HTMLElement{
 
         this.testConnectionButton.addEventListener('click', async (e:any) =>{
             //@ts-ignore
-            let con = new ApiConnection(this.config[this.confID]);
+            config = await ipcRenderer.invoke('get-config');
+            let con = new ApiConnection(config[this.confID]);
 
             this.testConnectionSpan.innerText = "...";
             this.testConnectionSpan.style.color = "white";
@@ -271,7 +273,6 @@ class ApiSelector extends HTMLElement{
         ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
         ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
-        this.config[this.confID] = newConf;
     }
     
 
@@ -292,7 +293,6 @@ class ApiSelector extends HTMLElement{
         ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
         ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
-        this.config[this.confID] = newConf;
     }
     
 
@@ -312,7 +312,6 @@ class ApiSelector extends HTMLElement{
         ipcRenderer.send('config-change-nested', this.confID, "model", newConf.model);
         ipcRenderer.send('config-change-nested', this.confID, "forceInstruct", newConf.forceInstruct);
         //@ts-ignore
-        this.config[this.confID] = newConf;
     }   
     
 }

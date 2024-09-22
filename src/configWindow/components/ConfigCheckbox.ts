@@ -41,10 +41,10 @@ class ConfigCheckbox extends HTMLElement{
         return ["name", "confID", "label"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
+        let config = await ipcRenderer.invoke('get-config');
 
         //@ts-ignore
         this.checkbox.checked = config[confID];

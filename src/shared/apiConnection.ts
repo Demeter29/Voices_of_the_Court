@@ -215,6 +215,7 @@ export class ApiConnection{
     }
 
     calculateTokensFromMessage(msg: Message): number{
+        console.log(msg)
     
         const enc = tiktoken.getEncoding("cl100k_base");
 

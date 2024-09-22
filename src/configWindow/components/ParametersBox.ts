@@ -65,10 +65,10 @@ class ParametersBox extends HTMLElement{
         return ["confID", "tempDefault", "freqPenDefault", "presPenDefault", "topPDefault"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
+        let config = await ipcRenderer.invoke('get-config');
 
         //@ts-ignore
         let values = config[confID]["parameters"];

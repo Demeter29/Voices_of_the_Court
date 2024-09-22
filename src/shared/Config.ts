@@ -1,7 +1,9 @@
 import fs from 'fs';
 import { Parameters, ApiConnection } from './apiConnection';
+import path from 'path';
+import { IpcRenderer, app, ipcRenderer} from 'electron';
 
-
+       
 
 export interface ApiConnectionConfig{
     type: string; //openrouter, openai, ooba
@@ -25,11 +27,6 @@ export class Config{
     overwriteContext: boolean;
     customContext: number;
 
-    temperature: number;
-    frequency_penalty: number;
-    presence_penalty: number;
-    top_p: number;
-
     selectedDescScript: string;
     selectedExMsgScript: string;
 
@@ -45,9 +42,6 @@ export class Config{
 
     interactionsEnableAll: boolean;
     disabledInteractions: string[];
-    interactionsModel: string;
-    interactionsRelations: boolean;
-
 
     cleanMessages: boolean;
     debugMode: boolean;
@@ -61,9 +55,9 @@ export class Config{
     suffixPrompt: string;
     enableSuffixPrompt: boolean;
 
-    constructor(){
-        const obj = JSON.parse(fs.readFileSync('./configs/config.json').toString());
-
+    constructor(configPath: string){  
+        const obj = JSON.parse(fs.readFileSync(configPath).toString());
+       
         this.userFolderPath = obj.userFolderPath;
         this.stream = obj.stream;
         this.context = obj.context;
@@ -74,10 +68,6 @@ export class Config{
         this.overwriteContext = obj.overwriteContext;
         this.customContext =  obj.customContext,
 
-        this.temperature = obj.temperature;
-        this.frequency_penalty = obj.frequency_penalty;
-        this.presence_penalty = obj.presence_penalty;
-        this.top_p = obj.top_p;
 
         this.selectedDescScript = obj.selectedDescScript;
         this.selectedExMsgScript = obj.selectedExMsgScript;
@@ -94,8 +84,6 @@ export class Config{
 
         this.interactionsEnableAll = obj.interactionsEnableAll;
         this.disabledInteractions = obj.disabledInteractions;
-        this.interactionsModel = obj.interactionsModel;
-        this.interactionsRelations = obj.interactionsRelations;
 
         this.cleanMessages = obj.cleanMessages;
         
@@ -113,7 +101,7 @@ export class Config{
     }
 
     export(){
-        fs.writeFileSync('./configs/config.json', JSON.stringify(this, null, '\t'))
+        fs.writeFileSync(path.join(app.getPath('userData'), 'votc_data', 'configs', 'config.json'), JSON.stringify(this, null, '\t'))
     }
 
     toSafeConfig(): Config{

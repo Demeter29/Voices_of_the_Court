@@ -46,10 +46,10 @@ class ConfigNumber extends HTMLElement{
         return ["name", "confID", "label", "min", "max"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
         const confID: string = this.confID;
 
-        let config = new Config();
+        let config = await ipcRenderer.invoke('get-config');
 
         //@ts-ignore
         this.input.value = config[confID];

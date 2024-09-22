@@ -9,6 +9,7 @@ import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conver
 import path from 'path';
 import { existsSync } from "original-fs";
 import fs from 'fs';
+import { checkUserData } from "./userDataCheck.js";
 const shell = require('electron').shell;
 
 if (require('electron-squirrel-startup')) {
@@ -46,14 +47,9 @@ console.log = function(d) { //
 
 //check config files
 
-let userDataPath = path.join(app.getPath('userData'), 'votc-data');
 
-if(!existsSync(userDataPath)){
-    fs.mkdirSync(userDataPath);
 
-    
-}
-
+const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
 if(process.argv[2] == '--dev'){
     console.log("dev mode")
@@ -72,15 +68,17 @@ let chatWindow: ChatWindow;
 let clipboardListener = new ClipboardListener();
 let config: Config;
 
+checkUserData();
+
 app.on('ready',  async () => {
+
+   
+
     console.log("App ready!");
 
     
 
-    if (!fs.existsSync(`./configs/config.json`)){
-        let conf = await JSON.parse(fs.readFileSync('./configs/default_config.json').toString());
-        await fs.writeFileSync('./configs/config.json', JSON.stringify(conf, null, '\t'))
-    }
+   
     
 
     launcherWindow = new ConfigWindow();
@@ -90,7 +88,15 @@ app.on('ready',  async () => {
     chatWindow.window.on('closed', () =>{app.quit()});
 
     clipboardListener.start();
-    config = new Config();
+
+
+    if (!fs.existsSync(path.join(userDataPath, 'configs', 'config.json'))){
+        console.log("nopeee")
+        let conf = await JSON.parse(fs.readFileSync(path.join(userDataPath, 'configs', 'default_config.json')).toString());
+        await fs.writeFileSync(path.join(userDataPath, 'configs', 'config.json'), JSON.stringify(conf, null, '\t'))
+    }
+    
+    config = new Config(path.join(userDataPath, 'configs', 'config.json'));
 
 
     launcherWindow.window.webContents.setWindowOpenHandler(({ url }) => {
@@ -166,6 +172,11 @@ function streamRelay(msgChunk: MessageChunk): void{
     streamMessage.content += msgChunk.content;
     chatWindow.window.webContents.send('stream-message', streamMessage)
 }
+
+ipcMain.handle('get-config', () => {return config});
+
+ipcMain.handle('get-userdata-path', () => {return path.join(app.getPath("userData"), 'votc_data')});
+
 
 ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
     //@ts-ignore
