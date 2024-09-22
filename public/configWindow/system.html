@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Voices of the Court</title>
+    <link rel="stylesheet" href="launcher.css" />
+    
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li><a href="connection.html">Connection</a></li>
+        <li><a href="prompting.html">Prompting</a></li>
+        <li><a href="interactions.html">Interactions</a></li>
+        <li><a href="summarization.html">Summarization</a></li>
+        <li><a href="modelSettings.html">Model Settings</a></li>
+        <li class="active"><a href="system.html">System</a></li>
+      </ul> 
+    </div>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="column">
+          <div class="border">
+            <span id="app-version">Current app version: </span><br>
+            <button id="update-button" type="button">Check for updates..</button>
+
+            <hr>
+
+            <button id="clear-summaries" type="button">Clear conversation summaries</button>
+
+            <hr>
+
+            <open-folder-button path="logs" label="open log files folder"></open-folder-button>
+          </div>
+        </div>
+        <div class="column">
+          <div class="border">
+            dsa
+          </div>
+        </div>
+      </div>  
+
+    </div>
+    
+   
+    <script>require("../../dist/configWindow/components/openFolderButton.js")</script>
+    <script>require("../../dist/configWindow/systemRenderer.js")</script>
+    
+  </body>
+</html>

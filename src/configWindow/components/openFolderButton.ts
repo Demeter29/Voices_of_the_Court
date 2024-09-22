@@ -5,12 +5,12 @@ import path from 'path';
 
 const template = document.createElement("template");
 
-function defineTemplate(path: string){
+function defineTemplate(path: string, label: string){
     return `
     <link rel="stylesheet" href="../../public/configWindow/launcher.css">
     <style>
     </style>
-    <button type="button">Open folder</button>
+    <button type="button">${label}</button>
     `
 }
 
@@ -18,15 +18,17 @@ function defineTemplate(path: string){
 
 class openFolderButton extends HTMLElement{
     path: string;
+    label: string;
     shadow: any;
     button: any;
 
     constructor(){
         super();
         this.path = this.getAttribute("path")!;
+        this.label = this.getAttribute("label")!;
 
         this.shadow = this.attachShadow({mode: "open"});
-        template.innerHTML = defineTemplate(this.path);
+        template.innerHTML = defineTemplate(this.path, this.label);
         this.shadow.append(template.content.cloneNode(true));
         this.button = this.shadow.querySelector("button");
 
@@ -36,17 +38,19 @@ class openFolderButton extends HTMLElement{
 
 
     static get observedAttributes(){
-        return ["name", "confID", "path",]
+        return ["name", "confID", "path", "label"]
     }
 
-    connectedCallback(){
+    async connectedCallback(){
+
+       let userdataPath = await ipcRenderer.invoke('get-userdata-path');
 
         this.button.addEventListener("click", (e: any) => {
             
-
+            
             //ipcRenderer.send('open-folder', this.path);
-            shell.openPath(path.resolve(this.path))
-        });
+            shell.openPath(path.resolve(path.join(userdataPath, this.path)));
+        }); 
     }
 }
 

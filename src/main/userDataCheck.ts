@@ -18,9 +18,7 @@ export async function checkUserData(){
 
     //folder already exist:
 
-    fs.cp(path.join(__dirname, "..", "..", "default_userdata", 'configs', 'default_config.json'), path.join(userPath, 'configs', 'default_config.json'), (err) => {
-        if(err) throw err;
-    });
+    fs.cpSync(path.join(__dirname, "..", "..", "default_userdata", 'configs', 'default_config.json'), path.join(userPath, 'configs', 'default_config.json'));
 
     //validate config
     const configPath = path.join(userPath, "configs", "config.json");
@@ -32,8 +30,6 @@ export async function checkUserData(){
         const configKeys = Object.keys(config);
         const defaultConfigKeys = Object.keys(defaultConfig);
 
-        console.log(JSON.stringify(configKeys));
-        console.log(JSON.stringify(defaultConfigKeys))
         if(JSON.stringify(configKeys) !== JSON.stringify(defaultConfigKeys)){
 
             console.log("userdata config file didn't match default config file. deleting config file");

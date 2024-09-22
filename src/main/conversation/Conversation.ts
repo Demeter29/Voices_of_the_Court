@@ -196,8 +196,7 @@ export class Conversation{
         this.description = "";
         this.exampleMessages = [];
 
-        const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description', this.config.selectedDescScript);
-        console.log(require(path.join(descriptionPath)))
+        const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description', this.config.selectedDescScript)
         try{
             delete require.cache[require.resolve(path.join(descriptionPath))];
             this.description = require(path.join(descriptionPath))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
@@ -232,7 +231,6 @@ export class Conversation{
 
         //get context size
         let modelName = this.textGenApiConnection.model
-        console.log("==HERE");
         if(modelName && modelName.includes("/")){
             modelName = modelName.split("/").pop()!;
         }

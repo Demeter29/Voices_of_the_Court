@@ -1,5 +1,6 @@
 var afterExtractScript = require("./build/afterExtractScript.js");
 var afterCopyScript = require("./build/afterCopyScript.js");
+const path = require('path');
 
 module.exports = {
   packagerConfig: {
@@ -10,6 +11,7 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
+      config: { loadingGif: path.join(__dirname, 'build', 'icons', 'installerPic.png')}
     },
     {
       name: '@electron-forge/maker-deb',

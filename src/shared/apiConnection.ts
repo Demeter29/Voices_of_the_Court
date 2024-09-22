@@ -36,8 +36,6 @@ export class ApiConnection{
         this.parameters = connectionConfig.parameters;
 
         let modelName = this.model
-        console.log("==HERE");
-        console.log(connectionConfig)
         if(modelName && modelName.includes("/")){
             modelName = modelName.split("/").pop()!;
         }
@@ -75,7 +73,6 @@ export class ApiConnection{
 
         //OPENAI DOESNT ALLOW spaces inside message.name so we have to put them inside the Message content.
         if(this.type == "openai"){
-            console.log("akurva")
             for(let i=0;i<prompt.length;i++){
                  //@ts-ignore
                  if(prompt[i].name){
@@ -215,7 +212,6 @@ export class ApiConnection{
     }
 
     calculateTokensFromMessage(msg: Message): number{
-        console.log(msg)
     
         const enc = tiktoken.getEncoding("cl100k_base");
 

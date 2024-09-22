@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater } from "electron";
+import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater, Tray, Menu } from "electron";
 import {ConfigWindow} from './windows/ConfigWindow.js';
 import {ChatWindow} from './windows/ChatWindow.js';
 import { Config } from '../shared/Config.js';
@@ -11,6 +11,22 @@ import { existsSync } from "original-fs";
 import fs from 'fs';
 import { checkUserData } from "./userDataCheck.js";
 const shell = require('electron').shell;
+
+const isFirstInstance = app.requestSingleInstanceLock();
+if (!isFirstInstance) {
+    app.quit();
+    process.exit();
+} 
+else {
+app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if(configWindow.window.isDestroyed()){
+        configWindow = new ConfigWindow();
+    }
+    else if(configWindow.window.isMinimized()){
+        configWindow.window.focus();
+    }
+})
+}
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -31,19 +47,11 @@ process.on('unhandledRejection', (error, p) => {
     console.log(error);
 });
 
-//logging
-var util = require('util');
+//check config files
+const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
-var log_file = fs.createWriteStream('debug.log', {flags : 'w'});
 
-console.log = function(d) { //
-    
-    process.stdout.write(util.format(d) + '\n');
 
-    let time = new Date();
-    var currentDate = `[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] `;
-    log_file.write(currentDate + util.format(util.inspect(d, {depth: Infinity})) + '\n');
-};
 
 //updating
 if(app.isPackaged){
@@ -51,15 +59,22 @@ if(app.isPackaged){
     const feed = `${server}/Demeter29/GPT_Kings/${process.platform}-${process.arch}/${app.getVersion()}`
     //@ts-ignore
     autoUpdater.setFeedURL(feed);
-    console.log("searching")
-    autoUpdater.checkForUpdates();
     
-    setInterval(() => {
-        autoUpdater.checkForUpdates()
-      }, 5 * 60 * 1000)    
+      autoUpdater.on('update-available', () => {
+        const dialogOpts = {
+          type: 'info',
+          buttons: [],
+          title: 'Update found!',
+          message: "new version found!",
+          detail:
+            'A new version is available. updating application now...'
+        }
+      
+        dialog.showMessageBox(dialogOpts);
+    })
 
-      autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-        console.log("gotca")
+    autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+
         const dialogOpts = {
           type: 'info',
           buttons: ['Restart', 'Later'],
@@ -73,14 +88,22 @@ if(app.isPackaged){
           if (returnValue.response === 0) autoUpdater.quitAndInstall()
         })
     })
+
+    
+
+    autoUpdater.on('update-not-available', () => {
+        const dialogOpts = {
+          type: 'info',
+          buttons: [],
+          title: 'App is up to date!',
+          message: "App is up to date!",
+          detail: 'no new version was found!'
+        }  
+        dialog.showMessageBox(dialogOpts);
+    })
 }
 
 
-//check config files
-
-
-
-const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
 if(process.argv[2] == '--dev'){
     console.log("dev mode")
@@ -93,7 +116,7 @@ if(process.argv[2] == '--dev'){
 
 
 
-let launcherWindow: ConfigWindow;
+let configWindow: ConfigWindow;
 let chatWindow: ChatWindow;
 
 let clipboardListener = new ClipboardListener();
@@ -104,24 +127,69 @@ app.on('ready',  async () => {
 
    await checkUserData();
 
+    //logging
+    var util = require('util');
+
+    var log_file = fs.createWriteStream(path.join(userDataPath, 'logs', 'debug.log'), {flags : 'w'});
+
+    console.log = function(d) { //
+        
+        process.stdout.write(util.format(d) + '\n');
+
+        let time = new Date();
+        var currentDate = `[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] `;
+        log_file.write(currentDate + util.format(util.inspect(d, {depth: Infinity})) + '\n');
+    };
+
+   let tray = new Tray(path.join(__dirname, '..', '..', 'build', 'icons', 'icon.ico'));
+   const contextMenu = Menu.buildFromTemplate([
+    { label: 'Open config window',
+        click: () => { 
+            if(configWindow.window.isDestroyed()){
+                configWindow = new ConfigWindow();
+            }
+            else if(configWindow.window.isMinimized()){
+                configWindow.window.focus();
+            }
+          }
+    },
+    { label: 'Check for updates..',
+        click: () => { 
+            if(app.isPackaged){
+                autoUpdater.checkForUpdates();
+            }
+          }
+    },
+    { label: 'Exit', 
+        click: () => { 
+            app.quit();
+      }},
+    ])
+    tray.setToolTip('Voices of the Court CK3 mod')
+    tray.setContextMenu(contextMenu)
+
+    tray.on('click', ()=>{
+        if(configWindow.window.isDestroyed()){
+            configWindow = new ConfigWindow();
+        }
+        else if(configWindow.window.isMinimized()){
+            configWindow.window.focus();
+        }
+    })
+
     console.log("App ready!");
 
-    
 
-   
-    
-
-    launcherWindow = new ConfigWindow();
+    configWindow = new ConfigWindow();
     chatWindow = new ChatWindow();
 
-    launcherWindow.window.on('closed', () =>{app.quit()});
+    
     chatWindow.window.on('closed', () =>{app.quit()});
 
     clipboardListener.start();
 
 
     if (!fs.existsSync(path.join(userDataPath, 'configs', 'config.json'))){
-        console.log("nopeee")
         let conf = await JSON.parse(fs.readFileSync(path.join(userDataPath, 'configs', 'default_config.json')).toString());
         await fs.writeFileSync(path.join(userDataPath, 'configs', 'config.json'), JSON.stringify(conf, null, '\t'))
     }
@@ -129,7 +197,7 @@ app.on('ready',  async () => {
     config = new Config(path.join(userDataPath, 'configs', 'config.json'));
 
 
-    launcherWindow.window.webContents.setWindowOpenHandler(({ url }) => {
+    configWindow.window.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);
         return { action: 'deny' };
     }) 
@@ -242,13 +310,13 @@ ipcMain.on('chat-stop', () =>{
 
 
 ipcMain.on("select-user-folder", (event) => {
-    dialog.showOpenDialog(launcherWindow.window, { properties: ['openDirectory']}).then( (resp) =>{
+    dialog.showOpenDialog(configWindow.window, { properties: ['openDirectory']}).then( (resp) =>{
         event.reply("select-user-folder-success", resp.filePaths[0]);
     });
 });
 
 ipcMain.on("open-folder", (event, path) => {
-    dialog.showSaveDialog(launcherWindow.window, { defaultPath: path, properties: []});
+    dialog.showSaveDialog(configWindow.window, { defaultPath: path, properties: []});
 });
 
 

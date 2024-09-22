@@ -53,7 +53,6 @@ export function buildTextPrompt(conv: Conversation): string {
 */
 
 export function buildChatPrompt(conv: Conversation): Message[]{
-    console.log("hey")
     let chatPrompt: Message[]  = [];
 
     chatPrompt.push({
