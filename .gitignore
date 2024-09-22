@@ -1,7 +1,3 @@
 /node_modules
 /dist
 /out
-/configs/app.config.json
-/conversation_summaries
-/configs/config.json
-/debug.log
