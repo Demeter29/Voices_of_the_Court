@@ -7,8 +7,8 @@
 	"customContext": 4096,
 	"maxMemoryTokens": 600,
 	"percentOfContextToSummarize": 20,
-	"selectedDescScript": "pList.js",
-	"selectedExMsgScript": "aliChat.js",
+	"selectedDescScript": "standard\\pList.js",
+	"selectedExMsgScript": "standard\\aliChat.js",
 	"inputSequence": "[INST]",
     "outputSequence": "[/INST]",
 	"textGenerationApiConnectionConfig": {

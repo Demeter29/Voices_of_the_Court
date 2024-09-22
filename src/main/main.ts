@@ -68,11 +68,10 @@ let chatWindow: ChatWindow;
 let clipboardListener = new ClipboardListener();
 let config: Config;
 
-checkUserData();
 
 app.on('ready',  async () => {
 
-   
+   await checkUserData();
 
     console.log("App ready!");
 

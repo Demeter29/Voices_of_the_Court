@@ -10,9 +10,7 @@ export async function checkUserData(){
 
     if(!existsSync(userPath)){
         console.log('userdata votc folder not found!')
-        fs.cp(path.join(process.cwd(), "default_userdata"), userPath, {recursive: true}, (err) => {
-            if(err) throw err;
-        });
+        fs.cpSync(path.join(process.cwd(), "default_userdata"), userPath, {recursive: true});
         console.log('userdata votc default folder created!');
 
         return;

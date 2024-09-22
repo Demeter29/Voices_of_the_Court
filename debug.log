@@ -1,24 +1,8 @@
-[1:24:55] 'product mode'
-[1:24:55] 'userdata votc folder not found!'
-[1:24:55] 'userdata votc default folder created!'
-[1:24:55] 'App ready!'
-[1:24:55] 'Config window opened!'
-[1:24:55] 'Chat window opened!'
-[1:24:55] 'nopeee'
-[1:24:55] '=== UNHANDLED REJECTION ==='
-[1:24:55] Error: ENOENT: no such file or directory, open 'C:\Users\gabor\AppData\Roaming\Voices of the Court\votc_data\configs\default_config.json'
-    at Object.openSync (node:fs:594:3)
-    at Object.func [as openSync] (node:electron/js2c/asar_bundle:2:1822)
-    at Object.readFileSync (node:fs:462:35)
-    at t.readFileSync (node:electron/js2c/asar_bundle:2:9165)
-    at C:\Users\gabor\Desktop\GPT_kings\dist\main\main.js:73:50
-    at Generator.next (<anonymous>)
-    at C:\Users\gabor\Desktop\GPT_kings\dist\main\main.js:8:71
-    at new Promise (<anonymous>)
-    at __awaiter (C:\Users\gabor\Desktop\GPT_kings\dist\main\main.js:4:12)
-    at App.<anonymous> (C:\Users\gabor\Desktop\GPT_kings\dist\main\main.js:64:34) {
-  errno: -4058,
-  syscall: 'open',
-  code: 'ENOENT',
-  path: 'C:\\Users\\gabor\\AppData\\Roaming\\Voices of the Court\\votc_data\\configs\\default_config.json'
-}
+[3:22:46] 'product mode'
+[3:22:46] '["userFolderPath","stream","context","maxTokens","maxMemoryTokens","percentOfContextToSummarize","overwriteContext","customContext","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
+[3:22:46] '["userFolderPath","stream","maxTokens","context","overwriteContext","customContext","maxMemoryTokens","percentOfContextToSummarize","selectedDescScript","selectedExMsgScript","inputSequence","outputSequence","textGenerationApiConnectionConfig","summarizationApiConnectionConfig","interactionApiConnectionConfig","summarizationUseTextGenApi","interactionUseTextGenApi","interactionsEnableAll","disabledInteractions","cleanMessages","debugMode","summariesInsertDepth","memoriesInsertDepth","descInsertDepth","mainPrompt","summarizePrompt","suffixPrompt","enableSuffixPrompt"]'
+[3:22:46] "userdata config file didn't match default config file. deleting config file"
+[3:22:46] 'App ready!'
+[3:22:46] 'Config window opened!'
+[3:22:46] 'Chat window opened!'
+[3:22:46] 'nopeee'
