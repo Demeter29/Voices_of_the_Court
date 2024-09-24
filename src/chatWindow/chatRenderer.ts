@@ -80,6 +80,8 @@ function displayErrorMessage(error: string){
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
 
+    chatInput.disabled = false;
+
     messageDiv.classList.add('error-message');
     messageDiv.innerText = error;
     chatMessages.append(messageDiv);

@@ -3,51 +3,61 @@
 	"stream": false,
 	"maxTokens": 500,
 	"maxMemoryTokens": 600,
-	"percentOfContextToSummarize": 20,
-	"overwriteContext": false,
-	"customContext": 9000,
+	"percentOfContextToSummarize": 40,
 	"selectedDescScript": "standard\\pList.js",
 	"selectedExMsgScript": "standard\\aliChat.js",
 	"inputSequence": "[INST]",
     "outputSequence": "[/INST]",
 	"textGenerationApiConnectionConfig": {
-		"type": "openrouter",
-		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "",
-		"model": "",
-		"forceInstruct": false,	
+		"connection": {
+			"type": "openrouter",
+			"baseUrl": "https://openrouter.ai/api/v1",
+			"key": "",
+			"model": "",
+			"forceInstruct": false,
+			"overwriteContext": false,
+			"customContext": 90000
+		},
 		"parameters": {
-			"temperature": 1,
+			"temperature": 0.8,
 			"frequency_penalty": 0.0,
 			"presence_penalty": 0.0,
-			"top_p": 1
+			"top_p": 0.9
 		}
 		
 	},
 	"summarizationApiConnectionConfig": {
-		"type": "openrouter",
-		"baseUrl": "https://openrouter.ai/api/v1",
-		"key": "",
-		"model": "",
-		"forceInstruct": false,
+		"connection": {
+			"type": "openrouter",
+			"baseUrl": "https://openrouter.ai/api/v1",
+			"key": "",
+			"model": "",
+			"forceInstruct": false,
+			"overwriteContext": false,
+			"customContext": 90000
+		},
 		"parameters": {
 			"temperature": 0.2,
 			"frequency_penalty": 0.0,
 			"presence_penalty": 0.0,
-			"top_p": 1
+			"top_p": 0.9
 		}
 	},
 	"interactionApiConnectionConfig": {
-		"type": "openrouter",
+		"connection": {
+			"type": "openrouter",
 		"baseUrl": "https://openrouter.ai/api/v1",
 		"key": "",
 		"model": "",
 		"forceInstruct": false,
+		"overwriteContext": false,
+    	"customContext": 90000
+		},
 		"parameters": {
 			"temperature": 0.2,
 			"frequency_penalty": 0.0,
 			"presence_penalty": 0.0,
-			"top_p": 1
+			"top_p": 0.9
 		}
 	},
 	"summarizationUseTextGenApi": true,

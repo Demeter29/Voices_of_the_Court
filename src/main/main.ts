@@ -177,6 +177,8 @@ app.on('ready',  async () => {
         }
     })
 
+    
+
     console.log("App ready!");
 
 
@@ -202,6 +204,10 @@ app.on('ready',  async () => {
         return { action: 'deny' };
     }) 
    
+});
+
+ipcMain.on('update-app', ()=>{
+    autoUpdater.checkForUpdates();
 });
 
 let conversation: Conversation;
@@ -287,16 +293,22 @@ ipcMain.on('config-change', (e, confID: string, newValue: any) =>{
 })
 
 ipcMain.on('config-change-nested', (e, outerConfID: string, innerConfID: string, newValue: any) =>{
-    
-    console.log(newValue);
-
     //@ts-ignore
     config[outerConfID][innerConfID] = newValue;
     config.export();
     if(chatWindow.isShown){
         conversation.updateConfig(config);
     }
-    
+})
+
+//dear god...
+ipcMain.on('config-change-nested-nested', (e, outerConfID: string, middleConfID: string, innerConfID: string, newValue: any) =>{
+    //@ts-ignore
+    config[outerConfID][middleConfID][innerConfID] = newValue;
+    config.export();
+    if(chatWindow.isShown){
+        conversation.updateConfig(config);
+    }
 })
 
 ipcMain.on('chat-stop', () =>{
@@ -318,5 +330,4 @@ ipcMain.on("select-user-folder", (event) => {
 ipcMain.on("open-folder", (event, path) => {
     dialog.showSaveDialog(configWindow.window, { defaultPath: path, properties: []});
 });
-
 

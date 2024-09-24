@@ -2,7 +2,7 @@ import { app } from 'electron';
 import { GameData } from '../../shared/GameData.js';
 import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
-import { ApiConnection } from '../../shared/apiConnection.js';
+import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';
 import { checkInteractions } from './checkInteractions.js';
 import { convertChatToText, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt} from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
@@ -30,7 +30,6 @@ export class Conversation{
     exampleMessages: Message[];
     summaries: Summary[];
     currentSummary: string;
-    contextSize: number;
     
     constructor(gameData: GameData, config: Config){
         this.isOpen = true;
@@ -59,13 +58,26 @@ export class Conversation{
 
         //TODO: wtf
         this.runFileManager = new RunFileManager(config.userFolderPath);
-        this.textGenApiConnection = new ApiConnection({});
-        this.summarizationApiConnection = new ApiConnection({});
-        this.interactionApiConnection = new ApiConnection({});
         this.description = "";
         this.interactions = [];
         this.exampleMessages = [],
-        this.contextSize = 0;
+
+        //TODO:::!!!
+        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
+
+        if(this.config.summarizationUseTextGenApi){
+            this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
+        }
+        else{
+            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
+        }
+        
+        if(this.config.interactionUseTextGenApi){;
+            this.interactionApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);;
+        }
+        else{
+            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);
+        }
         
         this.loadConfig();
     }
@@ -81,8 +93,8 @@ export class Conversation{
         let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
         console.log(`current tokens: ${currentTokens}`);
 
-        if(currentTokens > this.contextSize){
-            console.log(`Context limit hit, resummarizing conversation! limit:${this.contextSize}`);
+        if(currentTokens > this.textGenApiConnection.context){
+            console.log(`Context limit hit, resummarizing conversation! limit:${this.textGenApiConnection.context}`);
             await this.resummarize();
         }
 
@@ -141,21 +153,23 @@ export class Conversation{
     }
 
     async resummarize(){
-        let tokensToSummarize = this.contextSize * (this.config.percentOfContextToSummarize / 100)
-        console.log(`context: ${this.contextSize} percent to summarize: ${this.config.percentOfContextToSummarize} tokens to summarize: ${tokensToSummarize}`)
+        let tokensToSummarize = this.textGenApiConnection.context * (this.config.percentOfContextToSummarize / 100)
+        console.log(`context: ${this.textGenApiConnection.context} percent to summarize: ${this.config.percentOfContextToSummarize} tokens to summarize: ${tokensToSummarize}`)
             let tokenSum = 0;
             let messagesToSummarize: Message[] = [];
 
             while(tokenSum < tokensToSummarize && this.messages.length > 0){
                 let msg = this.messages.shift()!;
                 tokenSum += this.textGenApiConnection.calculateTokensFromMessage(msg);
-                messagesToSummarize.push(msg);
-                console.log("removing: ")
+                console.log("to remove:")
                 console.log(msg)
+                messagesToSummarize.push(msg);
             }
 
             if(messagesToSummarize.length > 0){ //prevent infinite loops
+                console.log("current summary: "+this.currentSummary)
                 this.currentSummary = await this.summarizationApiConnection.complete(buildResummarizeChatPrompt(this, messagesToSummarize), false, {});
+                console.log("after current summary: "+this.currentSummary)
             }
     }
 
@@ -213,39 +227,22 @@ export class Conversation{
     
         this.loadInteractions();
 
-        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig);
+        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
 
         if(this.config.summarizationUseTextGenApi){
-            this.summarizationApiConnection = this.textGenApiConnection;
+            this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
         }
         else{
-            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig);
+            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
         }
         
         if(this.config.interactionUseTextGenApi){;
-            this.interactionApiConnection = this.textGenApiConnection;
+            this.interactionApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);;
         }
         else{
-            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig);
+            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);
         }
-
-        //get context size
-        let modelName = this.textGenApiConnection.model
-        if(modelName && modelName.includes("/")){
-            modelName = modelName.split("/").pop()!;
-        }
-
-        if(this.config.overwriteContext){
-            console.log("Overwriting context size!");
-            this.contextSize = this.config.customContext;
-        }
-        else if(contextLimits[modelName]){
-            this.contextSize = contextLimits[modelName]
-        }
-        else{
-            console.log(`Warning: couldn't find ${this.textGenApiConnection.model}'s context limit. context overwrite value will be used!`);
-            this.contextSize = this.config.customContext;
-        }
+       
     }
 
     async loadInteractions(){

@@ -107,7 +107,9 @@ export function buildChatPrompt(conv: Conversation): Message[]{
             content: summaryString
         } 
 
-        insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);
+        
+
+        insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);   
         
     }
 
@@ -129,6 +131,15 @@ export function buildChatPrompt(conv: Conversation): Message[]{
 
     insertMessageAtDepth(messages, descMessage, correctedDescInsertDepth);
 
+    if(conv.currentSummary){
+        let currentSummaryMessage: Message = {
+            role: "system",
+            content: "Summarization of the previous messages in this conversation: "+conv.currentSummary,
+        }
+
+        messages.unshift(currentSummaryMessage);
+    }
+
     chatPrompt = chatPrompt.concat(messages);
 
     if(conv.config.enableSuffixPrompt){
@@ -137,6 +148,8 @@ export function buildChatPrompt(conv: Conversation): Message[]{
             content: conv.config.suffixPrompt
         })
     }
+
+    
 
     return chatPrompt;
 }

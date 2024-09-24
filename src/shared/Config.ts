@@ -1,17 +1,13 @@
 import fs from 'fs';
-import { Parameters, ApiConnection } from './apiConnection';
+import { Parameters, Connection, ApiConnection } from './apiConnection';
 import path from 'path';
 import { IpcRenderer, app, ipcRenderer} from 'electron';
 
        
 
+
 export interface ApiConnectionConfig{
-    type: string; //openrouter, openai, ooba
-    baseUrl: string;
-    key: string;
-    model: string;
-    forceInstruct: boolean ;//only used by openrouter
-    
+    connection: Connection;
     parameters: Parameters;
 }
 
@@ -23,8 +19,7 @@ export class Config{
     maxMemoryTokens: number;
     percentOfContextToSummarize: number;
 
-    overwriteContext: boolean;
-    customContext: number;
+    
 
     selectedDescScript: string;
     selectedExMsgScript: string;
@@ -62,9 +57,6 @@ export class Config{
         this.maxTokens = obj.maxTokens;
         this.maxMemoryTokens = obj.maxMemoryTokens;
         this.percentOfContextToSummarize = obj.percentOfContextToSummarize;
-
-        this.overwriteContext = obj.overwriteContext;
-        this.customContext =  obj.customContext,
 
 
         this.selectedDescScript = obj.selectedDescScript;
@@ -105,12 +97,12 @@ export class Config{
     toSafeConfig(): Config{
         //pass by value
         let output: Config = JSON.parse(JSON.stringify(this));
-        output.textGenerationApiConnectionConfig.key= "<hidden>";
-        output.interactionApiConnectionConfig.key = "<hidden>";
-        output.summarizationApiConnectionConfig.key = "<hidden>";
-        output.textGenerationApiConnectionConfig.baseUrl= "<hidden>";
-        output.interactionApiConnectionConfig.baseUrl = "<hidden>";
-        output.summarizationApiConnectionConfig.baseUrl = "<hidden>";
+        output.textGenerationApiConnectionConfig.connection.key= "<hidden>";
+        output.interactionApiConnectionConfig.connection.key = "<hidden>";
+        output.summarizationApiConnectionConfig.connection.key = "<hidden>";
+        output.textGenerationApiConnectionConfig.connection.baseUrl= "<hidden>";
+        output.interactionApiConnectionConfig.connection.baseUrl = "<hidden>";
+        output.summarizationApiConnectionConfig.connection.baseUrl = "<hidden>";
 
         return output;
     }

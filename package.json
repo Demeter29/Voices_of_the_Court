@@ -1,7 +1,7 @@
 {
   "name": "voices_of_the_court",
   "productName": "Voices of the Court",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "A chatbot mod for Crusader Kings 3",
   "main": "dist/main/main.js",
   "build": {
@@ -41,9 +41,5 @@
     "@electron-forge/maker-zip": "^6.0.4",
     "electron": "22.0.3",
     "source-map-support": "^0.5.21"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Demeter29/GPT_kings"
   }
 }

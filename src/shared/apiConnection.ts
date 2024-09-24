@@ -7,7 +7,18 @@ import { ApiConnectionConfig } from "./Config";
 
 export interface apiConnectionTestResult{
     success: boolean,
+    overwriteWarning?: boolean;
     errorMessage?: string,
+}
+
+export interface Connection{
+    type: string; //openrouter, openai, ooba
+    baseUrl: string;
+    key: string;
+    model: string;
+    forceInstruct: boolean ;//only used by openrouter
+    overwriteContext: boolean;
+    customContext: number;
 }
 
 export interface Parameters{
@@ -17,6 +28,7 @@ export interface Parameters{
 	top_p: number,
 }
 
+
 export class ApiConnection{
     type: string; //openrouter, openai, ooba
     baseUrl: string;
@@ -25,31 +37,35 @@ export class ApiConnection{
     forceInstruct: boolean ;//only used by openrouter
     parameters: Parameters;
     context: number;
+    overwriteWarning: boolean;
     
 
-    constructor(connectionConfig: any){
-        this.type = connectionConfig.type;
-        this.baseUrl = connectionConfig.baseUrl;
-        this.key = connectionConfig.key;
-        this.model = connectionConfig.model;
-        this.forceInstruct = connectionConfig.forceInstruct;
-        this.parameters = connectionConfig.parameters;
+    constructor(connection: Connection, parameters: Parameters){
+        this.type = connection.type;
+        this.baseUrl = connection.baseUrl;
+        this.key = connection.key;
+        this.model = connection.model;
+        this.forceInstruct = connection.forceInstruct;
+        this.parameters = parameters;
 
         let modelName = this.model
         if(modelName && modelName.includes("/")){
             modelName = modelName.split("/").pop()!;
         }
 
-        if(connectionConfig.overwriteContext){
+        if(connection.overwriteContext){
             console.log("Overwriting context size!");
-            this.context = connectionConfig.customContext;
+            this.context = connection.customContext;
+            this.overwriteWarning = false;
         }
         else if(contextLimits[modelName]){
-            this.context = contextLimits[modelName]
+            this.context = contextLimits[modelName];
+            this.overwriteWarning = false;
         }
         else{
             console.log(`Warning: couldn't find ${this.model}'s context limit. context overwrite value will be used!`);
-            this.context = connectionConfig.customContext;
+            this.context = connection.customContext;
+            this.overwriteWarning = true;
         }
     }
 
@@ -195,13 +211,13 @@ export class ApiConnection{
 
         return this.complete(prompt, false, {max_tokens: 1}).then( (resp) =>{
             if(resp){
-                return {success: true};
+                return {success: true, overwriteWarning: this.overwriteWarning };
             }
             else{
-                return {success: false, errorMessage: "this is fuku"};
+                return {success: false, overwriteWarning: false, errorMessage: "no response, something went wrong..."};
             }
         }).catch( (err) =>{
-            return {success: false, errorMessage: err}
+            return {success: false, overwriteWarning: false, errorMessage: err}
         });
     }
 
