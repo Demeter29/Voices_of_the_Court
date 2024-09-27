@@ -7,7 +7,7 @@ const template = document.createElement("template");
 
 function defineTemplate(rows: number, cols: number, placeholder: string){
     return `
-    <link rel="stylesheet" href="../../public/configWindow/launcher.css">
+    <link rel="stylesheet" href="../../public/configWindow/config.css">
     <style>
     </style>
     <textarea id="prompt" rows="${rows}" cols="${cols}" placeholder="${placeholder}">

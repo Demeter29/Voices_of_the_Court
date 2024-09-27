@@ -9,7 +9,7 @@ export interface Message {
 
 export type ResponseObject = {
     message: Message,
-    interactions: InteractionResponse[]
+    actions: ActionResponse[]
 }
 
 export interface ErrorMessage {
@@ -39,15 +39,15 @@ export interface Summary{
     content: string
 }
 
-export interface InteractionArgument{
+export interface ActionArgument{
     name: string;
     type: string;
     desc: string
 }
 
-export interface Interaction{
+export interface Action{
     signature: string,
-    args: InteractionArgument[],
+    args: ActionArgument[],
     description: string,
     group: string,
     check: () => boolean,
@@ -56,8 +56,8 @@ export interface Interaction{
     chatMessageClass: string
 }
 
-export interface InteractionResponse{
-    interactionName: string,
+export interface ActionResponse{
+    actionName: string,
     chatMessage: string,
     chatMessageClass: string
 }

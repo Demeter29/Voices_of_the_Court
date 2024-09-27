@@ -11,6 +11,7 @@ import { existsSync } from "original-fs";
 import fs from 'fs';
 import { checkUserData } from "./userDataCheck.js";
 const shell = require('electron').shell;
+const packagejson = require('../../package.json');
 
 const isFirstInstance = app.requestSingleInstanceLock();
 if (!isFirstInstance) {
@@ -101,15 +102,26 @@ if(app.isPackaged){
         }  
         dialog.showMessageBox(dialogOpts);
     })
+
+    autoUpdater.on('error', (error) => {
+        const dialogOpts = {
+          type: 'info',
+          buttons: [],
+          title: 'Update error!',
+          message: "Something went wrong during updating!",
+          detail: 'error message: '+error
+        }  
+        dialog.showMessageBox(dialogOpts);
+    })
 }
 
 
 
-if(process.argv[2] == '--dev'){
+if(app.isPackaged){
+    console.log("product mode")
+}else{
     console.log("dev mode")
     require('source-map-support').install();
-}else{
-    console.log("product mode")
 }
 
 
@@ -140,6 +152,8 @@ app.on('ready',  async () => {
         var currentDate = `[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] `;
         log_file.write(currentDate + util.format(util.inspect(d, {depth: Infinity})) + '\n');
     };
+
+    console.log(`app version: ${packagejson.version}`)
 
    let tray = new Tray(path.join(__dirname, '..', '..', 'build', 'icons', 'icon.ico'));
    const contextMenu = Menu.buildFromTemplate([

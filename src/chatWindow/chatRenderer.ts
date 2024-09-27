@@ -1,5 +1,5 @@
 import { ipcMain, ipcRenderer } from 'electron';
-import {Interaction, InteractionResponse, Message, MessageChunk, ResponseObject} from '../main/ts/conversation_interfaces.js';
+import {Action, ActionResponse, Message, MessageChunk, ResponseObject} from '../main/ts/conversation_interfaces.js';
 import { marked } from 'marked';
 import { GameData } from '../shared/GameData.js';
 const DOMPurify = require('dompurify');
@@ -57,16 +57,16 @@ async function displayMessage(message: Message): Promise<HTMLDivElement>{
     return messageDiv;
 }
 
-function displayInteractions(interactions: InteractionResponse[]){
+function displayActions(Actions: ActionResponse[]){
     
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
-    for(const interaction of interactions){
+    for(const Action of Actions){
         
-        const interactionSpan = document.createElement('span');
-        interactionSpan.innerText = interaction.chatMessage+"\n";
-        interactionSpan.classList.add(interaction.chatMessageClass);
-        messageDiv.appendChild(interactionSpan);
+        const ActionSpan = document.createElement('span');
+        ActionSpan.innerText = Action.chatMessage+"\n";
+        ActionSpan.classList.add(Action.chatMessageClass);
+        messageDiv.appendChild(ActionSpan);
 
         
     }
@@ -154,7 +154,7 @@ ipcRenderer.on('message-receive', async (e, responseObject: ResponseObject)=>{
     console.log(responseObject)
     await displayMessage(responseObject.message);
 
-    displayInteractions(responseObject.interactions);
+    displayActions(responseObject.actions);
 
 
 })
@@ -175,7 +175,7 @@ ipcRenderer.on('stream-message', (e, message: Message)=>{
 
 ipcRenderer.on('stream-end', (e, response: ResponseObject)=>{
     chatInput.disabled = false;
-    displayInteractions(response.interactions);
+    displayActions(response.actions);
     loadingDots.remove();
 })
 

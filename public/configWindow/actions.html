@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <title>Voices of the Court</title>
-    <link rel="stylesheet" href="launcher.css" />
+    <link rel="stylesheet" href="config.css" />
     
   </head>
   <body>
     <div class="navbar">
       <ul>
         <li><a href="connection.html">Connection</a></li>
-        <li><a href="prompting.html">Prompting</a></li>
-        <li class="active"><a href="interactions.html">Interactions</a></li>
+        <li class="active"><a href="actions.html">Actions</a></li>
         <li><a href="summarization.html">Summarization</a></li>
+        <li><a href="prompts.html">Prompts</a></li>
         <li><a href="modelSettings.html">Model Settings</a></li>
         <li><a href="system.html">System</a></li>
       </ul> 
@@ -20,31 +20,31 @@
 
     <div class="container">
       
-      <config-checkbox id="enable-interactions" confID="interactionsEnableAll" label="Enable interactions"></config-checkbox>
+      <config-checkbox id="enable-actions" confID="actionsEnableAll" label="Enable actions"></config-checkbox>
       
-      <div id="interactions" class="border">
+      <div id="actions" class="border">
 
-        <config-checkbox id="use-connection-api" confID="interactionUseTextGenApi" label="Use the same API as in the connection tab"></config-checkbox>
+        <config-checkbox id="use-connection-api" confID="actionsUseTextGenApi" label="Use the same API as in the connection tab"></config-checkbox>
 
         <hr>
 
-        <config-api-selector id="api-selector" confID="interactionApiConnectionConfig"></config-api-selector>
+        <config-api-selector id="api-selector" confID="actionsApiConnectionConfig"></config-api-selector>
         
         <hr>
 
         <h2>Parameters</h2>
-        <parameters-box confID="interactionApiConnectionConfig" tempDefault="0.2" freqPenDefault ="0" presPenDefault="0" topPDefault="0.9"></parameters-box>
+        <parameters-box confID="actionsApiConnectionConfig" tempDefault="0.2" freqPenDefault ="0" presPenDefault="0" topPDefault="0.9"></parameters-box>
 
         <hr>
 
-        <p>Select which interactions you want the mod to detect:</p>
+        <p>Select which actions you want the mod to detect:</p>
 
         <div class="input-group">
-          <button type="button" id="refresh-interactions">🔄 Reload files</button>
+          <button type="button" id="refresh-actions">🔄 Reload files</button>
           <open-folder-button path="scripts/actions/" label="open folder"></open-folder-button>
         </div>
         
-            <div id="interaction-group">
+            <div id="actions-group">
             </div>    
 
           
@@ -56,6 +56,6 @@
     <script>require("../../dist/configWindow/components/configSlider.js")</script>
     <script>require("../../dist/configWindow/components/ParametersBox.js")</script>
     <script>require("../../dist/configWindow/components/configCheckbox.js")</script>
-    <script>require("../../dist/configWindow/interactionRenderer.js")</script>
+    <script>require("../../dist/configWindow/actionsRenderer.js")</script>
   </body>
 </html>

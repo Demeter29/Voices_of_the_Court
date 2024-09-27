@@ -8,7 +8,7 @@ const template = document.createElement("template");
 function defineTemplate(tempDefault: number, freqPenDefault: number, presPenDefault: number, topPDefault: number, ){
     return `
     <div id="div" class="border">
-        <link rel="stylesheet" href="../../public/configWindow/launcher.css">
+        <link rel="stylesheet" href="../../public/configWindow/config.css">
         <config-slider id="temp" confID="temperature" label="Temperature"  min="0" max="2" step="0.01" default="${tempDefault}"></config-slider>
         <config-slider id="freqPen" confID="frequency_penalty" label="Frequency Penalty"  min="-2" max="2" step="0.01" default="${freqPenDefault}"></config-slider>
         <config-slider id="presPen" confID="presence_penalty" label="Presence Penalty"  min="-2" max="2" step="0.01" default="${presPenDefault}"></config-slider>
@@ -86,10 +86,10 @@ class ParametersBox extends HTMLElement{
                     console.log(confID)
     
                     let newParameters = {
-                        temperature: this.tempSlider.slider.value,
-                        frequency_penalty: this.freqPenSlider.slider.value,
-                        presence_penalty: this.presPenSlider.slider.value,
-                        top_p: this.topPSlider.slider.value,
+                        temperature: parseFloat(this.tempSlider.slider.value),
+                        frequency_penalty: parseFloat(this.freqPenSlider.slider.value),
+                        presence_penalty: parseFloat(this.presPenSlider.slider.value),
+                        top_p: parseFloat(this.topPSlider.slider.value),
                     }
     
                     console.log(newParameters)

@@ -7,7 +7,7 @@ const template = document.createElement("template");
 
 function defineTemplate(label: string){
     return `
-    <link rel="stylesheet" href="../../public/configWindow/launcher.css">
+    <link rel="stylesheet" href="../../public/configWindow/config.css">
     <style>
     </style>
     <input type="checkbox" name="awd" id="checkbox">

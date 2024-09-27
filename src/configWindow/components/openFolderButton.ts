@@ -7,7 +7,7 @@ const template = document.createElement("template");
 
 function defineTemplate(path: string, label: string){
     return `
-    <link rel="stylesheet" href="../../public/configWindow/launcher.css">
+    <link rel="stylesheet" href="../../public/configWindow/config.css">
     <style>
     </style>
     <button type="button">${label}</button>

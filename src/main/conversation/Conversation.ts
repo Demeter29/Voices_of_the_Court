@@ -3,14 +3,14 @@ import { GameData } from '../../shared/GameData.js';
 import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';
-import { checkInteractions } from './checkInteractions.js';
+import { checkActions } from './checkActions.js';
 import { convertChatToText, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt} from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
 import fs from 'fs';
 import path from 'path';
 
-import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Interaction, InteractionResponse} from '../ts/conversation_interfaces.js';
+import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Action, ActionResponse} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
 const contextLimits = require("../../../public/contextLimits.json");
 
@@ -24,9 +24,9 @@ export class Conversation{
     runFileManager: RunFileManager;
     textGenApiConnection: ApiConnection;
     summarizationApiConnection: ApiConnection;
-    interactionApiConnection: ApiConnection;
+    actionsApiConnection: ApiConnection;
     description: string;
-    interactions: Interaction[];
+    actions: Action[];
     exampleMessages: Message[];
     summaries: Summary[];
     currentSummary: string;
@@ -59,7 +59,7 @@ export class Conversation{
         //TODO: wtf
         this.runFileManager = new RunFileManager(config.userFolderPath);
         this.description = "";
-        this.interactions = [];
+        this.actions = [];
         this.exampleMessages = [],
 
         //TODO:::!!!
@@ -72,11 +72,11 @@ export class Conversation{
             this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
         }
         
-        if(this.config.interactionUseTextGenApi){;
-            this.interactionApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);;
+        if(this.config.actionsUseTextGenApi){;
+            this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
         }
         else{
-            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);
+            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
         }
         
         this.loadConfig();
@@ -134,20 +134,20 @@ export class Conversation{
 
         this.pushMessage(responseMessage);
 
-        let collectedInteractions: InteractionResponse[];
-        if(this.config.interactionsEnableAll){
-            collectedInteractions = await checkInteractions(this);
+        let collectedActions: ActionResponse[];
+        if(this.config.actionsEnableAll){
+            collectedActions = await checkActions(this);
         }
         else{
-            collectedInteractions = [];
+            collectedActions = [];
         }
 
         let responseObject: ResponseObject = {
             message: responseMessage,
-            interactions: collectedInteractions
+            actions: collectedActions
         }
 
-        console.log(responseObject.interactions)
+        console.log(responseObject.actions)
 
         return responseObject;
     }
@@ -213,19 +213,19 @@ export class Conversation{
         const descriptionPath = path.join(userDataPath, 'scripts', 'prompts', 'description', this.config.selectedDescScript)
         try{
             delete require.cache[require.resolve(path.join(descriptionPath))];
-            this.description = require(path.join(descriptionPath))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID)); 
+            this.description = require(path.join(descriptionPath))(this.gameData); 
         }catch(err){
             throw new Error("description script error, your used description script file is not valid! error message:\n"+err);
         }
         const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages', this.config.selectedExMsgScript);
         try{
             delete require.cache[require.resolve(path.join(exampleMessagesPath))];
-            this.exampleMessages= require(path.join(exampleMessagesPath))(this.gameData.date, this.gameData.scene, this.gameData.location, this.gameData.characters.get(this.gameData.playerID), this.gameData.characters.get(this.gameData.aiID));
+            this.exampleMessages= require(path.join(exampleMessagesPath))(this.gameData);
         }catch(err){
             throw new Error("example messages script error, your used example messages file is not valid! error message:\n"+err);
         }
     
-        this.loadInteractions();
+        this.loadActions();
 
         this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
 
@@ -236,17 +236,17 @@ export class Conversation{
             this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
         }
         
-        if(this.config.interactionUseTextGenApi){;
-            this.interactionApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);;
+        if(this.config.actionsUseTextGenApi){;
+            this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
         }
         else{
-            this.interactionApiConnection = new ApiConnection(this.config.interactionApiConnectionConfig.connection, this.config.interactionApiConnectionConfig.parameters);
+            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
         }
        
     }
 
-    async loadInteractions(){
-        this.interactions = [];
+    async loadActions(){
+        this.actions = [];
 
         const actionsPath = path.join(userDataPath, 'scripts', 'actions');
         let standardActionFiles = fs.readdirSync(path.join(actionsPath, 'standard')).filter(file => path.extname(file) === ".js");
@@ -254,22 +254,22 @@ export class Conversation{
 
         for(const file of standardActionFiles) {
 
-            if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
+            if(this.config.disabledActions.includes(path.basename(file).split(".")[0])){
                 continue;
             }
     
-            this.interactions.push(require(path.join(actionsPath, 'standard', file)));
-            console.log(`loaded standard interaction: `+file)
+            this.actions.push(require(path.join(actionsPath, 'standard', file)));
+            console.log(`loaded standard action: `+file)
         }
 
         for(const file of customActionFiles) {
 
-            if(this.config.disabledInteractions.includes(path.basename(file).split(".")[0])){
+            if(this.config.disabledActions.includes(path.basename(file).split(".")[0])){
                 continue;
             }
     
-            this.interactions.push(require(path.join(actionsPath, 'custom', file)));
-            console.log(`loaded custom interaction: `+file)
+            this.actions.push(require(path.join(actionsPath, 'custom', file)));
+            console.log(`loaded custom action: `+file)
         }
     }
 

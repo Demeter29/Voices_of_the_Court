@@ -150,6 +150,7 @@ export class ApiConnection{
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,
+                    stream: stream,
                     ...this.parameters,
                     ...otherArgs
                 })
@@ -159,6 +160,7 @@ export class ApiConnection{
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,
+                    stream: stream,
                     ...this.parameters,
                     ...otherArgs
                 });

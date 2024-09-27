@@ -43,6 +43,10 @@ export type Character = {
     topLiege: string,
     prowess: number,
     isKnight: boolean,
+    liegeRealmLaw: string //used for knowing landless camp purpose
+    isLandedRuler: boolean,
+    heldCourtAndCouncilPositions: string
+    titleRankConcept: string,
 
     memories: Memory[],
     traits: Trait[],
@@ -55,6 +59,7 @@ export type GameData = {
     date: string,
     scene: string,
     location: string,
+    locationController: string,
 
     playerID: number,
     playerName: string,
@@ -163,6 +168,7 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             date: data[4],
             scene: data[5].substring(11),
             location: data[6],
+            locationController: data[7],
     
             characters: new Map<number,Character>
         }
@@ -193,6 +199,10 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             topLiege: data[20],
             prowess: Number(data[21]),
             isKnight: !!Number(data[22]),
+            liegeRealmLaw: data[23],
+            isLandedRuler: !!Number(data[24]),
+            heldCourtAndCouncilPositions: data[25],
+            titleRankConcept: data[26],
             memories: [],
             traits: [],
             relationsToPlayer: [],

@@ -3,37 +3,37 @@ import { Conversation } from "./Conversation";
 import { Config } from "../../shared/Config";
 import OpenAI from "openai";
 import { convertMessagesToString } from "./promptBuilder";
-import { Message, Interaction, InteractionResponse } from "../ts/conversation_interfaces";
+import { Message, Action, ActionResponse } from "../ts/conversation_interfaces";
 import { parseVariables } from "./parseVariables";
 import fs from 'fs';
 import path from 'path';
 
 
 
-export async function checkInteractions(conv: Conversation): Promise<InteractionResponse[]>{
+export async function checkActions(conv: Conversation): Promise<ActionResponse[]>{
 
-    let availableInteractions: Interaction[] = [];
+    let availableActions: Action[] = [];
 
     //TODO
-    availableInteractions = conv.interactions;
+    availableActions = conv.actions;
 
-    let triggeredInteractions: InteractionResponse[] = [];
+    let triggeredActions: ActionResponse[] = [];
     
     
     let response;
-    if(conv.interactionApiConnection.isChat()){
-        let prompt = buildInteractionChatPrompt(conv, availableInteractions);
-        response = await conv.interactionApiConnection.complete(prompt, false, {} );
+    if(conv.actionsApiConnection.isChat()){
+        let prompt = buildActionChatPrompt(conv, availableActions);
+        response = await conv.actionsApiConnection.complete(prompt, false, {} );
     }
     else{
-        let prompt = convertChatToTextPrompt(buildInteractionChatPrompt(conv, availableInteractions) );
-        response = await conv.interactionApiConnection.complete(prompt, false, {} );
+        let prompt = convertChatToTextPrompt(buildActionChatPrompt(conv, availableActions) );
+        response = await conv.actionsApiConnection.complete(prompt, false, {} );
     }
 
     response = response.replace(/(\r\n|\n|\r)/gm, "");
 
     if(!response.match(/<rationale>(.*?)<\/?rationale>/) || !response.match(/<actions>(.*?)<\/?actions>/)){
-        console.log("Interaction warning: rationale or action couldn't be extracted. llm response: "+ response);
+        console.log("Action warning: rationale or action couldn't be extracted. llm response: "+ response);
         return [];
     }
 
@@ -56,29 +56,29 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
             continue;
         }
 
-        let matchedInteractions: Interaction[] = availableInteractions.filter( validInteraction =>{
-            return validInteraction.signature == foundActionName[0];
+        let matchedActions: Action[] = availableActions.filter( validAction =>{
+            return validAction.signature == foundActionName[0];
         })
 
 
-        if(matchedInteractions.length == 0){
-            console.log("Interaction warning: the returned action from llm matched none of the listed interactions.");
+        if(matchedActions.length == 0){
+            console.log("Action warning: the returned action from llm matched none of the listed actions.");
             continue;
         }
 
-        const matchedInteraction: Interaction = matchedInteractions[0];
+        const matchedAction: Action = matchedActions[0];
 
         //validate args
         const argsString = /\(([^)]+)\)/.exec(actionInResponse);
         if(argsString == null){
-            if(matchedInteraction.args.length === 0){
-                matchedInteraction.run(conv.gameData, conv.runFileManager, []);
+            if(matchedAction.args.length === 0){
+                matchedAction.run(conv.gameData, conv.runFileManager, []);
 
-                if(matchedInteraction.group != "emotion"){
-                    triggeredInteractions.push({
-                        interactionName: matchedInteraction.signature,
-                        chatMessage: parseVariables(matchedInteraction.chatMessage([]), conv.gameData),
-                        chatMessageClass: matchedInteraction.chatMessageClass
+                if(matchedAction.group != "emotion"){
+                    triggeredActions.push({
+                        actionName: matchedAction.signature,
+                        chatMessage: parseVariables(matchedAction.chatMessage([]), conv.gameData),
+                        chatMessageClass: matchedAction.chatMessageClass
                     })
                 }
                 
@@ -86,43 +86,43 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
                 continue;
             }
 
-            console.log("Interaction warning: response action had no arguments, but matched action has");
+            console.log("Action warning: response action had no arguments, but matched action has");
             continue;
         }
 
         const args = argsString![1].split(",");
 
-        if(args.length !== matchedInteraction.args.length){
-            console.log("Interaction warning: the matched interaction has different number of args than the one from the llm response.");
+        if(args.length !== matchedAction.args.length){
+            console.log("Action warning: the matched action has different number of args than the one from the llm response.");
             continue;
         }
 
-        let isValidInteraction = true;
+        let isValidAction = true;
         for(let i =0; i<args.length;i++){
 
-            if(matchedInteraction.args[0].type === "number"){
+            if(matchedAction.args[0].type === "number"){
                 if(isNaN(Number(args[0]))){
-                    console.log("Interaction warning: argument was not the valid type");
-                    isValidInteraction = false;
+                    console.log("Action warning: argument was not the valid type");
+                    isValidAction = false;
                     break;
                 }
                 
             }
-            else if(matchedInteraction.args[0].type === "string"){
+            else if(matchedAction.args[0].type === "string"){
                 //TODO
             }
         }
-        if(!isValidInteraction){
+        if(!isValidAction){
             continue;
         }
 
-        matchedInteraction.run(conv.gameData, conv.runFileManager, args);
+        matchedAction.run(conv.gameData, conv.runFileManager, args);
 
-        if(matchedInteraction.group != "emotion"){
-            triggeredInteractions.push({
-                interactionName: matchedInteraction.signature,
-                chatMessage: parseVariables(matchedInteraction.chatMessage(args), conv.gameData),
-                chatMessageClass: matchedInteraction.chatMessageClass
+        if(matchedAction.group != "emotion"){
+            triggeredActions.push({
+                actionName: matchedAction.signature,
+                chatMessage: parseVariables(matchedAction.chatMessage(args), conv.gameData),
+                chatMessageClass: matchedAction.chatMessageClass
             })
         }
         
@@ -136,10 +136,10 @@ export async function checkInteractions(conv: Conversation): Promise<Interaction
     );
     
 
-    return triggeredInteractions;
+    return triggeredActions;
 }
 
-function buildInteractionChatPrompt(conv: Conversation, interactions: Interaction[]): Message[]{
+function buildActionChatPrompt(conv: Conversation, actions: Action[]): Message[]{
     let output: Message[] = [];
 
     output.push({
@@ -174,27 +174,27 @@ function buildInteractionChatPrompt(conv: Conversation, interactions: Interactio
     
     let content = `List of actions ${conv.gameData.aiName} can do:`;
 
-    for(const interaction of interactions){ 
+    for(const action of actions){ 
 
         let argNames: string[] = [];
-        interaction.args.forEach( arg => { argNames.push(arg.name)})
+        action.args.forEach( arg => { argNames.push(arg.name)})
 
-        let signature = interaction.signature+'('+argNames.join(', ')+')';
+        let signature = action.signature+'('+argNames.join(', ')+')';
 
         let argString = "";
-        if(interaction.args.length == 0){
+        if(action.args.length == 0){
             argString = "Takes no arguments."
         }
         else{
-            argString = `Takes ${interaction.args.length} arguments: `
+            argString = `Takes ${action.args.length} arguments: `
         }
 
-        for(const arg of interaction.args){
+        for(const arg of action.args){
             argString += `${arg.name} (${arg.type}): ${arg.desc}. `
         }
 
         
-        content += `\n- ${signature}: ${parseVariables(interaction.description, conv.gameData)} ${parseVariables(argString, conv.gameData)}`;
+        content += `\n- ${signature}: ${parseVariables(action.description, conv.gameData)} ${parseVariables(argString, conv.gameData)}`;
     }
     content += `\n- noop(): Execute when none of the previous actions are a good fit for the given replies.`
 

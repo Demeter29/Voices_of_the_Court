@@ -1,4 +1,4 @@
-import {  app, BrowserWindow, screen, ipcMain } from "electron";
+import {  app, BrowserWindow, screen, ipcMain, Rectangle} from "electron";
 import { OverlayController, OVERLAY_WINDOW_OPTS } from 'electron-overlay-window';
 import {ClipboardListener} from '../ClipboardListener.js';
 import { Conversation } from "../conversation/Conversation.js";
@@ -21,8 +21,12 @@ export class ChatWindow{
             webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
+           
+
             }       
         })
+
+        //this.window.setShape([{x:0, y:0, width: 650, height: 800}])
         
         this.windowWatchId = 0;
 
@@ -54,7 +58,7 @@ export class ChatWindow{
         this.isShown = true;
 
         this.windowWatchId = ActiveWindow.subscribe( (winInfo) =>{
-            if(winInfo?.title == "GPT Kings" || winInfo?.title == "Crusader Kings III" ){
+            if(winInfo?.title == "Crusader Kings III" && this.isShown ){
 
                 OverlayController.activateOverlay();
                 this.window.webContents.send('chat-show');

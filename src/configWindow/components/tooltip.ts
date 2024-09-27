@@ -7,7 +7,7 @@ const template = document.createElement("template");
 
 function defineTemplate(side:string){
     return `
-    <link rel="stylesheet" href="../../public/configWindow/launcher.css"/>
+    <link rel="stylesheet" href="../../public/configWindow/config.css"/>
     <style>
     </style>
     <div class="tooltip tooltip-${side}"> <img src="../../public/assets/tooltip2.png" height="15" wdith="15">

@@ -7,7 +7,7 @@ const template = document.createElement("template");
 
 function defineTemplate(label: string, min: number, max: number, step: number){
     return `
-    <link rel="stylesheet" href="../../public/configWindow/launcher.css">
+    <link rel="stylesheet" href="../../public/configWindow/config.css">
     <style>
     </style>
     <div>

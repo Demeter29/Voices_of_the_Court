@@ -1,7 +1,12 @@
 //Made by: Durond
 //Script version: v1
 
-module.exports = (date, scene, location, player, ai) => {
+module.exports = (gameData) => {
+    const date = gameData.date;
+    const scene = gameData.scene;
+    const location = gameData.location;
+    const player = gameData.characters.get(gameData.playerID);
+    const ai = gameData.characters.get(gameData.aiID);
 
     let msgs = [];
 

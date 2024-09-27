@@ -6,19 +6,19 @@ import fs from 'fs';
 import path from 'path';
 
 //@ts-ignore
-let enableInteractions: HTMLElement = document.querySelector("#enable-interactions").checkbox;
-let interactions: HTMLElement = document.querySelector("#interactions")!;
+let enableActions: HTMLElement = document.querySelector("#enable-actions").checkbox;
+let actions: HTMLElement = document.querySelector("#actions")!;
 //@ts-ignore
 let useConnectionAPI: HTMLElement = document.querySelector("#use-connection-api")!.checkbox;
 let apiSelector: HTMLElement = document.querySelector("#api-selector")!;
 
-let interactionsDiv: HTMLDivElement = document.querySelector("#interaction-group")!;
+let actionsDiv: HTMLDivElement = document.querySelector("#actions-group")!;
 
-let refreshInteractionsButton: HTMLButtonElement = document.querySelector("#refresh-interactions")!;
+let refreshactionsButton: HTMLButtonElement = document.querySelector("#refresh-actions")!;
 
 let config;
-let disabledInteractions:string[];
-let interactionsPath: string;
+let disabledActions:string[];
+let actionsPath: string;
 
 init();
 
@@ -26,26 +26,26 @@ async function init(){
     config = await ipcRenderer.invoke('get-config');
 
     
-     disabledInteractions= config!.disabledInteractions;
+     disabledActions= config!.disabledActions;
 
-    loadInteractions();
+    loadactions();
 
-    refreshInteractionsButton.addEventListener('click', ()=>{
-        loadInteractions();
+    refreshactionsButton.addEventListener('click', ()=>{
+        loadactions();
     })
 
     let userDataPath = await ipcRenderer.invoke('get-userdata-path');
     
-    interactionsPath = path.join(userDataPath, 'scripts', 'actions');
+    actionsPath = path.join(userDataPath, 'scripts', 'actions');
 
 
         //init
     toggleApiSelector();
-    toggleInteractions();
+    toggleActions();
 
-    enableInteractions.addEventListener('change', () =>{
+    enableActions.addEventListener('change', () =>{
         
-        toggleInteractions();
+        toggleActions();
     })
 
     useConnectionAPI.addEventListener('change', () =>{
@@ -70,15 +70,15 @@ function toggleApiSelector(){
     }
 }
 
-function toggleInteractions(){
+function toggleActions(){
     //@ts-ignore
-    if(!enableInteractions.checked){
-        interactions.style.opacity = "0.5";
-        interactions.style.pointerEvents = "none";
+    if(!enableActions.checked){
+        actions.style.opacity = "0.5";
+        actions.style.pointerEvents = "none";
     }
     else{
-        interactions.style.opacity = "1";
-        interactions.style.pointerEvents = "auto";
+        actions.style.opacity = "1";
+        actions.style.pointerEvents = "auto";
     }
 }
 
@@ -91,13 +91,13 @@ function toggleInteractions(){
 
 
 
-async function loadInteractions(){
+async function loadactions(){
 
-    interactionsDiv.replaceChildren();
+    actionsDiv.replaceChildren();
 
     await sleep(250)
-    let standardFileNames = fs.readdirSync(path.join(interactionsPath, 'standard')).filter(file => path.extname(file) === '.js'); 
-    let customFileNames = fs.readdirSync(path.join(interactionsPath, 'custom')).filter(file => path.extname(file) === '.js'); 
+    let standardFileNames = fs.readdirSync(path.join(actionsPath, 'standard')).filter(file => path.extname(file) === '.js'); 
+    let customFileNames = fs.readdirSync(path.join(actionsPath, 'custom')).filter(file => path.extname(file) === '.js'); 
     
 
     
@@ -105,66 +105,66 @@ async function loadInteractions(){
     for(const fileName of standardFileNames){
 
         
-        let file  = require(path.join(interactionsPath, 'standard', fileName));
+        let file  = require(path.join(actionsPath, 'standard', fileName));
         
         let element = document.createElement("div");
 
-        let isChecked = !disabledInteractions.includes(file.signature);
+        let isChecked = !disabledActions.includes(file.signature);
 
         element.innerHTML = `
         <input type="checkbox" id="${file.signature}" ${isChecked? "checked" : ""}>
         <label>${file.signature}</label>
         `
 
-        interactionsDiv.appendChild(element);
+        actionsDiv.appendChild(element);
 
         element.addEventListener("change", (e: any)=>{
             //@ts-ignore
             if(element.querySelector(`#${file.signature}`)!.checked == false){
                 console.log("dsa")
-                if(!disabledInteractions.includes(file.signature)){
-                    disabledInteractions.push(file.signature);
+                if(!disabledActions.includes(file.signature)){
+                    disabledActions.push(file.signature);
                 }
             }
             else{
                 //@ts-ignore
-                disabledInteractions = disabledInteractions.filter(e => e !== file.signature);
+                disabledActions = disabledActions.filter(e => e !== file.signature);
             }
-            console.log(disabledInteractions)
-            ipcRenderer.send('config-change', "disabledInteractions", disabledInteractions);
+            console.log(disabledActions)
+            ipcRenderer.send('config-change', "disabledActions", disabledActions);
         });     
     }
 
     for(const fileName of customFileNames){
 
         
-        let file  = require(path.join(interactionsPath, 'custom', fileName));
+        let file  = require(path.join(actionsPath, 'custom', fileName));
         
         let element = document.createElement("div");
 
-        let isChecked = !disabledInteractions.includes(file.signature);
+        let isChecked = !disabledActions.includes(file.signature);
 
         element.innerHTML = `
         <input type="checkbox" id="${file.signature}" ${isChecked? "checked" : ""}>
         <label>${file.signature}</label>
         `
 
-        interactionsDiv.appendChild(element);
+        actionsDiv.appendChild(element);
 
         element.addEventListener("change", (e: any)=>{
             //@ts-ignore
             if(element.querySelector(`#${file.signature}`)!.checked == false){
                 console.log("dsa")
-                if(!disabledInteractions.includes(file.signature)){
-                    disabledInteractions.push(file.signature);
+                if(!disabledActions.includes(file.signature)){
+                    disabledActions.push(file.signature);
                 }
             }
             else{
                 //@ts-ignore
-                disabledInteractions = disabledInteractions.filter(e => e !== file.signature);
+                disabledActions = disabledActions.filter(e => e !== file.signature);
             }
-            console.log(disabledInteractions)
-            ipcRenderer.send('config-change', "disabledInteractions", disabledInteractions);
+            console.log(disabledActions)
+            ipcRenderer.send('config-change', "disabledActions", disabledActions);
         });     
     }
 }

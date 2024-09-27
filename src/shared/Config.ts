@@ -29,13 +29,13 @@ export class Config{
 
     textGenerationApiConnectionConfig: ApiConnectionConfig;
     summarizationApiConnectionConfig: ApiConnectionConfig;
-    interactionApiConnectionConfig: ApiConnectionConfig;
+    actionsApiConnectionConfig: ApiConnectionConfig;
 
     summarizationUseTextGenApi: boolean;
-    interactionUseTextGenApi: boolean;
+    actionsUseTextGenApi: boolean;
 
-    interactionsEnableAll: boolean;
-    disabledInteractions: string[];
+    actionsEnableAll: boolean;
+    disabledActions: string[];
 
     cleanMessages: boolean;
     debugMode: boolean;
@@ -67,13 +67,13 @@ export class Config{
 
         this.textGenerationApiConnectionConfig = obj.textGenerationApiConnectionConfig;
         this.summarizationApiConnectionConfig = obj.summarizationApiConnectionConfig;
-        this.interactionApiConnectionConfig = obj.interactionApiConnectionConfig;
+        this.actionsApiConnectionConfig = obj.actionsApiConnectionConfig;
 
         this.summarizationUseTextGenApi = obj.summarizationUseTextGenApi;
-        this.interactionUseTextGenApi = obj.interactionUseTextGenApi;
+        this.actionsUseTextGenApi = obj.actionsUseTextGenApi;
 
-        this.interactionsEnableAll = obj.interactionsEnableAll;
-        this.disabledInteractions = obj.disabledInteractions;
+        this.actionsEnableAll = obj.actionsEnableAll;
+        this.disabledActions = obj.disabledActions;
 
         this.cleanMessages = obj.cleanMessages;
         
@@ -98,10 +98,10 @@ export class Config{
         //pass by value
         let output: Config = JSON.parse(JSON.stringify(this));
         output.textGenerationApiConnectionConfig.connection.key= "<hidden>";
-        output.interactionApiConnectionConfig.connection.key = "<hidden>";
+        output.actionsApiConnectionConfig.connection.key = "<hidden>";
         output.summarizationApiConnectionConfig.connection.key = "<hidden>";
         output.textGenerationApiConnectionConfig.connection.baseUrl= "<hidden>";
-        output.interactionApiConnectionConfig.connection.baseUrl = "<hidden>";
+        output.actionsApiConnectionConfig.connection.baseUrl = "<hidden>";
         output.summarizationApiConnectionConfig.connection.baseUrl = "<hidden>";
 
         return output;
