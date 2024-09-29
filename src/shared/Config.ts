@@ -46,11 +46,13 @@ export class Config{
 
     mainPrompt: string;
     summarizePrompt: string;
+    memoriesPrompt: string;
     suffixPrompt: string;
     enableSuffixPrompt: boolean;
 
     constructor(configPath: string){  
         const obj = JSON.parse(fs.readFileSync(configPath).toString());
+
        
         this.userFolderPath = obj.userFolderPath;
         this.stream = obj.stream;
@@ -85,6 +87,7 @@ export class Config{
 
         this.mainPrompt =  obj.mainPrompt;
         this.summarizePrompt =  obj.summarizePrompt;
+        this.memoriesPrompt = obj.memoriesPrompt;
         this.suffixPrompt =  obj.suffixPrompt;
         this.enableSuffixPrompt =  obj.enableSuffixPrompt;
         

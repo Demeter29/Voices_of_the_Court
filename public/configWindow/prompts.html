@@ -37,6 +37,11 @@
                     </div>
 
                     <div class="input-group">
+                      Memories prompt
+                      <config-textarea confID="memoriesPrompt" rows="2"></config-textarea>
+                    </div>
+
+                    <div class="input-group">
                         <config-checkbox id="suffix-prompt-checkbox" confID="enableSuffixPrompt" label="Suffix prompt"></config-checkbox> <tooltip-text side="top">If enabled, suffix prompt is inserted as the last (system) message before sending the API request, it's useful for jailbreaking, or instructing the model on how to format the response message.</tooltip-text>
                         <config-textarea id="suffix-prompt-textarea" confID="suffixPrompt" rows="6"></config-textarea> 
                     </div>
@@ -84,6 +89,6 @@
     <script>require("../../dist/configWindow/components/tooltip.js")</script>
     <script>require("../../dist/configWindow/components/configCheckbox.js")</script>
     <script>require("../../dist/configWindow/components/configTextarea.js")</script>
-    <script>require("../../dist/configWindow/promptingRenderer.js")</script>
+    <script>require("../../dist/configWindow/promptsRenderer.js")</script>
   </body>
 </html>

@@ -4,7 +4,7 @@ import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';
 import { checkActions } from './checkActions.js';
-import { convertChatToText, buildChatPrompt, buildSummarizeTextPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt} from './promptBuilder.js';
+import { convertChatToText, buildChatPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt} from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
 import fs from 'fs';
@@ -119,7 +119,7 @@ export class Conversation{
             responseMessage = {
                 role: "assistant",
                 name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config.inputSequence, this.config.outputSequence), this.config.stream, {
+                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config), this.config.stream, {
                     stop: [this.config.inputSequence, this.config.outputSequence],
                     max_tokens: this.config.maxTokens,
                 },
@@ -168,7 +168,13 @@ export class Conversation{
 
             if(messagesToSummarize.length > 0){ //prevent infinite loops
                 console.log("current summary: "+this.currentSummary)
-                this.currentSummary = await this.summarizationApiConnection.complete(buildResummarizeChatPrompt(this, messagesToSummarize), false, {});
+                if(this.summarizationApiConnection.isChat()){
+                    this.currentSummary = await this.summarizationApiConnection.complete(buildResummarizeChatPrompt(this, messagesToSummarize), false, {});
+                }
+                else{
+                    this.currentSummary = await this.summarizationApiConnection.complete(convertChatToText(buildResummarizeChatPrompt(this, messagesToSummarize), this.config), false, {});
+                }
+               
                 console.log("after current summary: "+this.currentSummary)
             }
     }

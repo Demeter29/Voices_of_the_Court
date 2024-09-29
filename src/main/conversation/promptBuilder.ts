@@ -2,8 +2,9 @@ import { Conversation, } from "./Conversation";
 import { parseVariables } from "./parseVariables";
 import { Message } from "../ts/conversation_interfaces";
 import { GameData, Memory } from "../../shared/GameData";
+import { Config } from "../../shared/Config";
 
-export function convertChatToText(chat: Message[], inputSeq: string, outputSeq: string): string{
+export function convertChatToText(chat: Message[], config: Config): string{
     let output: string = "";
 
     for(let msg of chat){
@@ -13,44 +14,17 @@ export function convertChatToText(chat: Message[], inputSeq: string, outputSeq: 
                     output += msg.content+"\n";
                 break;
             case "user":
-                output += `${inputSeq}\n${msg.name}: ${msg.content}\n`;
+                output += `${config.inputSequence}\n${msg.name}: ${msg.content}\n`;
                 break;
                 case "assistant":
-                    output += `${outputSeq}\n${msg.name}: ${msg.content}\n`;
+                    output += `${config.outputSequence}\n${msg.name}: ${msg.content}\n`;
                     break;
         }
     }
 
-    output+=outputSeq
+    output+=config.outputSequence
     return output;
 }
-
-/*
-export function buildTextPrompt(conv: Conversation): string {
-        let output: string = "";
-
-        output+= parseVariables(conv.setting.mainPrompt, conv.gameData) +"\n";
-
-        output+= "Examples:\n"
-       
-        output+= convertMessagesToString(conv.exampleMessages, conv.setting.inputSequence, conv.setting.outputSequence);
-
-
-        const descMessage: Message = {
-            role: "system",
-            content: conv.description
-        };
-
-        let messagesWithDesc: Message[] = insertMessageAtDepth(conv.messages, descMessage, conv.config.descInsertDepth);
-
-        
-        output+= convertMessagesToString(messagesWithDesc, conv.setting.inputSequence, conv.setting.outputSequence);
-
-        output += conv.setting.outputSequence + conv.gameData.aiName +":"
-
-        return output;
-}
-*/
 
 export function buildChatPrompt(conv: Conversation): Message[]{
     let chatPrompt: Message[]  = [];
@@ -155,15 +129,6 @@ export function buildChatPrompt(conv: Conversation): Message[]{
 }
 
 //SUMMARIZATION
-
-export function buildSummarizeTextPrompt(conv: Conversation): string{
-    let output = convertMessagesToString(conv.messages, "", "")
-    
-
-    output+= conv.config.inputSequence + parseVariables(conv.config.summarizePrompt, conv.gameData) + "\n" +conv.config.outputSequence;
-
-    return output;
-}
 
 export function buildSummarizeChatPrompt(conv: Conversation): Message[]{
     
@@ -303,7 +268,7 @@ function createMemoryString(conv: Conversation): string{
 
     let output ="";
     if(allMemories.length>0){
-        output = "These are the significant events that has happened to the characters:"
+        output = conv.config.memoriesPrompt;
     }
 
     let tokenCount = 0;
