@@ -1,4 +1,4 @@
-import { GameData } from "../../shared/GameData";
+import { GameData } from "../shared/GameData";
 
 //replaces variables inside string. "Write {{aiName}}'s next reply" --> "Write Duke Vratislav's next reply"
 export function parseVariables(input: string, gameData: GameData): string {

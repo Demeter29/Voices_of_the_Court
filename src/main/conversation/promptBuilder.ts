@@ -1,5 +1,5 @@
 import { Conversation, } from "./Conversation";
-import { parseVariables } from "./parseVariables";
+import { parseVariables } from "../parseVariables";
 import { Message } from "../ts/conversation_interfaces";
 import { GameData, Memory } from "../../shared/GameData";
 import { Config } from "../../shared/Config";

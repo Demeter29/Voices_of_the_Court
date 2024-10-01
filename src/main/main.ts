@@ -226,6 +226,31 @@ ipcMain.on('update-app', ()=>{
     autoUpdater.checkForUpdates();
 });
 
+ipcMain.on('clear-summaries', ()=>{
+    const dialogOpts = {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: 'Clear summaries',
+        message: "Are you sure want to clear conversation summaries?",
+      }
+    
+      dialog.showMessageBox(dialogOpts).then((returnValue) => {
+        if (returnValue.response === 0){
+            const remPath = path.join(userDataPath, 'conversation_summaries');
+
+            fs.readdir(remPath, (err, files) => {
+                if (err) throw err;
+
+                for(const file of files){
+                    fs.rmSync(path.join(remPath, file), { recursive: true, force: true });
+                }
+
+                
+            })
+        }
+      })
+})
+
 let conversation: Conversation;
 
 clipboardListener.on('VOTC:IN', async () =>{
