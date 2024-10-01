@@ -31,8 +31,7 @@ export interface Parameters{
 
 export class ApiConnection{
     type: string; //openrouter, openai, ooba
-    baseUrl: string;
-    key: string;
+    client: OpenAI;
     model: string;
     forceInstruct: boolean ;//only used by openrouter
     parameters: Parameters;
@@ -42,8 +41,11 @@ export class ApiConnection{
 
     constructor(connection: Connection, parameters: Parameters){
         this.type = connection.type;
-        this.baseUrl = connection.baseUrl;
-        this.key = connection.key;
+        this.client = new OpenAI({
+            baseURL: connection.baseUrl,
+            apiKey: connection.key,
+            dangerouslyAllowBrowser: true,
+        })
         this.model = connection.model;
         this.forceInstruct = connection.forceInstruct;
         this.parameters = parameters;
@@ -70,7 +72,7 @@ export class ApiConnection{
     }
 
     isChat(): boolean {
-        if(this.type === "openai" || (this.type === "openrouter" && !this.forceInstruct ) ){
+        if(this.type === "openai" || (this.type === "openrouter" && !this.forceInstruct ) || this.type === "other"){
             return true;
         }
         else{
@@ -81,11 +83,6 @@ export class ApiConnection{
 
     async complete(prompt: string | Message[], stream: boolean, otherArgs: object, streamRelay?: (arg1: MessageChunk)=> void,  ): Promise<string> {
 
-        let openai = new OpenAI({
-            baseURL: this.baseUrl,
-            apiKey: this.key,
-            dangerouslyAllowBrowser: true,
-        })
 
         //OPENAI DOESNT ALLOW spaces inside message.name so we have to put them inside the Message content.
         if(this.type == "openai"){
@@ -103,7 +100,7 @@ export class ApiConnection{
         console.log(prompt);
         
         if(this.isChat()){
-            let completion = await openai.chat.completions.create({
+            let completion = await this.client.chat.completions.create({
                 model: this.model,
                 //@ts-ignore
                 messages: prompt,
@@ -156,7 +153,7 @@ export class ApiConnection{
                 })
             }
             else{
-                completion = await openai.completions.create({
+                completion = await this.client.completions.create({
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,

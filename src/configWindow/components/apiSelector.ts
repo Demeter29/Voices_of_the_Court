@@ -15,10 +15,10 @@ function defineTemplate(label: string){
     <div class="input-group">
         <label for="connection-api">API</label>
         <select name="connection-api" id="connection-api">
-        <option value="openai">OpenAI</option>
-        <option value="ooba">Text Gen WebUI (ooba)</option>
-        <option value="openrouter">OpenRouter</option>
-        <option disabled value="patreon">Patreon (soon!)</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="ooba">Text Gen WebUI (ooba)</option>
+            <option value="openai">OpenAI</option>
+            <option value="custom">Custom (OpenAI-compatible)</option>
         </select> 
     </div>
     
@@ -45,10 +45,10 @@ function defineTemplate(label: string){
             <h2>Text-Gen-WebUI (Ooba)</h2>
 
             <div class="input-group">
-            <label for="ooba-url">Server URL</label>
-            <br>
-            <input type="text" id="ooba-url">
-            <br>
+                <label for="ooba-url">Server URL</label>
+                <br>
+                <input type="text" id="ooba-url">
+                <br>
             </div>
         
         </div>
@@ -74,6 +74,27 @@ function defineTemplate(label: string){
             </div>
         </div>
 
+        <div id="custom-menu">
+            <h2>Custom (Openai-compatible) endpoint</h2>
+
+            <div class="input-group">
+                <label for="custom-url">Server URL</label>
+                <br>
+                <input type="text" id="custom-url">
+            </div>
+            <div class="input-group">
+                <label for="custom-key">API Key</label>
+                <br>
+                <input type="text" id="custom-key">
+            </div>
+            <div class="input-group">
+                <label for="custom-model">Model</label>
+                <br>
+                <input type="text" id="custom-model">
+            </div>
+    
+        </div>
+
         <hr>
         <input type="checkbox" id="overwrite-context"/>
         <label>Overwrite context size</label> <br>
@@ -92,12 +113,12 @@ class ApiSelector extends HTMLElement{
     typeSelector
     checkbox: any;
 
-    openaiDiv: HTMLInputElement
-    oobaDiv: HTMLInputElement
-    openrouterDiv: HTMLInputElement 
+    openaiDiv: HTMLDivElement
+    oobaDiv: HTMLDivElement
+    openrouterDiv: HTMLDivElement 
+    customDiv: HTMLDivElement 
 
     openaiKeyInput: HTMLInputElement 
-    openaiSaveButton: HTMLInputElement 
     openaiModelSelect: HTMLSelectElement 
 
     oobaUrlInput: HTMLSelectElement 
@@ -106,6 +127,10 @@ class ApiSelector extends HTMLElement{
     openrouterKeyInput: HTMLSelectElement 
     openrouterModelInput: HTMLInputElement 
     openrouterInstructModeCheckbox: HTMLInputElement 
+
+    customUrlInput: HTMLSelectElement 
+    customKeyInput: HTMLInputElement 
+    customModelInput: HTMLSelectElement 
 
     testConnectionButton: HTMLButtonElement 
     testConnectionSpan: HTMLButtonElement 
@@ -131,9 +156,9 @@ class ApiSelector extends HTMLElement{
         this.openaiDiv = this.shadow.querySelector("#openai-menu")!;
         this.oobaDiv = this.shadow.querySelector("#ooba-menu")!;
         this.openrouterDiv = this.shadow.querySelector("#openrouter-menu")!;
+        this.customDiv = this.shadow.querySelector("#custom-menu")!;
 
         this.openaiKeyInput = this.shadow.querySelector("#openai-key")!;
-        this.openaiSaveButton = this.shadow.querySelector("#openai-key-save")!;
         this.openaiModelSelect = this.shadow.querySelector("#openai-model-select")!;
 
         this.oobaUrlInput = this.shadow.querySelector("#ooba-url")!;
@@ -142,6 +167,10 @@ class ApiSelector extends HTMLElement{
         this.openrouterKeyInput = this.shadow.querySelector("#openrouter-key")!;
         this.openrouterModelInput = this.shadow.querySelector("#openrouter-model")!;
         this.openrouterInstructModeCheckbox = this.shadow.querySelector("#openrouter-instruct-mode")!;
+
+        this.customUrlInput = this.shadow.querySelector("#custom-url")!;
+        this.customKeyInput = this.shadow.querySelector("#custom-key")!;
+        this.customModelInput = this.shadow.querySelector("#custom-model")!;
 
         this.testConnectionButton = this.shadow.querySelector("#connection-test-button")!;
         this.testConnectionSpan = this.shadow.querySelector("#connection-test-span")!;
@@ -162,31 +191,36 @@ class ApiSelector extends HTMLElement{
 
         let apiConfig = config[confID].connection;
 
-        //@ts-ignore
+        
         this.typeSelector.value = apiConfig.type;
         this.displaySelectedApiBox();
 
-        //@ts-ignore
+        
         if(apiConfig.type == "openai"){
-            //@ts-ignore
+            
             this.openaiKeyInput.value = apiConfig.key;
-            //@ts-ignore
+            
             this.openaiModelSelect.value =  apiConfig.model;
         }
-        //@ts-ignore
+        
         else if(apiConfig.type == "ooba"){
-            //@ts-ignore
+            
             this.oobaUrlInput.value = apiConfig.key;
         }
-        //@ts-ignore
+        
         else if(apiConfig.type == "openrouter"){
-            //@ts-ignore
+            
             this.openrouterKeyInput.value = apiConfig.key;
-            //@ts-ignore
+            
             this.openrouterModelInput.value = apiConfig.model;
-            //@ts-ignore
+            
         }
-        //@ts-ignore
+        else if(apiConfig.type == "custom"){
+            this.customUrlInput.value = apiConfig.key;
+            this.customKeyInput.value = apiConfig.key;
+            this.customModelInput.value = apiConfig.model;
+        }
+        
         this.openrouterInstructModeCheckbox.checked = apiConfig.forceInstruct;
 
         this.overwriteContextCheckbox.checked = apiConfig.overwriteContext;
@@ -209,6 +243,9 @@ class ApiSelector extends HTMLElement{
                 case 'openrouter': 
                     this.saveOpenrouterConfig();
                 break;
+                case 'custom': 
+                    this.saveCustomConfig();
+                break;
             }
 
         });
@@ -223,6 +260,10 @@ class ApiSelector extends HTMLElement{
 
         this.openrouterDiv.addEventListener("change", (e:any) =>{
             this.saveOpenrouterConfig();
+        })
+
+        this.customDiv.addEventListener("change", (e:any) =>{
+            this.saveCustomConfig();
         })
 
         this.testConnectionButton.addEventListener('click', async (e:any) =>{
@@ -291,16 +332,25 @@ class ApiSelector extends HTMLElement{
                 this.openaiDiv.style.display = "block";
                 this.oobaDiv.style.display = "none";
                 this.openrouterDiv.style.display = "none";
+                this.customDiv.style.display = "none";
                 break;
             case 'ooba':
                 this.openaiDiv.style.display = "none";
                 this.oobaDiv.style.display = "block";
                 this.openrouterDiv.style.display = "none";
+                this.customDiv.style.display = "none";
                 break;
             case 'openrouter':
                 this.openaiDiv.style.display = "none";
                 this.oobaDiv.style.display = "none";
                 this.openrouterDiv.style.display = "block";
+                this.customDiv.style.display = "none";
+                break;
+            case 'custom':
+                this.openaiDiv.style.display = "none";
+                this.oobaDiv.style.display = "none";
+                this.openrouterDiv.style.display = "none";
+                this.customDiv.style.display = "block";
                 break;
         }
     }
@@ -355,6 +405,21 @@ class ApiSelector extends HTMLElement{
         ipcRenderer.send('config-change-nested', this.confID, "connection", newConf);
         //@ts-ignore
     }   
+
+    saveCustomConfig(){
+        const newConf = {
+            type: "custom",
+            baseUrl: this.customUrlInput.value,
+            key: this.customKeyInput.value,
+            model: this.customModelInput.value,
+            forceInstruct: false,
+            overwriteContext: this.overwriteContextCheckbox.checked,
+            customContext: this.customContextNumber.value
+        }
+        //ipcRenderer.send('config-change', this.confID, newConf);
+        ipcRenderer.send('config-change-nested', this.confID, "connection", newConf);
+        //@ts-ignore
+    }  
     
 }
 
