@@ -99,6 +99,7 @@ export class Conversation{
         }
 
         let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
+        //let currentTokens = 500;
         console.log(`current tokens: ${currentTokens}`);
 
         if(currentTokens > this.textGenApiConnection.context){

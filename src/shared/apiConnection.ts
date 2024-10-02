@@ -37,6 +37,7 @@ export class ApiConnection{
     parameters: Parameters;
     context: number;
     overwriteWarning: boolean;
+    encoder: tiktoken.Tiktoken;
     
 
     constructor(connection: Connection, parameters: Parameters){
@@ -49,6 +50,7 @@ export class ApiConnection{
         this.model = connection.model;
         this.forceInstruct = connection.forceInstruct;
         this.parameters = parameters;
+        this.encoder = tiktoken.getEncoding("cl100k_base");
 
         let modelName = this.model
         if(modelName && modelName.includes("/")){
@@ -221,28 +223,20 @@ export class ApiConnection{
     }
 
     calculateTokensFromText(text: string): number{
-    
-        const enc = tiktoken.getEncoding("cl100k_base");
-          return enc.encode(text).length;
+          return this.encoder.encode(text).length;
     }
 
     calculateTokensFromMessage(msg: Message): number{
-    
-        const enc = tiktoken.getEncoding("cl100k_base");
-
-        let sum = enc.encode(msg.role).length + enc.encode(msg.content).length
+        let sum = this.encoder.encode(msg.role).length + this.encoder.encode(msg.content).length
 
         if(msg.name){
-            sum += enc.encode(msg.name).length;
+            sum += this.encoder.encode(msg.name).length;
         }
 
         return sum;
     }
 
-    calculateTokensFromChat(chat: Message[]): number{
-    
-        const enc = tiktoken.getEncoding("cl100k_base");
-        
+    calculateTokensFromChat(chat: Message[]): number{        
         let sum=0;
         for(let msg of chat){
            sum += this.calculateTokensFromMessage(msg);
