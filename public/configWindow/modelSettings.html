@@ -65,9 +65,23 @@
                 <config-number confID="descInsertDepth" label="Char desc insert depth" min="0" max="20"></config-number>
               </div>
             </div>
+          </div>  
+        </div>
+        <br>
+
+        <h2>Instruct settings</h2>
+
+        <div class="border">
+          
+          <div class="row">
+            <div class="column">
+              <config-text confID="inputSequence" label="Input sequence"></config-text>
+            </div>
+            <div class="column">
+              <config-text confID="outputSequence" label="output sequence"></config-text>
+            </div>
           </div>
 
-          
         </div>
 
       </div>
@@ -75,6 +89,7 @@
 
         <h2>Text-generation parameters</h2>
 
+        
 
         <parameters-box confID="textGenerationApiConnectionConfig" tempDefault="0.8" freqPenDefault ="0" presPenDefault="0" topPDefault="0.9"></parameters-box>
 
@@ -91,6 +106,7 @@
 
 
   <script>require("../../dist/configWindow/components/ConfigCheckbox.js")</script>
+  <script>require("../../dist/configWindow/components/ConfigText.js")</script>
   <script>require("../../dist/configWindow/components/ConfigNumber.js")</script>
   <script>require("../../dist/configWindow/components/ConfigSlider.js")</script>
     <script>require("../../dist/configWindow/components/ParametersBox.js")</script>
