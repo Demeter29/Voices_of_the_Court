@@ -10,10 +10,10 @@ module.exports = (gameData) => {
 
     let msgs = [];
 
-    let personalityTraits = ai.traits.filter( (trait) => trait.category == "Personality Trait");
+    let personalityTraits = ai.traits.filter( (trait) => trait.category == "Свойство личности");
 
     if(personalityTraits.length == 0){
-        return msgs;
+        return {}
     }
 
     let output="";

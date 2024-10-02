@@ -26,8 +26,8 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
         response = await conv.actionsApiConnection.complete(prompt, false, {} );
     }
     else{
-        let prompt = convertChatToTextPrompt(buildActionChatPrompt(conv, availableActions) );
-        response = await conv.actionsApiConnection.complete(prompt, false, {} );
+        let prompt = convertChatToTextPrompt(buildActionChatPrompt(conv, availableActions), conv.config );
+        response = await conv.actionsApiConnection.complete(prompt, false, {stop: [conv.config.inputSequence, conv.config.outputSequence]} );
     }
 
     response = response.replace(/(\r\n|\n|\r)/gm, "");
@@ -141,38 +141,8 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
 
 function buildActionChatPrompt(conv: Conversation, actions: Action[]): Message[]{
     let output: Message[] = [];
-
-    output.push({
-        role: "system",
-        content: `Your task is to select the actions you think ${conv.gameData.aiName} did based on her last message. The rationale must be relevant to ${conv.gameData.aiName}'s personality, scenario, and the conversation so far. The actions MUST exist in the provided list. You can select multiple actions, seperate them with commas. If a function takes a value, then put it inside the brackets after the function, a function can take either 0 or 1 values.`
-    })
-
-    output.push({
-        role: "system",
-        content: `Choose ${conv.gameData.aiName}'s most relevant actions for the provided dialogue based on ${conv.gameData.aiName}'s last message or action.`
-    })
-
-
-    output.push({
-        role: "system",
-        content: "Prior dialogue:\n"+ convertMessagesToString(conv.messages.slice(conv.messages.length-8, conv.messages.length-2), "", "")
-    })
-
-    output.push({
-        role: "system",
-        content: conv.description
-    })
-
-    output.push({
-        role: "system",
-        content: "Given these replies:\n"+ convertMessagesToString(conv.messages.slice(conv.messages.length-2), "", "")
-    })
-
-
     
-
-    
-    let content = `List of actions ${conv.gameData.aiName} can do:`;
+    let listOfActions = `List of actions ${conv.gameData.aiName} can do:`;
 
     for(const action of actions){ 
 
@@ -194,26 +164,44 @@ function buildActionChatPrompt(conv: Conversation, actions: Action[]): Message[]
         }
 
         
-        content += `\n- ${signature}: ${parseVariables(action.description, conv.gameData)} ${parseVariables(argString, conv.gameData)}`;
+        listOfActions += `\n- ${signature}: ${parseVariables(action.description, conv.gameData)} ${parseVariables(argString, conv.gameData)}`;
     }
-    content += `\n- noop(): Execute when none of the previous actions are a good fit for the given replies.`
 
-    content += `\nExplain why and which actions you would trigger (rationale), then write the most appropriate actions (actions). If you think multiple actions should be triggered, then seperate them with commas (,) inside the <actions> tags.`
-    content+= `\nResponse format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>`
+    listOfActions += `\n- noop(): Execute when none of the previous actions are a good fit for the given replies.`
+    listOfActions += `\nExplain why and which actions you would trigger (rationale), then write the most appropriate actions (actions). If you think multiple actions should be triggered, then seperate them with commas (,) inside the <actions> tags.`
+    listOfActions+= `\nResponse format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>`
 
-    output = output.concat({
+    output.push({
         role: "system",
-        content: content
-    });
+        content: `Your task is to select the actions you think ${conv.gameData.aiName} did based on her last message. The rationale must be relevant to ${conv.gameData.aiName}'s personality, scenario, and the conversation so far. The actions MUST exist in the provided list. You can select multiple actions, seperate them with commas. If a function takes a value, then put it inside the brackets after the function, a function can take either 0 or 1 values. 'Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>'`
+    })
+
+    output.push({
+        role: "user",
+        content: `Choose ${conv.gameData.aiName}'s most relevant actions for the provided dialogue based on ${conv.gameData.aiName}'s last message or action.
+"Prior dialogue:\n"+ ${convertMessagesToString(conv.messages.slice(conv.messages.length-8, conv.messages.length-2), "", "")}
+${conv.description}
+"Given these replies:\n${convertMessagesToString(conv.messages.slice(conv.messages.length-2), "", "")}
+${listOfActions}`
+})
+
+output.push({
+    role: "user",
+    content: "Choose the most relevant actions. Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>"
+})
 
     return output;
 }
 
-function convertChatToTextPrompt(messages: Message[]): string{
+function convertChatToTextPrompt(messages: Message[], config: Config): string{
     let output: string = "";
     for(let msg of messages){
+        if(msg.role === "user"){
+            output+=config.inputSequence+"\n";
+        }
         output += msg.content+"\n";
     }
 
+    output+=config.outputSequence+"\n";
     return output;
 }

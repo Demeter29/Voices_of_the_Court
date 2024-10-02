@@ -119,7 +119,7 @@ export class Conversation{
             responseMessage = {
                 role: "assistant",
                 name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config), this.config.stream, {
+                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config, this.gameData.aiName), this.config.stream, {
                     stop: [this.config.inputSequence, this.config.outputSequence],
                     max_tokens: this.config.maxTokens,
                 },
@@ -172,7 +172,7 @@ export class Conversation{
                     this.currentSummary = await this.summarizationApiConnection.complete(buildResummarizeChatPrompt(this, messagesToSummarize), false, {});
                 }
                 else{
-                    this.currentSummary = await this.summarizationApiConnection.complete(convertChatToText(buildResummarizeChatPrompt(this, messagesToSummarize), this.config), false, {});
+                    this.currentSummary = await this.summarizationApiConnection.complete(convertChatToText(buildResummarizeChatPrompt(this, messagesToSummarize), this.config, this.gameData.aiName), false, {});
                 }
                
                 console.log("after current summary: "+this.currentSummary)

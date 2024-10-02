@@ -231,7 +231,7 @@ ipcMain.on('clear-summaries', ()=>{
         type: 'question',
         buttons: ['Yes', 'No'],
         title: 'Clear summaries',
-        message: "Are you sure want to clear conversation summaries?",
+        message: "Are you sure you want to clear conversation summaries?",
       }
     
       dialog.showMessageBox(dialogOpts).then((returnValue) => {

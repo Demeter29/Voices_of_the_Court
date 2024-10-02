@@ -10,7 +10,7 @@ export async function summarize(conv: Conversation): Promise<string>{
         })
     }
     else{
-        summarization = await conv.summarizationApiConnection.complete(convertChatToText(buildSummarizeChatPrompt(conv), conv.config), false, {
+        summarization = await conv.summarizationApiConnection.complete(convertChatToText(buildSummarizeChatPrompt(conv), conv.config, conv.gameData.aiName), false, {
         })
     }
 

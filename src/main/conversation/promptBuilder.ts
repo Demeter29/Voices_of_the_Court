@@ -4,7 +4,7 @@ import { Message } from "../ts/conversation_interfaces";
 import { GameData, Memory } from "../../shared/GameData";
 import { Config } from "../../shared/Config";
 
-export function convertChatToText(chat: Message[], config: Config): string{
+export function convertChatToText(chat: Message[], config: Config, aiName: string): string{
     let output: string = "";
 
     for(let msg of chat){
@@ -22,7 +22,7 @@ export function convertChatToText(chat: Message[], config: Config): string{
         }
     }
 
-    output+=config.outputSequence
+    output+=config.outputSequence+"\n"+aiName+": ";
     return output;
 }
 

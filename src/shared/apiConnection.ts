@@ -143,7 +143,7 @@ export class ApiConnection{
 
             if(this.type === "openrouter"){
                 //@ts-ignore
-                completion = await openai.chat.completions.create({
+                completion = await this.client.chat.completions.create({
                     model: this.model,
                     //@ts-ignore
                     prompt: prompt,
