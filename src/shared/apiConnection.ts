@@ -30,7 +30,7 @@ export interface Parameters{
 
 
 export class ApiConnection{
-    type: string; //openrouter, openai, ooba
+    type: string; //openrouter, openai, ooba, custom
     client: OpenAI;
     model: string;
     forceInstruct: boolean ;//only used by openrouter

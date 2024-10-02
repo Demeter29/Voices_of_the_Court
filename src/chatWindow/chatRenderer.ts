@@ -1,5 +1,5 @@
 import { ipcMain, ipcRenderer } from 'electron';
-import {Action, ActionResponse, Message, MessageChunk, ResponseObject} from '../main/ts/conversation_interfaces.js';
+import {Action, ActionResponse, Message, MessageChunk} from '../main/ts/conversation_interfaces.js';
 import { marked } from 'marked';
 import { GameData } from '../shared/GameData.js';
 const DOMPurify = require('dompurify');
@@ -42,30 +42,27 @@ async function displayMessage(message: Message): Promise<HTMLDivElement>{
             messageDiv.innerHTML = DOMPurify.sanitize(await marked.parseInline(`**${message.name}:** ${message.content}`), sanitizeConfig);
             break;
         case 'assistant':
-            loadingDots.remove();
+            removeLoadingDots();
             messageDiv.classList.add('ai-message');
             messageDiv.innerHTML = DOMPurify.sanitize(await marked.parseInline(`**${message.name}:** ${message.content}`), sanitizeConfig);
-            chatInput.disabled = false;
+
             break;
     };   
     chatMessages.append(messageDiv);
-    if(message.role === "user"){
-        showLoadingDots();
-    }
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     return messageDiv;
 }
 
-function displayActions(Actions: ActionResponse[]){
+function displayActions(actions: ActionResponse[]){
     
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
-    for(const Action of Actions){
+    for(const action of actions){
         
         const ActionSpan = document.createElement('span');
-        ActionSpan.innerText = Action.chatMessage+"\n";
-        ActionSpan.classList.add(Action.chatMessageClass);
+        ActionSpan.innerText = action.chatMessage+"\n";
+        ActionSpan.classList.add(action.chatMessageClass);
         messageDiv.appendChild(ActionSpan);
 
         
@@ -76,11 +73,9 @@ function displayActions(Actions: ActionResponse[]){
 }
 
 function displayErrorMessage(error: string){
-    loadingDots?.remove();
+    removeLoadingDots();
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
-
-    chatInput.disabled = false;
 
     messageDiv.classList.add('error-message');
     messageDiv.innerText = error;
@@ -90,7 +85,7 @@ function displayErrorMessage(error: string){
 
 
 
-chatInput.addEventListener('keydown', function(e) {    
+chatInput.addEventListener('keydown', async function(e) {    
     if(e.which == 13) { //on enter
         e.preventDefault(); //disallow newlines   
         if(chatInput.value != ''){
@@ -103,7 +98,8 @@ chatInput.addEventListener('keydown', function(e) {
                 content: messageText
             }
 
-            displayMessage(message);
+            await displayMessage(message);
+            showLoadingDots();
             ipcRenderer.send('message-send', message);
 
         };
@@ -119,7 +115,13 @@ function showLoadingDots(){  //and disable chat
     loadingDots = document.createElement('div');
     loadingDots.classList.add('loading');
     chatMessages.append(loadingDots);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
     chatInput.disabled = true;
+}
+
+function removeLoadingDots(){
+    loadingDots?.remove();
+    chatInput.disabled = false;
 }
 
 function hideChat(){
@@ -150,13 +152,23 @@ ipcRenderer.on('chat-start', (e, gameData: GameData) =>{
     document.body.style.display = '';
 })
 
-ipcRenderer.on('message-receive', async (e, responseObject: ResponseObject)=>{
-    console.log(responseObject)
-    await displayMessage(responseObject.message);
+ipcRenderer.on('message-receive', async (e, message: Message, waitForActions: boolean)=>{
+    await displayMessage(message);
+    console.log("wait: "+waitForActions)
 
-    displayActions(responseObject.actions);
+    if(!waitForActions){
+        removeLoadingDots();
+    }else{
+        showLoadingDots();
+    }
 
+    
+})
 
+ipcRenderer.on('actions-receive', async (e, actionsResponse: ActionResponse[]) =>{
+    displayActions(actionsResponse);
+
+    removeLoadingDots();
 })
 
 ipcRenderer.on('stream-start', async (e, gameData)=>{
@@ -167,16 +179,15 @@ ipcRenderer.on('stream-start', async (e, gameData)=>{
 })
 
 ipcRenderer.on('stream-message', (e, message: Message)=>{
-    loadingDots.remove();
+    removeLoadingDots();
     replaceLastMessage(message);
     showLoadingDots();
     //@ts-ignore
 })
 
-ipcRenderer.on('stream-end', (e, response: ResponseObject)=>{
-    chatInput.disabled = false;
-    displayActions(response.actions);
-    loadingDots.remove();
+ipcRenderer.on('stream-end', (e, actions: ActionResponse[])=>{
+    displayActions(actions);
+    removeLoadingDots();
 })
 
 ipcRenderer.on('error-message', (e, errorMessage: string) =>{

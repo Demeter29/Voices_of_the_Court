@@ -7,10 +7,6 @@ export interface Message {
     content: string ;
 }
 
-export type ResponseObject = {
-    message: Message,
-    actions: ActionResponse[]
-}
 
 export interface ErrorMessage {
     text: string,

@@ -13,6 +13,8 @@ export class ChatWindow{
     window: BrowserWindow;
     isShown: boolean;
     windowWatchId: number;
+    interval: any;
+
 
     constructor(){
         this.window = new BrowserWindow({
@@ -50,6 +52,8 @@ export class ChatWindow{
         ipcMain.on('chat-stop', () =>{this.hide()})
         
         console.log("Chat window opened!")
+
+        
     }
 
     show(){
@@ -57,16 +61,30 @@ export class ChatWindow{
         OverlayController.activateOverlay();
         this.isShown = true;
 
-        this.windowWatchId = ActiveWindow.subscribe( (winInfo) =>{
+        /*this.windowWatchId = ActiveWindow.subscribe( (winInfo) =>{
             if(winInfo?.title == "Crusader Kings III" && this.isShown ){
 
                 OverlayController.activateOverlay();
-                this.window.webContents.send('chat-show');
+                //this.window.webContents.send('chat-show');
                 
             }else{
-                this.window.webContents.send('chat-hide');
+                //this.window.webContents.send('chat-hide');
             }
-        })
+                
+        })*/
+
+        this.interval = setInterval(()=>{
+            let win = ActiveWindow.getActiveWindow();
+            console.log(win.title)
+
+            if(win.title === "Crusader Kings III" || win.title === "Voices of the Court - Chat"){
+                OverlayController.activateOverlay();
+                //this.window.webContents.send('chat-show');
+            }else{
+                this.window.minimize();
+                //this.window.webContents.send('chat-hide');
+            }
+        }, 500)
 
         
     }
@@ -77,6 +95,8 @@ export class ChatWindow{
         this.isShown = false;
 
         ActiveWindow.unsubscribe(this.windowWatchId);
+
+        clearInterval(this.interval);
     }
 }
 

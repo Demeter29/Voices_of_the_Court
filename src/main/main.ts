@@ -5,7 +5,7 @@ import { Config } from '../shared/Config.js';
 import { ClipboardListener } from "./ClipboardListener.js";
 import { Conversation } from "./conversation/Conversation.js";
 import { GameData, parseLog } from "../shared/GameData.js";
-import { Message, ResponseObject, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
+import { Message, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
 import path from 'path';
 import { existsSync } from "original-fs";
 import fs from 'fs';
@@ -258,7 +258,7 @@ clipboardListener.on('VOTC:IN', async () =>{
     chatWindow.window.webContents.send('chat-show');
     try{ 
         console.log("New conversation started!");
-        conversation = new Conversation(await parseLog(config.userFolderPath+'\\logs\\debug.log'), config);
+        conversation = new Conversation(await parseLog(config.userFolderPath+'\\logs\\debug.log'), config, chatWindow);
         chatWindow.window.webContents.send('chat-start', conversation.gameData);
         
     }catch(err){
@@ -283,25 +283,7 @@ clipboardListener.on('VOTC:EFFECT_ACCEPTED', async () =>{
 ipcMain.on('message-send', async (e, message: Message) =>{
     conversation.pushMessage(message);
     try{
-        if(config.stream){
-            streamMessage = {
-                role: "assistant",
-                name: conversation.gameData.aiName,
-                content: ""
-            }
-    
-            chatWindow.window.webContents.send('stream-start');
-    
-            let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
-    
-            chatWindow.window.webContents.send('stream-end', response);
-        }
-        else{
-            let response: ResponseObject = await conversation.generateNewAIMessage(streamRelay);
-    
-            
-            chatWindow.window.webContents.send('message-receive', response);
-        } 
+        conversation.generateNewAIMessage();
     }
     catch(err){
         console.log(err);
@@ -312,11 +294,7 @@ ipcMain.on('message-send', async (e, message: Message) =>{
     
 });
 
-let streamMessage: Message
-function streamRelay(msgChunk: MessageChunk): void{
-    streamMessage.content += msgChunk.content;
-    chatWindow.window.webContents.send('stream-message', streamMessage)
-}
+
 
 ipcMain.handle('get-config', () => {return config});
 

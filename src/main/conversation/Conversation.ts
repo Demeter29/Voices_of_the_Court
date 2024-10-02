@@ -10,13 +10,15 @@ import { summarize } from './summarize.js';
 import fs from 'fs';
 import path from 'path';
 
-import {Message, MessageChunk, ResponseObject, ErrorMessage, Summary, Action, ActionResponse} from '../ts/conversation_interfaces.js';
+import {Message, MessageChunk, ErrorMessage, Summary, Action, ActionResponse} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
+import { ChatWindow } from '../windows/ChatWindow.js';
 const contextLimits = require("../../../public/contextLimits.json");
 
 const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
 export class Conversation{
+    chatWindow: ChatWindow;
     isOpen: boolean;
     gameData: GameData;
     messages: Message[];
@@ -31,7 +33,8 @@ export class Conversation{
     summaries: Summary[];
     currentSummary: string;
     
-    constructor(gameData: GameData, config: Config){
+    constructor(gameData: GameData, config: Config, chatWindow: ChatWindow){
+        this.chatWindow = chatWindow;
         this.isOpen = true;
         this.gameData = gameData;
         this.messages = [];
@@ -86,9 +89,14 @@ export class Conversation{
         this.messages.push(message);
     }
 
-    async generateNewAIMessage(streamRelay: (arg1: MessageChunk)=> void): Promise<ResponseObject>{
+    async generateNewAIMessage(){
+
         
         let responseMessage: Message;
+
+        if(this.config.stream){
+            this.chatWindow.window.webContents.send('stream-start');
+        }
 
         let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
         console.log(`current tokens: ${currentTokens}`);
@@ -98,11 +106,21 @@ export class Conversation{
             await this.resummarize();
         }
 
+        let streamMessage = {
+            role: "assistant",
+            name: this.gameData.aiName,
+            content: ""
+        }
+        let cw = this.chatWindow;
+        function streamRelay(msgChunk: MessageChunk): void{
+            streamMessage.content += msgChunk.content;
+            cw.window.webContents.send('stream-message', streamMessage)
+        }
+
 
         if(this.textGenApiConnection.isChat()){
             
-
-            responseMessage= {
+            responseMessage = {
                 role: "assistant",
                 name: this.gameData.aiName,
                 content: await this.textGenApiConnection.complete(buildChatPrompt(this), this.config.stream, {
@@ -134,6 +152,11 @@ export class Conversation{
 
         this.pushMessage(responseMessage);
 
+        if(!this.config.stream){
+            this.chatWindow.window.webContents.send('message-receive', responseMessage, this.config.actionsEnableAll);
+        }
+        
+
         let collectedActions: ActionResponse[];
         if(this.config.actionsEnableAll){
             collectedActions = await checkActions(this);
@@ -142,14 +165,7 @@ export class Conversation{
             collectedActions = [];
         }
 
-        let responseObject: ResponseObject = {
-            message: responseMessage,
-            actions: collectedActions
-        }
-
-        console.log(responseObject.actions)
-
-        return responseObject;
+        this.chatWindow.window.webContents.send('actions-receive', collectedActions);
     }
 
     async resummarize(){
@@ -280,3 +296,4 @@ export class Conversation{
     }
 
 }
+
