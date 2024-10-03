@@ -75,7 +75,7 @@ export class ChatWindow{
 
         this.interval = setInterval(()=>{
             let win = ActiveWindow.getActiveWindow();
-            console.log(win.title)
+           // console.log(win.title)
 
             if(win.title === "Crusader Kings III" || win.title === "Voices of the Court - Chat"){
                 OverlayController.activateOverlay();

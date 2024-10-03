@@ -1,5 +1,5 @@
 import { Conversation } from "./Conversation";
-import { buildSummarizeChatPrompt, convertChatToText} from "./promptBuilder";
+import { buildSummarizeChatPrompt, convertChatToTextNoNames} from "./promptBuilder";
 
 
 export async function summarize(conv: Conversation): Promise<string>{
@@ -10,7 +10,7 @@ export async function summarize(conv: Conversation): Promise<string>{
         })
     }
     else{
-        summarization = await conv.summarizationApiConnection.complete(convertChatToText(buildSummarizeChatPrompt(conv), conv.config, conv.gameData.aiName), false, {
+        summarization = await conv.summarizationApiConnection.complete(convertChatToTextNoNames(buildSummarizeChatPrompt(conv), conv.config), false, {
         })
     }
 

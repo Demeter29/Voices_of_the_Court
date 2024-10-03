@@ -4,7 +4,7 @@ import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';
 import { checkActions } from './checkActions.js';
-import { convertChatToText, buildChatPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt} from './promptBuilder.js';
+import { convertChatToText, buildChatPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt, convertChatToTextNoNames} from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
 import fs from 'fs';
@@ -189,7 +189,7 @@ export class Conversation{
                     this.currentSummary = await this.summarizationApiConnection.complete(buildResummarizeChatPrompt(this, messagesToSummarize), false, {});
                 }
                 else{
-                    this.currentSummary = await this.summarizationApiConnection.complete(convertChatToText(buildResummarizeChatPrompt(this, messagesToSummarize), this.config, this.gameData.aiName), false, {});
+                    this.currentSummary = await this.summarizationApiConnection.complete(convertChatToTextNoNames(buildResummarizeChatPrompt(this, messagesToSummarize), this.config), false, {});
                 }
                
                 console.log("after current summary: "+this.currentSummary)

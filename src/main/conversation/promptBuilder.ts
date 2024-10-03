@@ -26,6 +26,19 @@ export function convertChatToText(chat: Message[], config: Config, aiName: strin
     return output;
 }
 
+export function convertChatToTextNoNames(messages: Message[], config: Config): string{
+    let output: string = "";
+    for(let msg of messages){
+        if(msg.role === "user"){
+            output+=config.inputSequence+"\n";
+        }
+        output += msg.content+"\n";
+    }
+
+    output+=config.outputSequence+"\n";
+    return output;
+}
+
 export function buildChatPrompt(conv: Conversation): Message[]{
     let chatPrompt: Message[]  = [];
 
