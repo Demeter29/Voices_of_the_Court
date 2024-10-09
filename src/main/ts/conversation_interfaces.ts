@@ -46,7 +46,7 @@ export interface Action{
     args: ActionArgument[],
     description: string,
     group: string,
-    check: () => boolean,
+    check: (gameData: GameData) => boolean,
     run: (arg1: GameData, arg2: RunFileManager, arg3: string[]) => void,
     chatMessage: (arg1: string[]) => string,
     chatMessageClass: string

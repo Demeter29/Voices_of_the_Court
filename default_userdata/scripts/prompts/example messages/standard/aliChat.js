@@ -16,29 +16,59 @@ module.exports = (gameData) => {
         return msgs;
     }
 
-    let output="";
+
+    //trait 1
+    
     if(personalityTraits.length > 0){
-        output += `*${ai.shortName}'s eyes lit up* My personality, my lord? *${ai.sheHe} takes a short pause thinking* Well, I am ${personalityTraits[0].name}, ${traitMessageMap.get(personalityTraits[0].name)}`;
+        let output = `*${ai.shortName}'s eyes lit up* My personality, my lord? *${ai.sheHe} takes a short pause thinking* Well, I am ${personalityTraits[0].name}, ${traitMessageMap.get(personalityTraits[0].name)}`;
+
+        msgs.push({
+            role: "user",
+            name: player.shortName,
+            content: "Personality?"
+        });
+    
+        msgs.push({
+            role: "assistant",
+            name: ai.shortName,
+            content: output
+        });
     }
-    if(personalityTraits.length > 1){
-        output += `*${ai.sheHe} pauses again thinking about what else to say* I am also ${personalityTraits[1].name}, ${traitMessageMap.get(personalityTraits[1].name)}`;
+    
+
+    //trait 2
+    if(personalityTraits.length > 1){   
+        let output = `Yes, *${ai.sheHe} pauses again thinking about what else to say* I am also ${personalityTraits[1].name}, ${traitMessageMap.get(personalityTraits[1].name)}`;
+
+        msgs.push({
+            role: "user",
+            name: player.shortName,
+            content: "Anyting else?"
+        });
+    
+        msgs.push({
+            role: "assistant",
+            name: ai.shortName,
+            content: output
+        });
     }
+
+    //trait 3
     if(personalityTraits.length > 2){
-        output += `*she takes a big breath* and I am ${personalityTraits[2].name}, ${traitMessageMap.get(personalityTraits[2].name)}`;
+        let output = `*No, I am also ${personalityTraits[2].name}, ${traitMessageMap.get(personalityTraits[2].name)}`;
+
+        msgs.push({
+            role: "user",
+            name: player.shortName,
+            content: "Is that all?"
+        });
+    
+        msgs.push({
+            role: "assistant",
+            name: ai.shortName,
+            content: output
+        });
     }
-
-    //traits
-    msgs.push({
-        role: "user",
-        name: player.shortName,
-        content: "Personality?"
-    });
-
-    msgs.push({
-        role: "assistant",
-        name: ai.shortName,
-        content: output
-    });
 
     return msgs;
 }

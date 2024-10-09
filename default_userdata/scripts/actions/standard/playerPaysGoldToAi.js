@@ -9,6 +9,9 @@ module.exports = {
     ],
     description: `execute when {{playerName}} pays gold to {{aiName}} and {{aiName}} accepts it.`,
     group: "",
+    check: (gameData) => {
+        return true;
+    },
     run: (gameData, runFileManager) => {
         runFileManager.append(`
             global_var:talk_second_scope = {
@@ -24,5 +27,5 @@ module.exports = {
     chatMessage: (args) =>{
         return `You paid ${args[0]} gold to {{aiName}}`
     },
-    chatMessageClass: "neutral-interaction-message"
+    chatMessageClass: "neutral-action-message"
 }

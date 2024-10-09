@@ -9,8 +9,8 @@ module.exports = {
     ],
     description: `execute when {{playerName}}'s last single dialogue or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
     group: "opinion",
-    check: (conv) =>{
-        getConversationOpinionValue(conv.gameData.opinionBreakdownToPlayer)>-50;
+    check: (gameData) =>{
+        return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) > -50);
     },
     run: (gameData, runFileManager, args) => {
         let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
@@ -22,7 +22,7 @@ module.exports = {
                     add_opinion = {
                         target = global_var:talk_first_scope
                         modifier = conversation_opinion
-                        opinion = ${args[0]}
+                        opinion = -${args[0]}
                     }
                 }`
             )
@@ -31,7 +31,7 @@ module.exports = {
     chatMessage: (args) =>{
         return `{{aiName}}'s opinion of you has decreased by ${args[0]}.`
     },
-    chatMessageClass: "negative-interaction-message"
+    chatMessageClass: "negative-action-message"
 }
 
 //help functions

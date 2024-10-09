@@ -28,6 +28,7 @@ export interface Parameters{
 	top_p: number,
 }
 
+let encoder = tiktoken.getEncoding("cl100k_base");
 
 export class ApiConnection{
     type: string; //openrouter, openai, ooba, custom
@@ -37,7 +38,6 @@ export class ApiConnection{
     parameters: Parameters;
     context: number;
     overwriteWarning: boolean;
-    encoder: tiktoken.Tiktoken;
     
 
     constructor(connection: Connection, parameters: Parameters){
@@ -50,7 +50,7 @@ export class ApiConnection{
         this.model = connection.model;
         this.forceInstruct = connection.forceInstruct;
         this.parameters = parameters;
-        this.encoder = tiktoken.getEncoding("cl100k_base");
+        
 
         let modelName = this.model
         if(modelName && modelName.includes("/")){
@@ -223,14 +223,14 @@ export class ApiConnection{
     }
 
     calculateTokensFromText(text: string): number{
-          return this.encoder.encode(text).length;
+          return encoder.encode(text).length;
     }
 
     calculateTokensFromMessage(msg: Message): number{
-        let sum = this.encoder.encode(msg.role).length + this.encoder.encode(msg.content).length
+        let sum = encoder.encode(msg.role).length + encoder.encode(msg.content).length
 
         if(msg.name){
-            sum += this.encoder.encode(msg.name).length;
+            sum += encoder.encode(msg.name).length;
         }
 
         return sum;

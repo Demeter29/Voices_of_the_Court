@@ -3,8 +3,10 @@ module.exports = {
     args: [],
     description: `execute when {{aiName}} gets seriously wounded.`,
     group: "fight",
-    check: (conv) =>{
-        return true;
+    check: (gameData) =>{
+        const char = gameData.characters.get(gameData.aiID);
+
+        return !hasTrait(char, "Wounded")
     },
     run: (gameData, runFileManager) => {
         runFileManager.append(
@@ -16,6 +18,16 @@ module.exports = {
     chatMessage: () =>{
         return `{{aiName}} got wounded!`
     },
-    chatMessageClass: "negative-interaction-message"
+    chatMessageClass: "negative-action-message"
 }
 
+function hasTrait(char, traitName){
+    let output = false;
+    char.traits.forEach(trait => {
+        if(trait.name === traitName){
+            output = true;
+        }
+    });
+
+    return output
+}

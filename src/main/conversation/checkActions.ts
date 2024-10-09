@@ -14,8 +14,15 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
 
     let availableActions: Action[] = [];
 
-    //TODO
-    availableActions = conv.actions;
+    availableActions = [];
+
+    for(let action of conv.actions){
+        if(action.check(conv.gameData)){
+            availableActions.push(action)
+        }
+    }
+
+
 
     let triggeredActions: ActionResponse[] = [];
     
@@ -45,7 +52,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
         return [];
     }
 
-    const actions = actionsString.replace(/ /g,'').split(',');
+    const actions = actionsString.split(',');
 
     //validations
     for(const actionInResponse of actions){
@@ -74,7 +81,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
             if(matchedAction.args.length === 0){
                 matchedAction.run(conv.gameData, conv.runFileManager, []);
 
-                if(matchedAction.group != "emotion"){
+                if(matchedAction.chatMessageClass != null){
                     triggeredActions.push({
                         actionName: matchedAction.signature,
                         chatMessage: parseVariables(matchedAction.chatMessage([]), conv.gameData),
@@ -118,7 +125,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
 
         matchedAction.run(conv.gameData, conv.runFileManager, args);
 
-        if(matchedAction.group != "emotion"){
+        if(matchedAction.chatMessageClass != null){
             triggeredActions.push({
                 actionName: matchedAction.signature,
                 chatMessage: parseVariables(matchedAction.chatMessage(args), conv.gameData),

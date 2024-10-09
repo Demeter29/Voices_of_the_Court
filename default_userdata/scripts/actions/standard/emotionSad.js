@@ -15,8 +15,8 @@ module.exports = {
         )
     },
     chatMessage: () =>{
-        return `emotion: sad`
+        
     },
-    chatMessageClass: "neutral-interaction-message"
+    chatMessageClass: null
 }
 

@@ -3,7 +3,7 @@ module.exports = {
     args: [],
     description: `execute when {{aiName}} is feeling happy.`,
     group: "emotion",
-    check: (conv) =>{
+    check: (gameData) =>{
         return true;
     },
     run: (gameData, runFileManager) => {
@@ -15,8 +15,8 @@ module.exports = {
         )
     },
     chatMessage: () =>{
-        return `emotion: happy`
+        
     },
-    chatMessageClass: "neutral-interaction-message"
+    chatMessageClass: null
 }
 

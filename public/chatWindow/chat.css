@@ -96,23 +96,15 @@ em{
     font-size: 20px;
 }
 
-.positive-opinion-message{
+.positive-action-message{
     color:green;
 }
 
-.negative-opinion-message{
+.negative-action-message{
     color:red;
 }
 
-.positive-interaction-message{
-    color:green;
-}
-
-.negative-interaction-message{
-    color:red;
-}
-
-.neutral-interaction-message{
+.neutral-action-message{
     color: yellow;
 }
 

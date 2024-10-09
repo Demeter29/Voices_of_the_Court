@@ -12,6 +12,9 @@ module.exports = {
     ],
     description: `execute when {{playerName}}'s last dialogue or action drastically improved {{aiName}}'s opinion of {{playerName}}.`,
     group: "opinion",
+    check: (gameData) =>{
+        return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) < 50)
+    },
     run: (gameData, runFileManager, args) =>{
         let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
         if(conversationOpinion<50){
@@ -33,7 +36,7 @@ module.exports = {
     chatMessage: (args) =>{
         return `{{aiName}}'s opinion of you has improved by ${args[0]}.`
     },
-    chatMessageClass: "positive-interaction-message"
+    chatMessageClass: "positive-action-message"
 }
 
 //help functions
