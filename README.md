@@ -9,9 +9,8 @@ Discord: https://discord.gg/yYtS2zFdKw
 # Trailer video 
 [![link to](https://img.youtube.com/vi/E2GmlNsK-J8/0.jpg)](https://www.youtube.com/watch?v=E2GmlNsK-J8)
 
-# Install
+# Install and setup
 
-Download the latest installer from [Releases](https://github.com/Demeter29/Voices_of_the_Court/releases)
-
+[Read the instructs on the wiki](https://github.com/Demeter29/Voices_of_the_Court/wiki)
 
 
