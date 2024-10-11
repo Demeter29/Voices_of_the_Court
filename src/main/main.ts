@@ -58,8 +58,7 @@ const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 
 //updating
 if(app.isPackaged){
-    const server = 'https://update.electronjs.org';
-    const feed = `${server}/Demeter29/GPT_Kings/${process.platform}-${process.arch}/${app.getVersion()}`
+    const feed = `${packagejson.updater.server}/${packagejson.updater.repo}/${process.platform}-${process.arch}/${app.getVersion()}`
     //@ts-ignore
     autoUpdater.setFeedURL(feed);
     

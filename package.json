@@ -1,7 +1,7 @@
 {
   "name": "voices_of_the_court",
   "productName": "Voices of the Court",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "LLM integration into Crusader Kings 3",
   "main": "dist/main/main.js",
   "build": {
@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "Durond",
-  "license": "MIT",
+  "license": "GNU GPLv3",
   "dependencies": {
     "@paymoapp/active-window": "^2.1.1",
     "dompurify": "^3.0.8",
@@ -41,5 +41,9 @@
     "@electron-forge/maker-zip": "^6.0.4",
     "electron": "22.0.3",
     "source-map-support": "^0.5.21"
+  },
+  "updater": {
+    "server": "https://update.electronjs.org",
+    "repo": "Demeter29/Voices_of_the_Court"
   }
 }

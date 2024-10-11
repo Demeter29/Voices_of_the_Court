@@ -1,16 +1,15 @@
-html{
-    cursor: url('../assets/cursor.png'), auto;	
-    font-family: Paradox;  
-}
-
 @font-face {
     font-family: Paradox;
     src: url("../assets/Paradox_King_Script.otf");
 }
-
 @font-face {
     font-family: Gitan;
     src: url("../assets/GitanLatin-Regular.otf");
+}
+
+html{
+    cursor: url('../assets/cursor.png'), auto;	
+    font-family: Paradox;  
 }
 
 .chat-box{
@@ -48,6 +47,17 @@ html{
     display: none;
 }
 
+.message{
+    padding-top:20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 20px;
+}
+
+.message:hover{
+    background-color: rgba(84, 84, 84, 0.1); 
+}
+
 .chat-input{
     width: 99%;
     height: 11%;
@@ -60,6 +70,11 @@ html{
     font-size: 17px;
     cursor: url('../assets/cursor.png'), auto; 	
 }
+
+.chat-input::-webkit-scrollbar{
+    display: none;
+}
+
 
 .leave-button {
     background: gray;
@@ -76,36 +91,13 @@ html{
 }
 
 .leave-button:hover {
-    background-color: rgb(84, 84, 84); /* Green */
+    background-color: rgb(84, 84, 84); 
     color: white;
   }
 
-.chat-input::-webkit-scrollbar{
-    display: none;
-}
 
 em{
     color:#91918f;
-}
-
-.message{
-    margin-top:20px;
-    margin-left: 5px;
-    margin-right: 5px;
-
-    font-size: 20px;
-}
-
-.positive-action-message{
-    color:green;
-}
-
-.negative-action-message{
-    color:red;
-}
-
-.neutral-action-message{
-    color: yellow;
 }
 
 .player-message{
@@ -118,6 +110,18 @@ em{
 
 .error-message{
     color: red;
+}
+
+.positive-action-message{
+    color:green;
+}
+
+.negative-action-message{
+    color:red;
+}
+
+.neutral-action-message{
+    color: yellow;
 }
 
 .loading{
@@ -150,9 +154,4 @@ em{
     .5em 0 0 white;}
 }
 
-
-
-::selection {
-    background: rgb(65, 65, 65);
-  }
   
