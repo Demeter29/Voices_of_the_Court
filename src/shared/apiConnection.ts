@@ -46,6 +46,10 @@ export class ApiConnection{
             baseURL: connection.baseUrl,
             apiKey: connection.key,
             dangerouslyAllowBrowser: true,
+            defaultHeaders: {
+                "HTTP-Referer": "https://github.com/Demeter29/Voices_of_the_Court", // Optional, for including your app on openrouter.ai rankings.
+                "X-Title": "Voices of the Court", // Optional. Shows in rankings on openrouter.ai.
+              }
         })
         this.model = connection.model;
         this.forceInstruct = connection.forceInstruct;
