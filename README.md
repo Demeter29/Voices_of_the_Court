@@ -15,7 +15,7 @@ We impact the game with Actions. These are predefined game effects that gets tri
 
 # Install
 
-Documentation on installin can be found on [docs.voicesofthecourt.app](https://docs.voicesofthecourt.app/installation)
+Documentation on installation can be found on [docs.voicesofthecourt.app](https://docs.voicesofthecourt.app/installation)
 
 
 
