@@ -7,7 +7,7 @@ module.exports = {
             desc: "the reason (the event) that made them become rivals with eachother. (write it in past tense)."
         }
     ],
-    description: "Trigger when something drastic happens and {{playerName}} and {{aiName}} become rivals with eachother. it's enough of {{aiName}} does something that {playerName}} really didn't like.",
+    description: "Execute when something drastic happened and {{playerName}} and {{aiName}} became rivals with eachother.",
     check: (gameData) => {
         return true;
     },

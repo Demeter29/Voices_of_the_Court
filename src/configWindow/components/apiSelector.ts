@@ -29,7 +29,7 @@ function defineTemplate(label: string){
             <div class="input-group">
             <label for="api-key">API Key</label>
             <br>
-            <input type="text" id="openai-key">
+            <input type="password" id="openai-key">
             </div>
         
             <div class="input-group">
@@ -59,7 +59,7 @@ function defineTemplate(label: string){
             <div class="input-group">
             <label for="api-key">API Key</label>
             <br>
-            <input type="text" id="openrouter-key">
+            <input type="password" id="openrouter-key">
             </div>
         
             <div class="input-group">
@@ -85,7 +85,7 @@ function defineTemplate(label: string){
             <div class="input-group">
                 <label for="custom-key">API Key</label>
                 <br>
-                <input type="text" id="custom-key">
+                <input type="password" id="custom-key">
             </div>
             <div class="input-group">
                 <label for="custom-model">Model</label>

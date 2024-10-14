@@ -54,10 +54,6 @@ html{
     font-size: 20px;
 }
 
-.message:hover{
-    background-color: rgba(84, 84, 84, 0.1); 
-}
-
 .chat-input{
     width: 99%;
     height: 11%;

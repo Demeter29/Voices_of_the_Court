@@ -128,5 +128,6 @@
     "llama-3-70b-instruct:nitro": 8192,
     "hermes-3-llama-3.1-405b": 131072,
     "hermes-3-llama-3.1-405b:free": 8192,
-    "llama-3.1-405b-instruct:free": 8192
+    "llama-3.1-405b-instruct:free": 8192,
+    "hermes-3-llama-3.1-70b": 131072
 }

@@ -1,7 +1,7 @@
 module.exports = {
     signature: "emotionPain",
     args: [],
-    description: `execute when {{aiName}} is feeling pain or being hurt.`,
+    description: `Execute when {{aiName}} is feeling pain or being hurt.`,
     group: "emotion",
     check: (conv) =>{
         return true;

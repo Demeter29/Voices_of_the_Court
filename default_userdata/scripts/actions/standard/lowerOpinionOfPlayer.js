@@ -7,7 +7,7 @@ module.exports = {
             desc: "the number of opinion values the relation decreases with. Can be between 1 and 5."
         }
     ],
-    description: `execute when {{playerName}}'s last single dialogue or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
+    description: `Execute when {{playerName}}'s last single dialogue or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
     group: "opinion",
     check: (gameData) =>{
         return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) > -50);

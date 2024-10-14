@@ -1,7 +1,7 @@
 module.exports = {
     signature: "aiGetsWounded",
     args: [],
-    description: `execute when {{aiName}} gets seriously wounded.`,
+    description: `Execute when {{aiName}} got seriously wounded.`,
     group: "fight",
     check: (gameData) =>{
         const char = gameData.characters.get(gameData.aiID);

@@ -40,7 +40,7 @@ module.exports = (gameData) =>{
     const locationController = gameData.locationController;
     const scene = gameData.scene;
     
-    let playerPersonaItems = [mainPosition(player), courtAndCouncilPositions(player), houseAndStatus(player), personalityTraits(player), otherTraits(player), marriage(player), `age(${ai.age})`, `faith(${ai.faith})`, `culture(${ai.culture})`];
+    let playerPersonaItems = [mainPosition(player), courtAndCouncilPositions(player), houseAndStatus(player), personalityTraits(player), otherTraits(player), marriage(player), `age(${player.age})`, `faith(${player.faith})`, `culture(${player.culture})`];
     let aiPersonaItems = [mainPosition(ai), courtAndCouncilPositions(ai), listRelationsToPlayer(ai), houseAndStatus(ai), opinion(ai), personalityTraits(ai), otherTraits(ai), greedines(ai), marriage(ai),  `age(${ai.age})`, `faith(${ai.faith})`, `culture(${ai.culture})`,];
     
     //remove "", null, undefined and 0. 

@@ -7,7 +7,7 @@ module.exports = {
             desc: "the reason (the event) that made them become friends. (write it in past tense)."
         }
     ],
-    description: "Trigger when a strong and close friendship forms between {{playerName}} and {{aiName}}.",
+    description: "Execute when a strong and close friendship formed between {{playerName}} and {{aiName}}.",
     check: (gameData) => {
         let ai = gameData.characters.get(gameData.aiID);
         return (getConversationOpinionValue(ai.opinionBreakdownToPlayer) > 35) && 

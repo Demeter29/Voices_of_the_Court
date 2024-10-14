@@ -1,7 +1,7 @@
 module.exports = {
     signature: "emotionHappy",
     args: [],
-    description: `execute when {{aiName}} is feeling happy.`,
+    description: `Execute when {{aiName}} is feeling happy.`,
     group: "emotion",
     check: (gameData) =>{
         return true;

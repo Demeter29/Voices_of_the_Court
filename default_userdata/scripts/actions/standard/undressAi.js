@@ -1,7 +1,7 @@
 module.exports = {
     signature: "undressAi",
     args: [],
-    description: `execute when {{aiName}} gets undressed either willingly or forcefully against her wish.`,
+    description: `Execute when {{aiName}} got undressed either willingly or forcefully against her wish.`,
     group: "",
     check: (gameData) => {
         return true;

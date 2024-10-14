@@ -149,7 +149,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
 function buildActionChatPrompt(conv: Conversation, actions: Action[]): Message[]{
     let output: Message[] = [];
     
-    let listOfActions = `List of actions ${conv.gameData.aiName} can do:`;
+    let listOfActions = `List of events that could've happened:`;
 
     for(const action of actions){ 
 
@@ -180,12 +180,12 @@ function buildActionChatPrompt(conv: Conversation, actions: Action[]): Message[]
 
     output.push({
         role: "system",
-        content: `Your task is to select the actions you think ${conv.gameData.aiName} did based on her last message. The rationale must be relevant to ${conv.gameData.aiName}'s personality, scenario, and the conversation so far. The actions MUST exist in the provided list. You can select multiple actions, seperate them with commas. If a function takes a value, then put it inside the brackets after the function, a function can take either 0 or 1 values. 'Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>'`
+        content: `Your task is to select the events you think happened in the last replies. The actions MUST exist in the provided list. You can select multiple actions, seperate them with commas. If a function takes a value, then put it inside the brackets after the function, a function can take either 0 or 1 values. 'Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>'`
     })
 
     output.push({
         role: "user",
-        content: `Choose ${conv.gameData.aiName}'s most relevant actions for the provided dialogue based on ${conv.gameData.aiName}'s last message or action.
+        content: `Choose the most relevant events that might've happened in the provided dialogue based on ${conv.gameData.aiName}'s last message or action.
 "Prior dialogue:\n"+ ${convertMessagesToString(conv.messages.slice(conv.messages.length-8, conv.messages.length-2), "", "")}
 ${conv.description}
 "Given these replies:\n${convertMessagesToString(conv.messages.slice(conv.messages.length-2), "", "")}
@@ -194,7 +194,7 @@ ${listOfActions}`
 
 output.push({
     role: "user",
-    content: "Choose the most relevant actions. Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>"
+    content: "Choose the most relevant events. Response format: <rationale>Reasoning.</rationale><actions>actionName1(value), actionName2(value)</actions>"
 })
 
     return output;

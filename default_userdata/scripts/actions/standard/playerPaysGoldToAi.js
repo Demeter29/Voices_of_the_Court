@@ -7,7 +7,7 @@ module.exports = {
             desc: "the amount of gold {{playerName}} pays to {{aiName}}"
         }
     ],
-    description: `execute when {{playerName}} pays gold to {{aiName}} and {{aiName}} accepts it.`,
+    description: `Execute when {{playerName}} paid gold to {{aiName}} and {{aiName}} accepted it.`,
     group: "",
     check: (gameData) => {
         return true;

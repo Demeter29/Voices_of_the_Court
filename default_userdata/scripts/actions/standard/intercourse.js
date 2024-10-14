@@ -2,7 +2,7 @@
 module.exports = {
     signature: "intercourse",
     args: [],
-    description: `execute when {{aiName}} and {{playerName}} has sexual intercourse, only trigger when the act is finished, the act can both be consensual or rape`,
+    description: `Execute when {{aiName}} and {{playerName}} had sexual intercourse, only execute when the act is finished, the act can both be consensual or rape.`,
     group: "",
     check: (gameData) => {
         return true;
