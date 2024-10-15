@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater, Tray, Menu } from "electron";
+import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater, Tray, Menu, MessageBoxOptions } from "electron";
 import {ConfigWindow} from './windows/ConfigWindow.js';
 import {ChatWindow} from './windows/ChatWindow.js';
 import { Config } from '../shared/Config.js';
@@ -64,12 +64,11 @@ if(app.isPackaged){
     
       autoUpdater.on('update-available', () => {
         const dialogOpts = {
-          type: 'info',
+          type: "info" as const,
           buttons: [],
           title: 'Update found!',
           message: "new version found!",
-          detail:
-            'A new version is available. updating application now...'
+          detail: 'A new version is available. updating application now...'
         }
       
         dialog.showMessageBox(dialogOpts);
@@ -78,7 +77,7 @@ if(app.isPackaged){
     autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 
         const dialogOpts = {
-          type: 'info',
+          type: 'info' as const,
           buttons: ['Restart', 'Later'],
           title: 'Application Update',
           message: process.platform === 'win32' ? releaseNotes : releaseName,
@@ -95,7 +94,7 @@ if(app.isPackaged){
 
     autoUpdater.on('update-not-available', () => {
         const dialogOpts = {
-          type: 'info',
+          type: 'info' as const,
           buttons: [],
           title: 'App is up to date!',
           message: "App is up to date!",
@@ -106,7 +105,7 @@ if(app.isPackaged){
 
     autoUpdater.on('error', (error) => {
         const dialogOpts = {
-          type: 'info',
+          type: 'info' as const,
           buttons: [],
           title: 'Update error!',
           message: "Something went wrong during updating!",
@@ -227,7 +226,7 @@ ipcMain.on('update-app', ()=>{
 
 ipcMain.on('clear-summaries', ()=>{
     const dialogOpts = {
-        type: 'question',
+        type: 'question' as const,
         buttons: ['Yes', 'No'],
         title: 'Clear summaries',
         message: "Are you sure you want to clear conversation summaries?",
