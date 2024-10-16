@@ -84,7 +84,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
         if(argsString == null){
             if(matchedAction.args.length === 0){
                 try{
-                    matchedAction.run(conv.gameData, conv.runFileManager.append, []);
+                    matchedAction.run(conv.gameData, (text: string)=>{conv.runFileManager.append(text)}, []);
                 }catch(e){
                     let errMsg =`Action error: failure in check function. action: ${matchedAction.signature}; details: `+e;
                     console.log(errMsg)

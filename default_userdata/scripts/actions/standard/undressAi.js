@@ -5,7 +5,6 @@ module.exports = {
     signature: "undressAi",
     args: [],
     description: `Execute when {{aiName}} got undressed either willingly or forcefully against her wish.`,
-    group: "",
 
     /**
      * @param {GameData} gameData 

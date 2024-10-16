@@ -5,7 +5,6 @@ module.exports = {
     signature: "aiGetsWounded",
     args: [],
     description: `Execute when {{aiName}} got seriously wounded.`,
-    group: "fight",
 
     /**
      * @param {GameData} gameData 

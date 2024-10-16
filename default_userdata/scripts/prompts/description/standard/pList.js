@@ -8,11 +8,16 @@ module.exports = (gameData) =>{
     const ai = gameData.characters.get(gameData.aiID);
     const date = gameData.date;
     const location = gameData.location;
-    const locationController = gameData.locationController;
+    let locationController = gameData.locationController;
+    if(locationController === player.fullName){
+        locationController = player.shortName;
+    }
+    else if(locationController === ai.fullName){
+        locationController = ai.shortName;
+    }
     const scene = gameData.scene;
     
-    let playerPersonaItems = [
-        `full name(${player.fullName})`,
+    let playerPersonaItems = [,
         mainPosition(player), 
         courtAndCouncilPositions(player), 
         houseAndStatus(player), 
@@ -21,11 +26,11 @@ module.exports = (gameData) =>{
         marriage(player), 
         `age(${player.age})`, 
         `faith(${player.faith})`, 
-        `culture(${player.culture})`
+        `culture(${player.culture})`,
+        `wealth(${player.gold} gold)`
     ];
     
-    let aiPersonaItems = [
-        `full name(${ai.fullName})`,
+    let aiPersonaItems = [,
         mainPosition(ai), 
         courtAndCouncilPositions(ai), 
         listRelationsToPlayer(ai), 
@@ -37,7 +42,9 @@ module.exports = (gameData) =>{
         marriage(ai),  
         `age(${ai.age})`, 
         `faith(${ai.faith})`, 
-        `culture(${ai.culture})`,];
+        `culture(${ai.culture})`,
+        `wealth(${ai.gold} gold)`
+    ];
     
     //remove "", null, undefined and 0. 
     playerPersonaItems = playerPersonaItems.filter(function(e){return e}); 
@@ -143,7 +150,15 @@ module.exports = (gameData) =>{
     
     function marriage(char){
         if(char.consort){
-            return `married to ${char.consort}`
+            if(char.consort == player.fullName){
+                return `married to ${player.shortName}`;
+            }
+            else if(char.consort == ai.fullName){
+                return `married to ${ai.shortName}`;
+            }
+            else{
+                return `married to ${char.consort}`
+            }
         }
         else{
             return `unmarried`;

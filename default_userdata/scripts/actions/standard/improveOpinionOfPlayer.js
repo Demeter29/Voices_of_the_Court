@@ -10,8 +10,7 @@ module.exports = {
             desc: "the number of opinion values the relation improves with. Can be between 1 and 5."
         }
     ],
-    description: `Execute when {{playerName}}'s last dialogue or action drastically improved {{aiName}}'s opinion of {{playerName}}.`,
-    group: "opinion",
+    description: `Execute when {{playerName}}'s last last single dialogue or action drastically improved {{aiName}}'s opinion of {{playerName}}.`,
 
     /**
      * @param {GameData} gameData 

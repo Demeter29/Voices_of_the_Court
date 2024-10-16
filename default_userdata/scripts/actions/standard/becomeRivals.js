@@ -10,8 +10,7 @@ module.exports = {
             desc: "the reason (the event) that made them become rivals with eachother. (write it in past tense)."
         }
     ],
-    description: "Execute when something drastic happened and {{playerName}} and {{aiName}} became rivals with eachother.",
-    group: "",
+    description: "Execute when {{playerName}} and {{aiName}} became fierce rivals with eachother.",
 
     /**
      * @param {GameData} gameData 

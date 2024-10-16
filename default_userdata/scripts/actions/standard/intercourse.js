@@ -4,8 +4,7 @@
 module.exports = {
     signature: "intercourse",
     args: [],
-    description: `Execute when {{aiName}} and {{playerName}} had sexual intercourse, only execute when the act is finished, the act can both be consensual or rape.`,
-    group: "",
+    description: `Execute when {{aiName}} and {{playerName}} had sexual intercourse, only execute after the intercourse is over. The act can be both consensual or rape.`,
 
     /**
      * @param {GameData} gameData 
@@ -30,7 +29,7 @@ module.exports = {
     `);
     },
     chatMessage: (args) =>{
-        return `you layed with {{aiName}}`
+        return `you lay with {{aiName}}`
     },
     chatMessageClass: "neutral-action-message"
 }

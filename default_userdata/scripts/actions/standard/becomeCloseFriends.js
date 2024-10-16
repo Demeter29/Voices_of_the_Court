@@ -7,11 +7,10 @@ module.exports = {
         {
             name: "reason",
             type: "string",
-            desc: "the reason (the event) that made them become friends. (write it in past tense)."
+            desc: "the reason (the event) that made them become friends. (in past tense)."
         }
     ],
     description: "Execute when a strong and close friendship formed between {{playerName}} and {{aiName}}.",
-    group: "",
 
     /**
      * @param {GameData} gameData 

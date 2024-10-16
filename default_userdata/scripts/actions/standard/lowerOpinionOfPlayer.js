@@ -11,7 +11,6 @@ module.exports = {
         }
     ],
     description: `Execute when {{playerName}}'s last single dialogue or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
-    group: "opinion",
 
     /**
      * @param {GameData} gameData 

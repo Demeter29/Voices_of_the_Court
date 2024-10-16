@@ -45,7 +45,7 @@ export class Character {
             this.primaryTitle = data[3],
             this.sheHe = data[4],
             this.age = Number(data[5]),
-            this.gold = Number(data[6]),
+            this.gold = Math.floor(Number(data[6])),
             this.opinionOfPlayer = Number(data[7]),
             this.sexuality = removeTooltip(data[8]),
             this.personality = data[9],

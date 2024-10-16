@@ -10,8 +10,7 @@ module.exports = {
             desc: "the amount of gold {{playerName}} pays to {{aiName}}"
         }
     ],
-    description: `Execute when {{playerName}} paid gold to {{aiName}} and {{aiName}} accepted it.`,
-    group: "",
+    description: `Execute when {{playerName}} gave gold to {{aiName}}, only execute if it's clear that {{aiName}} accepted it and took the gold.`,
 
     /**
      * @param {GameData} gameData 
@@ -35,6 +34,7 @@ module.exports = {
                 remove_short_term_gold = ${args[0]};
             }
         `);
+
 
         gameData.getPlayer().gold -= args[0];
         gameData.getPlayer().gold += args[0];
