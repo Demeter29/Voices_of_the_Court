@@ -12,8 +12,6 @@ import path from 'path';
 
 export async function checkActions(conv: Conversation): Promise<ActionResponse[]>{
 
-    throw "test";
-
     let availableActions: Action[] = [];
 
     availableActions = [];
