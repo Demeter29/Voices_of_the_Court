@@ -1,5 +1,6 @@
-/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
+//Made by: Durond
 
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "improveOpinionOfPlayer",
     args: [ 
@@ -14,10 +15,9 @@ module.exports = {
 
     /**
      * @param {GameData} gameData 
-     * @returns boolean
      */
     check: (gameData) =>{
-        return gameData.getAi().sho
+        return true
     },
 
     /**

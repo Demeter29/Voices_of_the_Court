@@ -1,3 +1,6 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "lowerOpinionOfPlayer",
     args: [ 
@@ -9,9 +12,19 @@ module.exports = {
     ],
     description: `Execute when {{playerName}}'s last single dialogue or action drastically lowered {{aiName}}'s opinion of {{playerName}}.`,
     group: "opinion",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) =>{
         return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) > -50);
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager, args) => {
         let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
         if(conversationOpinion>-50){

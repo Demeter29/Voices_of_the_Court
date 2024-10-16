@@ -1,3 +1,6 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "playerPaysGoldToAi",
     args: [
@@ -9,9 +12,19 @@ module.exports = {
     ],
     description: `Execute when {{playerName}} paid gold to {{aiName}} and {{aiName}} accepted it.`,
     group: "",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) => {
         return true;
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager) => {
         runFileManager.append(`
             global_var:talk_second_scope = {

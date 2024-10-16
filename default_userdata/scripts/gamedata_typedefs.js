@@ -1,5 +1,4 @@
 
-
 export type Trait = {
     category: string,
     name: string,

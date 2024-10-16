@@ -17,15 +17,19 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
     availableActions = [];
 
     for(let action of conv.actions){
-        if(action.check(conv.gameData)){
-            availableActions.push(action)
+        try{
+            if(action.check(conv.gameData)){
+                availableActions.push(action)
+            }
+        }catch(e){
+            let errMsg =`Action error: failure in check function. action: ${action.signature}; details: `+e;
+            console.log(errMsg)
+            conv.chatWindow.window.webContents.send('error-message', errMsg);
         }
+        
     }
 
-
-
     let triggeredActions: ActionResponse[] = [];
-    
     
     let response;
     if(conv.actionsApiConnection.isChat()){
@@ -79,7 +83,13 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
         const argsString = /\(([^)]+)\)/.exec(actionInResponse);
         if(argsString == null){
             if(matchedAction.args.length === 0){
-                matchedAction.run(conv.gameData, conv.runFileManager.append, []);
+                try{
+                    matchedAction.run(conv.gameData, conv.runFileManager.append, []);
+                }catch(e){
+                    let errMsg =`Action error: failure in check function. action: ${matchedAction.signature}; details: `+e;
+                    console.log(errMsg)
+                    conv.chatWindow.window.webContents.send('error-message', errMsg);
+                }
 
                 if(matchedAction.chatMessageClass != null){
                     triggeredActions.push({
@@ -123,7 +133,14 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
             continue;
         }
 
-        matchedAction.run(conv.gameData, (text: string)=>{conv.runFileManager.append(text)}, args);
+        try{
+            matchedAction.run(conv.gameData, (text: string)=>{conv.runFileManager.append(text)}, args);
+        }catch(e){
+            let errMsg =`Action error: failure in check function. action: ${matchedAction.signature}; details: `+e;
+            console.log(errMsg)
+            conv.chatWindow.window.webContents.send('error-message', errMsg);
+        }
+        
 
         if(matchedAction.chatMessageClass != null){
             triggeredActions.push({

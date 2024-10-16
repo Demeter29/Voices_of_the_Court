@@ -1,37 +1,8 @@
 //Made by: Durond
-//Script version: v1
 //NOTE: trait descriptions are not included, you should use this with an exMessages script that includes them, like aliChat.
 
-/*
-id: Number(data[0]),
-            shortName: data[1],
-            fullName: data[2],
-            primaryTitle: data[3],
-            sheHe: data[4],
-            age: Number(data[5]),
-            gold: Number(data[6]),
-            opinionOfPlayer: Number(data[7]),
-            sexuality: removeTooltip(data[8]),
-            personality: data[9],
-            greed: Number(data[10]),
-            isIndependentRuler: !!Number(data[11]),
-            liege: data[12],
-            consort: data[13],
-            culture: data[14],
-            faith: data[15],
-            house: data[16],
-            isRuler: !!Number(data[17]),
-            firstName: data[18],
-            capitalLocation: data[19],
-            topLiege: data[20],
-            prowess: Number(data[21]),
-            isKnight: !!Number(data[22]),
-            memories: [],
-            personalityTraits: [],
-            relationsToPlayer: [],
-            opinionBreakdownToPlayer: []
-*/
-
+/**@typedef {import('../../../gamedata_typedefs.js').GameData} GameData */
+/**@param {GameData} gameData */
 module.exports = (gameData) =>{
     const player = gameData.characters.get(gameData.playerID);
     const ai = gameData.characters.get(gameData.aiID);

@@ -1,6 +1,7 @@
 //Made by: Durond
-//Script version: v1
 
+/**@typedef {import('../../../gamedata_typedefs.js').GameData} GameData */
+/**@param {GameData} gameData */
 module.exports = (gameData) => {
     const date = gameData.date;
     const scene = gameData.scene;

@@ -1,3 +1,6 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "becomeCloseFriends",
     args: [
@@ -8,12 +11,23 @@ module.exports = {
         }
     ],
     description: "Execute when a strong and close friendship formed between {{playerName}} and {{aiName}}.",
+    group: "",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) => {
         let ai = gameData.characters.get(gameData.aiID);
         return (getConversationOpinionValue(ai.opinionBreakdownToPlayer) > 35) && 
                 (ai.opinionOfPlayer > 0) &&
                 !ai.relationsToPlayer.includes("Friend")
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager, args) => {
         console.log(args[0])
         runFileManager.append(`global_var:talk_second_scope = {

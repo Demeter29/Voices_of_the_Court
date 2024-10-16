@@ -1,8 +1,15 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "aiGetsWounded",
     args: [],
     description: `Execute when {{aiName}} got seriously wounded.`,
     group: "fight",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) =>{
         const char = gameData.characters.get(gameData.aiID);
 

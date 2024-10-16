@@ -1,11 +1,24 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "emotionWorry",
     args: [],
     description: `Execute when {{aiName}} is feeling worried.`,
     group: "emotion",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (conv) =>{
         return true;
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager) => {
         runFileManager.append(
             `set_global_variable = {

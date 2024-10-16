@@ -43,14 +43,20 @@ export async function checkUserData(){
     const defaultScriptsPath = path.join(__dirname, "..", "..", "default_userdata", "scripts");
     const userDataScriptsPath= path.join(userPath, "scripts");
 
+    //actions
+    fs.rmdirSync(path.join(userDataScriptsPath, 'actions', 'standard'), {recursive: true});
     fs.cp(path.join(defaultScriptsPath, 'actions', 'standard'), path.join(userDataScriptsPath, 'actions', 'standard'), {recursive: true}, (err) => {
         if(err) throw err;
     });
 
+    //description
+    fs.rmdirSync(path.join(userDataScriptsPath, 'prompts', 'description', 'standard'), {recursive: true});
     fs.cp(path.join(defaultScriptsPath, 'prompts', 'description', 'standard'), path.join(userDataScriptsPath, 'prompts', 'description', 'standard'), {recursive: true}, (err) => {
         if(err) throw err;
     });
 
+    //example messages
+    fs.rmdirSync(path.join(userDataScriptsPath, 'prompts', 'example messages', 'standard'), {recursive: true});
     fs.cp(path.join(defaultScriptsPath, 'prompts', 'example messages', 'standard'), path.join(userDataScriptsPath, 'prompts', 'example messages', 'standard'), {recursive: true}, (err) => {
         if(err) throw err;
     });

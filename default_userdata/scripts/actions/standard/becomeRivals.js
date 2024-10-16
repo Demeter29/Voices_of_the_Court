@@ -1,3 +1,6 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "becomeRivals",
     args: [
@@ -8,9 +11,20 @@ module.exports = {
         }
     ],
     description: "Execute when something drastic happened and {{playerName}} and {{aiName}} became rivals with eachother.",
+    group: "",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) => {
         return true;
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager, args) => {
         console.log(args[0])
         runFileManager.append(`global_var:talk_second_scope = {

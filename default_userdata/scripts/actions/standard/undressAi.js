@@ -1,11 +1,24 @@
+//Made by: Durond
+
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 module.exports = {
     signature: "undressAi",
     args: [],
     description: `Execute when {{aiName}} got undressed either willingly or forcefully against her wish.`,
     group: "",
+
+    /**
+     * @param {GameData} gameData 
+     */
     check: (gameData) => {
         return true;
     },
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
     run: (gameData, runFileManager) => {
         runFileManager.append(`
         global_var:talk_second_scope = {

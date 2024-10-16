@@ -15,7 +15,6 @@ const shell = require('electron').shell;
 const packagejson = require('../../package.json');
 
 
-
 const isFirstInstance = app.requestSingleInstanceLock();
 if (!isFirstInstance) {
     app.quit();
