@@ -1,7 +1,7 @@
 import { Conversation, } from "./Conversation";
 import { parseVariables } from "../parseVariables";
 import { Message } from "../ts/conversation_interfaces";
-import { GameData, Memory } from "../../shared/GameData";
+import { GameData, Memory } from "../../shared/gameData/GameData";
 import { Config } from "../../shared/Config";
 
 export function convertChatToText(chat: Message[], config: Config, aiName: string): string{

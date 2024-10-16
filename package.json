@@ -11,6 +11,7 @@
     ]
   },
   "scripts": {
+    "createTypeDefs": "node ./build/createGameDataTypeDefs.js",
     "build": "tsc",
     "start": "npm run build && electron . --prod",
     "go": "electron .",
@@ -37,7 +38,8 @@
     "@electron-forge/maker-squirrel": "^7.5.0",
     "@electron-forge/maker-zip": "^7.5.0",
     "electron": "33.0.0",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "ts-to-jsdoc": "^2.4.0"
   },
   "updater": {
     "server": "https://update.electronjs.org",

@@ -1,5 +1,5 @@
 import { RunFileManager } from "../RunFileManager";
-import { GameData } from "../../shared/GameData";
+import { GameData } from "../../shared/gameData/GameData";
 
 export interface Message {
     role: 'system' | 'user' | 'assistant';
@@ -47,7 +47,7 @@ export interface Action{
     description: string,
     group: string,
     check: (gameData: GameData) => boolean,
-    run: (arg1: GameData, arg2: RunFileManager, arg3: string[]) => void,
+    run: (arg1: GameData, arg2: (arg1: string)=> void, arg3: string[]) => void,
     chatMessage: (arg1: string[]) => string,
     chatMessageClass: string
 }

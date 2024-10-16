@@ -1,74 +1,7 @@
+import { GameData, Memory, Trait, OpinionModifier} from "./GameData";
+import { Character } from "./Character";
 const fs = require('fs');
 const readline = require('readline');
-
-export type Trait = {
-    category: string,
-    name: string,
-    desc: string
-}
-
-export type Memory = {
-    type: string,
-    creationDate: string,
-    desc: string,
-    relevanceWeight: number
-}
-
-export type OpinionModifier = {
-    reason: string,
-    value: number,
-}
-
-export type Character = {
-    id: number,
-    shortName: string,
-    fullName: string,
-    primaryTitle: string,
-    sheHe: string,
-    age: number,
-    gold: number;
-    opinionOfPlayer: number;
-    sexuality: string,
-    personality: string,
-    greed: number,
-    isIndependentRuler: boolean,
-    liege: string,
-    consort: string,
-    culture: string,
-    faith: string,
-    house: string,
-    isRuler: boolean,
-    firstName: string,
-    capitalLocation: string,
-    topLiege: string,
-    prowess: number,
-    isKnight: boolean,
-    liegeRealmLaw: string //used for knowing landless camp purpose
-    isLandedRuler: boolean,
-    heldCourtAndCouncilPositions: string
-    titleRankConcept: string,
-
-    memories: Memory[],
-    traits: Trait[],
-    relationsToPlayer: string[],
-    opinionBreakdownToPlayer: OpinionModifier[]
-}
-
-
-export type GameData = {
-    date: string,
-    scene: string,
-    location: string,
-    locationController: string,
-
-    playerID: number,
-    playerName: string,
-    aiID: number,
-    aiName: string,
-
-    characters: Map<number,Character>
-}
-
 
 export async function parseLog(debugLogPath: string): Promise<GameData>{
     let gameData: GameData
@@ -120,10 +53,10 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
 
             switch (dataType){
                 case "init":
-                    gameData = parseInit(data);
+                    gameData = new GameData(data);
                 break;
                 case "character": 
-                    let char = parseCharacter(data);
+                    let char = new Character(data);
                     gameData!.characters.set(char.id, char);
                 break;
                 case "memory": 
@@ -158,57 +91,7 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             }
         }
     } 
-    
-    function parseInit(data: string[]): GameData{
-        return {
-            playerID: Number(data[0]),
-            playerName: removeTooltip(data[1]),
-            aiID: Number(data[2]),
-            aiName: removeTooltip(data[3]),
-            date: data[4],
-            scene: data[5].substring(11),
-            location: data[6],
-            locationController: data[7],
-    
-            characters: new Map<number,Character>
-        }
-    }
-    
-    function parseCharacter(data: string[]): Character{
-        return {
-            id: Number(data[0]),
-            shortName: data[1],
-            fullName: data[2],
-            primaryTitle: data[3],
-            sheHe: data[4],
-            age: Number(data[5]),
-            gold: Number(data[6]),
-            opinionOfPlayer: Number(data[7]),
-            sexuality: removeTooltip(data[8]),
-            personality: data[9],
-            greed: Number(data[10]),
-            isIndependentRuler: !!Number(data[11]),
-            liege: data[12],
-            consort: data[13],
-            culture: data[14],
-            faith: data[15],
-            house: data[16],
-            isRuler: !!Number(data[17]),
-            firstName: data[18],
-            capitalLocation: data[19],
-            topLiege: data[20],
-            prowess: Number(data[21]),
-            isKnight: !!Number(data[22]),
-            liegeRealmLaw: data[23],
-            isLandedRuler: !!Number(data[24]),
-            heldCourtAndCouncilPositions: data[25],
-            titleRankConcept: data[26],
-            memories: [],
-            traits: [],
-            relationsToPlayer: [],
-            opinionBreakdownToPlayer: []
-        }
-    }
+
     
     function parseMemory(data: string[]): Memory{
         return {
@@ -230,18 +113,12 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
     function parseOpinionModifier(line: string): OpinionModifier{
         line = line.replace(/ *\([^)]*\) */g, "");
 
-        
-        
-
         let splits = line.split(": ");
-
 
         for(let i=0;i<splits.length;i++){
             splits[i] = removeTooltip(splits[i])
         }
-
-        
-
+  
         return {
             reason: splits[0],
             value: Number(splits[1])
@@ -253,10 +130,7 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
 }
 
 
-
-
-//TODO: just learn regex for fuck's sake
-function removeTooltip(str: string): string{
+export function removeTooltip(str: string): string{
     let newWords: string[] = []
     str.split(" ").forEach( (word) =>{
         if(word.includes('')){
@@ -268,4 +142,3 @@ function removeTooltip(str: string): string{
 
     return newWords.join(' ').replace(/ +(?= )/g,'').trim();
 }
-

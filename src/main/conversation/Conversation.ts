@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { GameData } from '../../shared/GameData.js';
+import { GameData } from '../../shared/gameData/GameData.js';
 import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';

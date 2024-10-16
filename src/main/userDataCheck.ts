@@ -55,7 +55,12 @@ export async function checkUserData(){
         if(err) throw err;
     });
 
+    //copy typedefs
+
+    fs.cp(path.join(defaultScriptsPath, 'gamedata_typedefs.js'), path.join(userDataScriptsPath, 'gamedata_typedefs.js'), {}, (err) => {
+        if(err) throw err;
+    });
+
+    
     return true;
-
-
 }

@@ -1,4 +1,4 @@
-import { GameData } from "../../shared/GameData";
+import { GameData } from "../../shared/gameData/GameData";
 import { Conversation } from "./Conversation";
 import { Config } from "../../shared/Config";
 import OpenAI from "openai";
@@ -79,7 +79,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
         const argsString = /\(([^)]+)\)/.exec(actionInResponse);
         if(argsString == null){
             if(matchedAction.args.length === 0){
-                matchedAction.run(conv.gameData, conv.runFileManager, []);
+                matchedAction.run(conv.gameData, conv.runFileManager.append, []);
 
                 if(matchedAction.chatMessageClass != null){
                     triggeredActions.push({
@@ -123,7 +123,7 @@ export async function checkActions(conv: Conversation): Promise<ActionResponse[]
             continue;
         }
 
-        matchedAction.run(conv.gameData, conv.runFileManager, args);
+        matchedAction.run(conv.gameData, (text: string)=>{conv.runFileManager.append(text)}, args);
 
         if(matchedAction.chatMessageClass != null){
             triggeredActions.push({

@@ -1,5 +1,4 @@
-
-
+/**@typedef {import('../../gamedata_typedefs.js').GameData} GameData */
 
 module.exports = {
     signature: "improveOpinionOfPlayer",
@@ -12,15 +11,26 @@ module.exports = {
     ],
     description: `Execute when {{playerName}}'s last dialogue or action drastically improved {{aiName}}'s opinion of {{playerName}}.`,
     group: "opinion",
+
+    /**
+     * @param {GameData} gameData 
+     * @returns boolean
+     */
     check: (gameData) =>{
-        return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) < 50)
+        return gameData.getAi().sho
     },
-    run: (gameData, runFileManager, args) =>{
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
+    run: (gameData, runGameEffect, args) =>{
         let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
         if(conversationOpinion<50){
             changeConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer, conversationOpinion+5);
 
-            runFileManager.append(
+            runGameEffect(
                 `global_var:talk_second_scope = {
                     add_opinion = {
                         target = global_var:talk_first_scope
@@ -30,48 +40,9 @@ module.exports = {
                 }`
             )
         }
-
-       
     },
     chatMessage: (args) =>{
         return `{{aiName}}'s opinion of you has improved by ${args[0]}.`
     },
     chatMessageClass: "positive-action-message"
 }
-
-//help functions
-
-function getConversationOpinionValue(opinionBreakdown){
-    let results = opinionBreakdown.filter( (opinionModifier) =>{
-        return opinionModifier.reason == "From conversations";
-    })
-
-    let conversationOpinion = 0;
-    if(results.length>0){
-        conversationOpinion = results[0].value;
-    }
-
-    return conversationOpinion;
-}
-
-function changeConversationOpinionValue(opinionBreakdown, value){
-    let found = false;
-    opinionBreakdown.forEach( (om) =>{
-        
-        if(om.reason == "From conversations"){
-            om.value = value;
-
-            found = true
-        }        
-    })
-
-    //no modifier found
-    if(!found){
-        opinionBreakdown.push({
-            reason: "From conversations",
-            value: value
-        })
-    }
-    
-
-}   

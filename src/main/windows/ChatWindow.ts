@@ -2,7 +2,7 @@ import {  app, BrowserWindow, screen, ipcMain, Rectangle} from "electron";
 import { OverlayController, OVERLAY_WINDOW_OPTS } from 'electron-overlay-window';
 import {ClipboardListener} from '../ClipboardListener.js';
 import { Conversation } from "../conversation/Conversation.js";
-import {GameData} from "../../shared/GameData.js";
+import {GameData} from "../../shared/gameData/GameData.js";
 import fs from 'fs';
 import { ConfigWindow } from "./ConfigWindow.js";
 import ActiveWindow from '@paymoapp/active-window';

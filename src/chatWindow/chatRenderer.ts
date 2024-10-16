@@ -1,7 +1,7 @@
 import { ipcMain, ipcRenderer } from 'electron';
 import {Action, ActionResponse, Message, MessageChunk} from '../main/ts/conversation_interfaces.js';
 import { marked } from 'marked';
-import { GameData } from '../shared/GameData.js';
+import { GameData } from '../shared/gameData/GameData.js';
 const DOMPurify = require('dompurify');
 
 const sanitizeConfig = {
