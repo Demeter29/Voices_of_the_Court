@@ -26,9 +26,10 @@ module.exports = {
      * @param {string[]} args 
      */
     run: (gameData, runGameEffect, args) =>{
-        let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
-        if(conversationOpinion<50){
-            changeConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer, conversationOpinion+5);
+        let ai = gameData.getAi();
+        let conversationOpinion = ai.getOpinionModifierValue("From conversation");
+        if(conversationOpinion < 50){
+            ai.setOpinionModifierValue("From conversation", conversationOpinion + args[0]);
 
             runGameEffect(
                 `global_var:talk_second_scope = {

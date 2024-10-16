@@ -19,8 +19,8 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager) => {
-        runFileManager.append(`
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(`
         global_var:talk_first_scope = {
             had_sex_with_effect = {
 				CHARACTER = global_var:talk_second_scope

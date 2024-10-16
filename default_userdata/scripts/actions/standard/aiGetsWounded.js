@@ -11,30 +11,28 @@ module.exports = {
      * @param {GameData} gameData 
      */
     check: (gameData) =>{
-        const char = gameData.characters.get(gameData.aiID);
-
-        return !hasTrait(char, "Wounded")
+        return !gameData.getAi().hasTrait("wounded");
     },
-    run: (gameData, runFileManager) => {
-        runFileManager.append(
+
+    /**
+     * @param {GameData} gameData 
+     * @param {Function} runGameEffect
+     * @param {string[]} args 
+     */
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(
             `global_var:talk_second_scope = {
                 add_trait = wounded_1
             }`
         )
+        gameData.getAi().addTrait({
+            category: "health",
+            name: "Wounded",
+            desc: `${gameData.getAi().shortName} is wounded`    
+        })
     },
     chatMessage: () =>{
         return `{{aiName}} got wounded!`
     },
     chatMessageClass: "negative-action-message"
-}
-
-function hasTrait(char, traitName){
-    let output = false;
-    char.traits.forEach(trait => {
-        if(trait.name === traitName){
-            output = true;
-        }
-    });
-
-    return output
 }

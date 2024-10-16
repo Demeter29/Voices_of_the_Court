@@ -17,7 +17,12 @@ module.exports = {
      * @param {GameData} gameData 
      */
     check: (gameData) => {
-        return true;
+        let ai = gameData.getAi();
+        
+        return ( !ai.relationsToPlayer.includes("Friend") && 
+                !ai.relationsToPlayer.includes("Rival") &&
+                ai.opinionOfPlayer < 20
+                )
     },
 
     /**
@@ -25,11 +30,13 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager, args) => {
+    run: (gameData, runGameEffect, args) => {
         console.log(args[0])
-        runFileManager.append(`global_var:talk_second_scope = {
+        runGameEffect(`global_var:talk_second_scope = {
             set_relation_rival = { reason = ${args[0]} target = global_var:talk_first_scope }
         }`)
+
+        gameData.getAi().relationsToPlayer.push("Rival");
     },
     chatMessage: (args) =>{
         return `{{aiName}} has become your rival.`

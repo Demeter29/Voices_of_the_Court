@@ -73,7 +73,7 @@ export class Character {
     }
 
     /**
-     * check if the character has a trait with a given name
+     * Check if the character has a trait with a given name.
      * @param name - the name of the trait
      * @return {boolean} 
      */
@@ -82,7 +82,7 @@ export class Character {
     }
 
     /**
-     * append a new trait to the character
+     * Append a new trait to the character.
      * @param {Trait }trait
      * @returns {void} 
      */
@@ -96,9 +96,14 @@ export class Character {
         });
     }
 
-    getOpinionModifierValue(opinionModifierReason: string): number{
+    /**
+     * Get the value of the opinion modifier with the given reason text
+     * @param {string} reason - the opinion modifier's reason text
+     * @returns {number} - opinion modifier's value. returns 0 if doesn't exist.
+     */
+    getOpinionModifierValue(reason: string): number{
         let target = this.opinionBreakdownToPlayer.find( (om: OpinionModifier) =>{
-            om.reason.toLowerCase() == opinionModifierReason.toLowerCase();
+            om.reason.toLowerCase() == reason.toLowerCase();
         });
 
         if(target !== undefined){
@@ -109,9 +114,15 @@ export class Character {
         }
     }
 
-    setOpinionModifierValue(opinionModifierReason: string, value: number){
+    /**
+     * Sets the opinion modifier's value. Creates a new opinion modifier if it doesn't exist. NOTE: this will also update the opinionOfPlayer property.
+     * @param {string} reason - The opinion modifier's reason text.
+     * @param {string} value - The value to set the opinion modifier.
+     * @returns {void}
+     */
+    setOpinionModifierValue(reason: string, value: number): void{
         let targetIndex = this.opinionBreakdownToPlayer.findIndex( (om: OpinionModifier) =>{
-            om.reason.toLowerCase() == opinionModifierReason.toLowerCase();
+            om.reason.toLowerCase() == reason.toLowerCase();
         })
 
         if(targetIndex != -1){
@@ -123,6 +134,14 @@ export class Character {
                 value: value
             })
         }
+
+        //recalculate opinionOfPlayer
+        let sum = 0;
+        for(const opinionModifier of this.opinionBreakdownToPlayer){
+            sum += opinionModifier.value;
+        }
+        this.opinionOfPlayer = sum;
     }
+
 }
 

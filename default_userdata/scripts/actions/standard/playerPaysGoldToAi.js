@@ -25,17 +25,19 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager) => {
-        runFileManager.append(`
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(`
             global_var:talk_second_scope = {
-            add_gold = 50;
+            add_gold = ${args[0]};
             }
 
             global_var:talk_first_scope = {
-                        remove_short_term_gold = 50;
+                remove_short_term_gold = ${args[0]};
             }
         `);
-        
+
+        gameData.getPlayer().gold -= args[0];
+        gameData.getPlayer().gold += args[0];
     },
     chatMessage: (args) =>{
         return `You paid ${args[0]} gold to {{aiName}}`

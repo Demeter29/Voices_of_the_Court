@@ -160,7 +160,12 @@ export class Conversation{
 
         let collectedActions: ActionResponse[];
         if(this.config.actionsEnableAll){
-            collectedActions = await checkActions(this);
+            try{
+                collectedActions = await checkActions(this);
+            }
+            catch(e){
+                collectedActions = [];
+            }
         }
         else{
             collectedActions = [];
@@ -280,7 +285,8 @@ export class Conversation{
             if(this.config.disabledActions.includes(path.basename(file).split(".")[0])){
                 continue;
             }
-    
+            
+            delete require.cache[require(path.join(actionsPath, 'standard', file))];
             this.actions.push(require(path.join(actionsPath, 'standard', file)));
             console.log(`loaded standard action: `+file)
         }
@@ -291,6 +297,7 @@ export class Conversation{
                 continue;
             }
     
+            delete require.cache[require(path.join(actionsPath, 'custom', file))];
             this.actions.push(require(path.join(actionsPath, 'custom', file)));
             console.log(`loaded custom action: `+file)
         }

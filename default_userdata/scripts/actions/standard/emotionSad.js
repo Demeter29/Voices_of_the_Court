@@ -19,12 +19,12 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager) => {
-        runFileManager.append(
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(
             `set_global_variable = {
 				name = talk_pose
 				value = flag:sad
-        }`
+            }`
         )
     },
     chatMessage: () =>{

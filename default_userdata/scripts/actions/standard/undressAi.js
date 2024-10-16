@@ -19,8 +19,8 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager) => {
-        runFileManager.append(`
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(`
         global_var:talk_second_scope = {
             add_character_flag = {
                 flag = is_naked

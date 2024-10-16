@@ -17,10 +17,11 @@ module.exports = {
      * @param {GameData} gameData 
      */
     check: (gameData) => {
-        let ai = gameData.characters.get(gameData.aiID);
-        return (getConversationOpinionValue(ai.opinionBreakdownToPlayer) > 35) && 
-                (ai.opinionOfPlayer > 0) &&
-                !ai.relationsToPlayer.includes("Friend")
+        let ai = gameData.getAi();
+        
+        return (ai.getOpinionModifierValue("From conversation") > 35 &&
+                ai.opinionOfPlayer > 0 &&
+                !ai.relationsToPlayer.includes("Friend"))
     },
 
     /**
@@ -28,11 +29,12 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager, args) => {
-        console.log(args[0])
-        runFileManager.append(`global_var:talk_second_scope = {
+    run: (gameData, runGameEffect, args) => {
+        runGameEffect(`global_var:talk_second_scope = {
             set_relation_friend = { reason = ${args[0]} target = global_var:talk_first_scope }
         }`)
+
+        gameData.getAi().relationsToPlayer.push("Friend");
     },
     chatMessage: (args) =>{
         return `{{aiName}} has become your friend.`

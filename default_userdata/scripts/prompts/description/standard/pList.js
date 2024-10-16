@@ -6,13 +6,38 @@
 module.exports = (gameData) =>{
     const player = gameData.characters.get(gameData.playerID);
     const ai = gameData.characters.get(gameData.aiID);
-    const date = gameData.scene;
+    const date = gameData.date;
     const location = gameData.location;
     const locationController = gameData.locationController;
     const scene = gameData.scene;
     
-    let playerPersonaItems = [mainPosition(player), courtAndCouncilPositions(player), houseAndStatus(player), personalityTraits(player), otherTraits(player), marriage(player), `age(${player.age})`, `faith(${player.faith})`, `culture(${player.culture})`];
-    let aiPersonaItems = [mainPosition(ai), courtAndCouncilPositions(ai), listRelationsToPlayer(ai), houseAndStatus(ai), opinion(ai), personalityTraits(ai), otherTraits(ai), greedines(ai), marriage(ai),  `age(${ai.age})`, `faith(${ai.faith})`, `culture(${ai.culture})`,];
+    let playerPersonaItems = [
+        `full name(${player.fullName})`,
+        mainPosition(player), 
+        courtAndCouncilPositions(player), 
+        houseAndStatus(player), 
+        personalityTraits(player), 
+        otherTraits(player), 
+        marriage(player), 
+        `age(${player.age})`, 
+        `faith(${player.faith})`, 
+        `culture(${player.culture})`
+    ];
+    
+    let aiPersonaItems = [
+        `full name(${ai.fullName})`,
+        mainPosition(ai), 
+        courtAndCouncilPositions(ai), 
+        listRelationsToPlayer(ai), 
+        houseAndStatus(ai), 
+        opinion(ai), 
+        personalityTraits(ai), 
+        otherTraits(ai), 
+        greedines(ai), 
+        marriage(ai),  
+        `age(${ai.age})`, 
+        `faith(${ai.faith})`, 
+        `culture(${ai.culture})`,];
     
     //remove "", null, undefined and 0. 
     playerPersonaItems = playerPersonaItems.filter(function(e){return e}); 

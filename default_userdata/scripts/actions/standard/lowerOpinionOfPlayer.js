@@ -17,7 +17,7 @@ module.exports = {
      * @param {GameData} gameData 
      */
     check: (gameData) =>{
-        return (getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer) > -50);
+        return true;
     },
 
     /**
@@ -25,12 +25,13 @@ module.exports = {
      * @param {Function} runGameEffect
      * @param {string[]} args 
      */
-    run: (gameData, runFileManager, args) => {
-        let conversationOpinion = getConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer)
-        if(conversationOpinion>-50){
-            changeConversationOpinionValue(gameData.characters.get(gameData.aiID).opinionBreakdownToPlayer, conversationOpinion-5)
+    run: (gameData, runGameEffect, args) => {
+       let ai = gameData.getAi();
+        let conversationOpinion = ai.getOpinionModifierValue("From conversation");
+        if(conversationOpinion > -50){
+            ai.setOpinionModifierValue("From conversation", conversationOpinion - args[0]);
 
-            runFileManager.append(
+            runGameEffect(
                 `global_var:talk_second_scope = {
                     add_opinion = {
                         target = global_var:talk_first_scope
@@ -46,40 +47,3 @@ module.exports = {
     },
     chatMessageClass: "negative-action-message"
 }
-
-//help functions
-
-function getConversationOpinionValue(opinionBreakdown){
-    let results = opinionBreakdown.filter( (opinionModifier) =>{
-        return opinionModifier.reason == "From conversations";
-    })
-
-    let conversationOpinion = 0;
-    if(results.length>0){
-        conversationOpinion = results[0].value;
-    }
-
-    return conversationOpinion;
-}
-
-function changeConversationOpinionValue(opinionBreakdown, value){
-    let found = false;
-    opinionBreakdown.forEach( (om) =>{
-        
-        if(om.reason == "From conversations"){
-            om.value = value;
-
-            found = true
-        }        
-    })
-
-    //no modifier found
-    if(!found){
-        opinionBreakdown.push({
-            reason: "From conversations",
-            value: value
-        })
-    }
-    
-
-}   
