@@ -64,18 +64,22 @@ export function buildChatPrompt(conv: Conversation): Message[]{
 
     let messages = conv.messages.slice(0); //pass by value
 
-    let correctedSummariesInsertDepth = conv.config.summariesInsertDepth;
-    let correctedMemoriesInsertDepth = conv.config.memoriesInsertDepth;
-    let correctedDescInsertDepth = conv.config.descInsertDepth;
+    const descMessage: Message = {
+        role: "system",
+        content: conv.description
+    };
 
-    if(conv.config.summariesInsertDepth > conv.config.memoriesInsertDepth){
-        correctedMemoriesInsertDepth++;
+    insertMessageAtDepth(messages, descMessage, conv.config.descInsertDepth);
+
+
+    const memoryMessage: Message = {
+        role: "system",
+        content: createMemoryString(conv)
     }
-    if(conv.config.summariesInsertDepth > conv.config.descInsertDepth){
-        correctedDescInsertDepth++;
-    }
-    if(conv.config.memoriesInsertDepth > conv.config.descInsertDepth){
-        correctedDescInsertDepth++;
+
+    
+    if(memoryMessage.content){
+        insertMessageAtDepth(messages, memoryMessage, conv.config.memoriesInsertDepth);
     }
 
     if(conv.summaries.length > 0){
@@ -95,28 +99,11 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         } 
 
         
-
-        insertMessageAtDepth(messages, summariesMessage, correctedSummariesInsertDepth);   
-        
-    }
-
-    const descMessage: Message = {
-        role: "system",
-        content: conv.description
-    };
-
-    const memoryMessage: Message = {
-        role: "system",
-        content: createMemoryString(conv)
-    }
-
-    
-    if(memoryMessage.content){
-        insertMessageAtDepth(messages, memoryMessage, correctedMemoriesInsertDepth);
+        insertMessageAtDepth(messages, summariesMessage, conv.config.summariesInsertDepth); 
     }
     
 
-    insertMessageAtDepth(messages, descMessage, correctedDescInsertDepth);
+    
 
     if(conv.currentSummary){
         let currentSummaryMessage: Message = {
@@ -147,7 +134,6 @@ export function buildSummarizeChatPrompt(conv: Conversation): Message[]{
     
     let output: Message[] = [];
 
-    //I found that summarization works a lot better if the conversation is contained in just 1 message
     output.push({
         role: "system",
         content: convertMessagesToString(conv.messages, "", "")
@@ -206,16 +192,14 @@ export function convertMessagesToString(messages: Message[], inputSeq: string, o
     return output;
 }
 
-function insertMessageAtDepth(messages: Message[], messageToInsert: Message, insertDepth: number): Message[] {
+function insertMessageAtDepth(messages: Message[], messageToInsert: Message, insertDepth: number): void{
 
     if(messages.length < insertDepth){
-        messages.unshift(messageToInsert);
+        messages.splice(0, 0, messageToInsert);
     }
     else{
-        messages.splice(messages.length - insertDepth, 0, messageToInsert);
+        messages.splice(messages.length - insertDepth + 1, 0, messageToInsert);
     }
-
-    return messages;
 }
 
 function getDateDifference(pastDate: string, todayDate: string): string{
