@@ -1,5 +1,4 @@
-var afterExtractScript = require("./build/afterExtractScript.js");
-var afterCopyScript = require("./build/afterCopyScript.js");
+
 const path = require('path');
 
 module.exports = {
@@ -23,13 +22,7 @@ module.exports = {
     },
   ],
   hooks: {
-    packageAfterExtract: (forgeConfig, buildPath, electronVersion, platform, arch) => {
-        afterExtractScript(forgeConfig, buildPath, electronVersion, platform, arch);
-    },
-
-    packageAfterCopy: (forgeConfig, buildPath, electronVersion, platform, arch) => {
-      afterCopyScript(forgeConfig, buildPath, electronVersion, platform, arch);
-  },
+    
 
   }
 

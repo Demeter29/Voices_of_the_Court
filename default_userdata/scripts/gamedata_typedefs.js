@@ -105,7 +105,7 @@ export class Character {
             this.primaryTitle = data[3],
             this.sheHe = data[4],
             this.age = Number(data[5]),
-            this.gold = Number(data[6]),
+            this.gold = Math.floor(Number(data[6])),
             this.opinionOfPlayer = Number(data[7]),
             this.sexuality = removeTooltip(data[8]),
             this.personality = data[9],
@@ -175,7 +175,7 @@ export class Character {
     }
 
     /**
-     * Sets the opinion modifier's value. Creates a new opinion modifier if it doesn't exist.
+     * Sets the opinion modifier's value. Creates a new opinion modifier if it doesn't exist. NOTE: this will also update the opinionOfPlayer property.
      * @param {string} reason - The opinion modifier's reason text.
      * @param {string} value - The value to set the opinion modifier.
      * @returns {void}
@@ -194,19 +194,14 @@ export class Character {
                 value: value
             })
         }
-    }
 
-    /**
-     * Recalculate the opinionOfPlayer property from the opinionBreakdown array.
-     * @returns {number} - the new opinion value. NOTE: This will also change the opinionOfPlayer property.
-     */
-    recalculateOpinionOfPlayer(){
+        //recalculate opinionOfPlayer
         let sum = 0;
         for(const opinionModifier of this.opinionBreakdownToPlayer){
             sum += opinionModifier.value;
         }
         this.opinionOfPlayer = sum;
-        return sum;
     }
+
 }
 
