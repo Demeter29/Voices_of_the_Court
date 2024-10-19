@@ -1,4 +1,4 @@
-import {  app, BrowserWindow, screen } from "electron";
+import {  app, BrowserWindow } from "electron";
 
 export class ConfigWindow{
     window: BrowserWindow;

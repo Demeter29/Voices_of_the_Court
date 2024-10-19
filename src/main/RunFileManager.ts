@@ -1,5 +1,3 @@
-import { Config } from "../shared/Config";
-import { ipcMain, ipcRenderer } from 'electron';
 import fs from 'fs';
 
 export class RunFileManager{

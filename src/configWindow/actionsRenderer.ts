@@ -1,7 +1,4 @@
-import { ipcMain, ipcRenderer, dialog, app} from 'electron';
-import { Config } from '../shared/Config';
-import  {OpenAI}  from "openai";
-import { ApiConnection } from '../shared/apiConnection';
+import { ipcRenderer} from 'electron';
 import fs from 'fs';
 import path from 'path';
 

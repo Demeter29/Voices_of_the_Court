@@ -1,4 +1,3 @@
-import { RunFileManager } from "../RunFileManager";
 import { GameData } from "../../shared/gameData/GameData";
 
 export interface Message {

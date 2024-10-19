@@ -1,6 +1,6 @@
 //this file checks the app's userdata folder.
 
-import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater } from "electron";
+import { app} from "electron";
 import path from 'path';
 import { existsSync } from "original-fs";
 import fs from 'fs';

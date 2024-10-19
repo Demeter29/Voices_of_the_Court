@@ -1,10 +1,9 @@
 import { app } from 'electron';
 import { GameData } from '../../shared/gameData/GameData.js';
-import  {OpenAI}  from 'openai';
 import { Config } from '../../shared/Config.js';
-import { ApiConnection, Connection, Parameters } from '../../shared/apiConnection.js';
+import { ApiConnection} from '../../shared/apiConnection.js';
 import { checkActions } from './checkActions.js';
-import { convertChatToText, buildChatPrompt, buildSummarizeChatPrompt , buildResummarizeChatPrompt, convertChatToTextNoNames} from './promptBuilder.js';
+import { convertChatToText, buildChatPrompt, buildResummarizeChatPrompt, convertChatToTextNoNames} from './promptBuilder.js';
 import { cleanMessageContent } from './messageCleaner.js';
 import { summarize } from './summarize.js';
 import fs from 'fs';
@@ -13,7 +12,6 @@ import path from 'path';
 import {Message, MessageChunk, ErrorMessage, Summary, Action, ActionResponse} from '../ts/conversation_interfaces.js';
 import { RunFileManager } from '../RunFileManager.js';
 import { ChatWindow } from '../windows/ChatWindow.js';
-const contextLimits = require("../../../public/contextLimits.json");
 
 const userDataPath = path.join(app.getPath('userData'), 'votc_data');
 

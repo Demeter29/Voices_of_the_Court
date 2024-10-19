@@ -1,8 +1,6 @@
-import { ipcMain, ipcRenderer } from 'electron';
+import {ipcRenderer } from 'electron';
 import { Config } from '../../shared/Config';
-import fs from 'fs';
-import path from 'path';
-import { ApiConnection, apiConnectionTestResult } from '../../shared/apiConnection';
+import { ApiConnection } from '../../shared/apiConnection';
 
 const template = document.createElement("template");
 

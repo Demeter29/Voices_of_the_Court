@@ -1,14 +1,8 @@
-import { GameData } from "../../shared/gameData/GameData";
 import { Conversation } from "./Conversation";
 import { Config } from "../../shared/Config";
-import OpenAI from "openai";
 import { convertMessagesToString } from "./promptBuilder";
 import { Message, Action, ActionResponse } from "../ts/conversation_interfaces";
 import { parseVariables } from "../parseVariables";
-import fs from 'fs';
-import path from 'path';
-
-
 
 export async function checkActions(conv: Conversation): Promise<ActionResponse[]>{
 

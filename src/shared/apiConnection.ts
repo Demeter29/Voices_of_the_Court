@@ -3,7 +3,6 @@ import OpenAI from "openai";
 const contextLimits = require("../../public/contextLimits.json");
 
 import tiktoken from "js-tiktoken";
-import { ApiConnectionConfig } from "./Config";
 
 export interface apiConnectionTestResult{
     success: boolean,

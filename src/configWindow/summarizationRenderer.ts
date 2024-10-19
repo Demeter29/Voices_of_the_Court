@@ -1,9 +1,4 @@
-import { ipcMain, ipcRenderer, dialog} from 'electron';
-import { Config } from '../shared/Config';
-import  {OpenAI}  from "openai";
-import { ApiConnection } from '../shared/apiConnection';
-import fs from 'fs';
-import path from 'path';
+import { ipcRenderer} from 'electron';
 
 //@ts-ignore
 let useConnectionAPI: HTMLElement = document.querySelector("#use-connection-api")!.checkbox;

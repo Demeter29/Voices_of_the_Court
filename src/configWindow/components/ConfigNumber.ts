@@ -1,7 +1,5 @@
-import { ipcMain, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Config } from '../../shared/Config';
-import fs from 'fs';
-import path from 'path';
 
 const template = document.createElement("template");
 

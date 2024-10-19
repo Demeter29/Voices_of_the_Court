@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { Parameters, Connection, ApiConnection } from './apiConnection';
+import { Parameters, Connection} from './apiConnection';
 import path from 'path';
-import { IpcRenderer, app, ipcRenderer} from 'electron';
+import {app} from 'electron';
 
        
 

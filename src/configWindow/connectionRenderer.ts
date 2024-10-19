@@ -1,7 +1,4 @@
-import { ipcMain, ipcRenderer, dialog} from 'electron';
-import { Config } from '../shared/Config';
-import  {OpenAI}  from "openai";
-import { ApiConnection } from '../shared/apiConnection';
+import { ipcRenderer} from 'electron';
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
@@ -11,13 +8,12 @@ let runPathInput: HTMLSelectElement = document.querySelector("#run-path-input")!
 
 let config;
 
-//@ts-ignore
-document.getElementById("container")?.style.display = "block";
+document.getElementById("container")!.style.display = "block";
 
 init();
 
 async function init(){
-    
+    //@ts-ignore
     
     config = await ipcRenderer.invoke('get-config');
     console.log(await ipcRenderer.invoke('get-config'))

@@ -1,5 +1,4 @@
-import { ipcMain, ipcRenderer , app} from "electron";
-import { Config } from "../shared/Config";
+import { ipcRenderer} from "electron";
 import fs from 'fs';
 import path from 'path';
 

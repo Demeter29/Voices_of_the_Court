@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, dialog, ipcRenderer, autoUpdater, Tray, Menu, MessageBoxOptions } from "electron";
+import { app, ipcMain, dialog, autoUpdater, Tray, Menu} from "electron";
 import {ConfigWindow} from './windows/ConfigWindow.js';
 import {ChatWindow} from './windows/ChatWindow.js';
 import { Config } from '../shared/Config.js';
@@ -6,9 +6,8 @@ import { ClipboardListener } from "./ClipboardListener.js";
 import { Conversation } from "./conversation/Conversation.js";
 import { GameData } from "../shared/gameData/GameData.js";
 import { parseLog } from "../shared/gameData/parseLog.js";
-import { Message, ErrorMessage, MessageChunk } from "./ts/conversation_interfaces.js";
+import { Message} from "./ts/conversation_interfaces.js";
 import path from 'path';
-import { existsSync } from "original-fs";
 import fs from 'fs';
 import { checkUserData } from "./userDataCheck.js";
 const shell = require('electron').shell;
