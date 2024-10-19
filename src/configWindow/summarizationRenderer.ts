@@ -12,6 +12,7 @@ let apiSelector: HTMLElement = document.querySelector("#api-selector")!;
 
 
 //init
+document.getElementById("container")!.style.display = "block";
 
 init();
 

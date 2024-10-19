@@ -11,8 +11,9 @@ let scriptSelectorsDiv: HTMLDivElement = document.querySelector("#script-selecto
 let suffixPromptCheckbox: any = document.querySelector("#suffix-prompt-checkbox")!;
 let suffixPromptTextarea: any = document.querySelector("#suffix-prompt-textarea")!;
 
-//init
 
+//init
+document.getElementById("container")!.style.display = "block";
 
 
 

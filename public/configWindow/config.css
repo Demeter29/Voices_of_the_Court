@@ -118,6 +118,8 @@ input[type=checkbox]{
 .container{
   padding: 2rem;
   padding-top: 4rem;
+
+  display: none;
 }
 
 .row {

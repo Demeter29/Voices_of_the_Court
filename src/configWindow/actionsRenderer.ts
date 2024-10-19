@@ -20,6 +20,7 @@ let config;
 let disabledActions:string[];
 let actionsPath: string;
 
+document.getElementById("container")!.style.display = "block";
 init();
 
 async function init(){

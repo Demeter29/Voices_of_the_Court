@@ -11,9 +11,14 @@ let runPathInput: HTMLSelectElement = document.querySelector("#run-path-input")!
 
 let config;
 
+//@ts-ignore
+document.getElementById("container")?.style.display = "block";
+
 init();
 
 async function init(){
+    
+    
     config = await ipcRenderer.invoke('get-config');
     console.log(await ipcRenderer.invoke('get-config'))
 
