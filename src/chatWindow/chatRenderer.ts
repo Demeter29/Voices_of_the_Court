@@ -92,19 +92,38 @@ chatInput.addEventListener('keydown', async function(e) {
             const messageText = chatInput.value;
             chatInput.value = ''
 
-            let message: Message = {
-                role: "user",
-                name: playerName,
-                content: messageText
+            if(messageText.startsWith('/')){
+                sendCommand(messageText);
             }
-
-            await displayMessage(message);
-            showLoadingDots();
-            ipcRenderer.send('message-send', message);
-
+            else{
+                let message: Message = {
+                    role: "user",
+                    name: playerName,
+                    content: messageText
+                }
+    
+                await displayMessage(message);
+                showLoadingDots();
+                ipcRenderer.send('message-send', message);
+            }
         };
     };
 });
+
+function sendCommand(text: string){
+    let args = text.slice(1).trim().split(/ +/g); 
+    const command = args.shift()!.toLowerCase();
+}
+
+function listCommands(){
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+
+    messageDiv.innerText = `List of commands: \n/actions - lists all the available actions \n/action {actionName} {args} - trigger an action`;
+
+    chatMessages.append(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
 async function replaceLastMessage(message: Message){
     chatMessages.lastElementChild!.innerHTML = DOMPurify.sanitize((await marked.parseInline(`**${message.name}:** ${message.content}*`)).replace(/\*/g, ''), sanitizeConfig);
