@@ -214,7 +214,7 @@ class ApiSelector extends HTMLElement{
             
         }
         else if(apiConfig.type == "custom"){
-            this.customUrlInput.value = apiConfig.key;
+            this.customUrlInput.value = apiConfig.baseUrl;
             this.customKeyInput.value = apiConfig.key;
             this.customModelInput.value = apiConfig.model;
         }
