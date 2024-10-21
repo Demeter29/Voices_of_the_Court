@@ -1,4 +1,4 @@
-import { GameData, Memory, Trait, OpinionModifier} from "./GameData";
+import { GameData, Memory, Trait, OpinionModifier, Secret} from "./GameData";
 import { Character } from "./Character";
 const fs = require('fs');
 const readline = require('readline');
@@ -63,6 +63,10 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
                     let memory = parseMemory(data)
                     gameData!.characters.get(rootID)!.memories.push(memory);
                 break;
+                case "secret": 
+                    let secret = parseSecret(data)
+                    gameData!.characters.get(rootID)!.secrets.push(secret);
+                break;
                 case "trait":
                     gameData!.characters.get(rootID)!.traits.push(parseTrait(data));
                 break;
@@ -101,6 +105,15 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             relevanceWeight: Number(data[4])
         }
     }
+
+    function parseSecret(data: string[]): Secret{
+        return {
+            name: data[1],
+            desc: data[2],
+            category: data[3],
+        }
+    }
+
     
     function parseTrait(data: string[]): Trait{
         return {

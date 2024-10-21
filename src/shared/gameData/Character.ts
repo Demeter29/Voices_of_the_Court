@@ -1,4 +1,4 @@
-import {Memory, Trait, OpinionModifier} from "./GameData"
+import {Memory, Trait, OpinionModifier, Secret} from "./GameData"
 import { removeTooltip } from "./parseLog";
 
 /** @class */
@@ -33,6 +33,7 @@ export class Character {
     heldCourtAndCouncilPositions: string
     titleRankConcept: string;
 
+    secrets: Secret[];
     memories: Memory[];
     traits: Trait[];
     relationsToPlayer: string[];
@@ -66,6 +67,7 @@ export class Character {
             this.isLandedRuler = !!Number(data[24]),
             this.heldCourtAndCouncilPositions = data[25],
             this.titleRankConcept = data[26],
+            this.secrets = [],
             this.memories = [],
             this.traits = [],
             this.relationsToPlayer = [],
@@ -103,7 +105,7 @@ export class Character {
      */
     getOpinionModifierValue(reason: string): number{
         let target = this.opinionBreakdownToPlayer.find( (om: OpinionModifier) =>{
-            om.reason.toLowerCase() == reason.toLowerCase();
+            om.reason === reason;
         });
 
         if(target !== undefined){

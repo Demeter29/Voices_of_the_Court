@@ -1,7 +1,7 @@
 import { Conversation, } from "./Conversation";
 import { parseVariables } from "../parseVariables";
 import { Message } from "../ts/conversation_interfaces";
-import { Memory } from "../../shared/gameData/GameData";
+import { Memory, Secret } from "../../shared/gameData/GameData";
 import { Config } from "../../shared/Config";
 
 export function convertChatToText(chat: Message[], config: Config, aiName: string): string{
@@ -81,6 +81,17 @@ export function buildChatPrompt(conv: Conversation): Message[]{
     if(memoryMessage.content){
         insertMessageAtDepth(messages, memoryMessage, conv.config.memoriesInsertDepth);
     }
+
+
+    const secretMessage: Message = {
+        role: "system",
+        content: createSecretString(conv)
+    }
+
+    if(secretMessage.content){
+        insertMessageAtDepth(messages, secretMessage, conv.config.memoriesInsertDepth);
+    }
+
 
     if(conv.summaries.length > 0){
         let summaryString = "Here are the date and summary of previous conversations between them:\n"
@@ -248,7 +259,37 @@ function getDateDifference(pastDate: string, todayDate: string): string{
 }
 
 
+function createSecretString(conv: Conversation): string{
+    let allSecrets: Secret[] = [];
 
+    allSecrets = allSecrets.concat(conv.gameData.characters.get(conv.gameData.playerID)!.secrets);
+    allSecrets = allSecrets.concat(conv.gameData.characters.get(conv.gameData.aiID)!.secrets);
+
+    let output ="";
+    if(allSecrets.length>0){
+        output = conv.config.memoriesPrompt;
+    }
+
+    let tokenCount = 0;
+    while(allSecrets.length>0){
+        const secret: Secret = allSecrets.pop()!;
+
+        let secretLine = `${secret.name}: ${secret.desc}`;
+
+        let secretLineTokenCount = conv.textGenApiConnection.calculateTokensFromText(secretLine);
+
+        if(tokenCount + secretLineTokenCount > conv.config.maxMemoryTokens){
+            break;
+        } 
+        else{
+            output+="\n"+secretLine;
+            tokenCount+=secretLineTokenCount;
+        }
+
+    }
+    return output;
+
+}
 
 function createMemoryString(conv: Conversation): string{
 
