@@ -19,6 +19,11 @@ export type OpinionModifier = {
     value: number,
 }
 
+export type Secret = {
+    name: string,
+    desc: string,
+    category: string
+}
 
 /** 
  * @class
@@ -93,6 +98,7 @@ export class Character {
     heldCourtAndCouncilPositions: string
     titleRankConcept: string;
 
+    secrets: Secret[];
     memories: Memory[];
     traits: Trait[];
     relationsToPlayer: string[];
@@ -126,6 +132,7 @@ export class Character {
             this.isLandedRuler = !!Number(data[24]),
             this.heldCourtAndCouncilPositions = data[25],
             this.titleRankConcept = data[26],
+            this.secrets = [],
             this.memories = [],
             this.traits = [],
             this.relationsToPlayer = [],
@@ -162,9 +169,7 @@ export class Character {
      * @returns {number} - opinion modifier's value. returns 0 if doesn't exist.
      */
     getOpinionModifierValue(reason: string): number{
-        let target = this.opinionBreakdownToPlayer.find( (om: OpinionModifier) =>{
-            om.reason.toLowerCase() == reason.toLowerCase();
-        });
+        let target = this.opinionBreakdownToPlayer.find( modifier => modifier.reason === reason);
 
         if(target !== undefined){
             return target.value;

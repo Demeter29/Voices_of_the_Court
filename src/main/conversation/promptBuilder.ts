@@ -260,35 +260,30 @@ function getDateDifference(pastDate: string, todayDate: string): string{
 
 
 function createSecretString(conv: Conversation): string{
-    let allSecrets: Secret[] = [];
-
-    allSecrets = allSecrets.concat(conv.gameData.characters.get(conv.gameData.playerID)!.secrets);
-    allSecrets = allSecrets.concat(conv.gameData.characters.get(conv.gameData.aiID)!.secrets);
+    let aiSecrets: Secret[] = [];
+    let playerSecrets: Secret[] = [];
+    
+    aiSecrets = aiSecrets.concat(conv.gameData.characters.get(conv.gameData.aiID)!.secrets);
+    playerSecrets = playerSecrets.concat(conv.gameData.characters.get(conv.gameData.playerID)!.secrets);
 
     let output ="";
-    if(allSecrets.length>0){
-        output = conv.config.memoriesPrompt;
+    if(aiSecrets.length>0){
+        output += `${conv.gameData.aiName}'s secrets:`;
+    }
+    while(aiSecrets.length>0){
+        const secret: Secret = aiSecrets.pop()!;
+        output+=`\n${conv.gameData.aiName}: ${secret.desc}`;
     }
 
-    let tokenCount = 0;
-    while(allSecrets.length>0){
-        const secret: Secret = allSecrets.pop()!;
-
-        let secretLine = `${secret.name}: ${secret.desc}`;
-
-        let secretLineTokenCount = conv.textGenApiConnection.calculateTokensFromText(secretLine);
-
-        if(tokenCount + secretLineTokenCount > conv.config.maxMemoryTokens){
-            break;
-        } 
-        else{
-            output+="\n"+secretLine;
-            tokenCount+=secretLineTokenCount;
-        }
-
+    if(playerSecrets.length>0){
+        output += `\n\n${conv.gameData.playerName}'s secrets:`;
     }
-    return output;
+    while(playerSecrets.length>0){
+        const secret: Secret = playerSecrets.pop()!;
+        output+=`\n${conv.gameData.playerName}: ${secret.desc}`;
+    }
 
+    return output+"\n\n";
 }
 
 function createMemoryString(conv: Conversation): string{
