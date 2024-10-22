@@ -104,9 +104,7 @@ export class Character {
      * @returns {number} - opinion modifier's value. returns 0 if doesn't exist.
      */
     getOpinionModifierValue(reason: string): number{
-        let target = this.opinionBreakdownToPlayer.find( (om: OpinionModifier) =>{
-            om.reason === reason;
-        });
+        let target = this.opinionBreakdownToPlayer.find( modifier => modifier.reason === reason);
 
         if(target !== undefined){
             return target.value;
