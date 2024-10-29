@@ -138,10 +138,12 @@ export class Character {
         //recalculate opinionOfPlayer
         let sum = 0;
         for(const opinionModifier of this.opinionBreakdownToPlayer){
-            sum += opinionModifier.value;
+            if (!Number.isNaN(opinionModifier.value)) {
+                sum += Number(opinionModifier.value);
+            }
         }
         this.opinionOfPlayer = sum;
-    }
+    }   
 
 }
 
