@@ -4,6 +4,10 @@ Voices of the Court is a Crusader Kings 3 mod which integrates Large Language Mo
 
 Documentation: https://docs.voicesofthecourt.app
 
+[Steam page](https://steamcommunity.com/sharedfiles/filedetails/?id=3346777360)
+
+Join our Discord:
+
 [![Discord Server](https://discord.com/api/guilds/1066522056243564585/widget.png?style=banner2)](https://discord.gg/5nuE54GFgr)
 
 # Trailer video 
