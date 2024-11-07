@@ -16,3 +16,10 @@ Join our Discord:
 # Gameplay video by DaFloove
 [![link to](https://img.youtube.com/vi/3lhHkXPmis0/0.jpg)](https://www.youtube.com/watch?v=3lhHkXPmis0)
 
+# Local setup
+
+1. clone the repo
+2. install dependencies with `npm i`
+3. start dev mode with `npm run start`
+4. package app with `npm run make`
+
