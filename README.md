@@ -1,21 +1,25 @@
 # Voices of the Court
 
-Voices of the Court is a Crusader kings 3 mod that integrates Large Language Models (LLMs) into the gameplay. It lets you hold conversations with the characters and also impact the game state to an extend.
+Voices of the Court is a Crusader Kings 3 mod which integrates Large Language Models into the game. It lets you hold conversations with the characters and also impact the game state to an extend.
 
-## How does it work?
+Documentation: https://docs.voicesofthecourt.app
 
-The mod extracts the necessary game information from ck3, converts them into prompts for the llms and and creates a chat for you with the selected character.
+[Steam page](https://steamcommunity.com/sharedfiles/filedetails/?id=3346777360)
 
-## How does it impact the game state?
+Join our Discord:
 
-We impact the game with Actions. These are predefined game effects that gets triggered when the llm thinks it should. Only the predefined actions will get triggered, the llm can't make these actions on their own.
+[![Discord Server](https://discord.com/api/guilds/1066522056243564585/widget.png?style=banner2)](https://discord.gg/5nuE54GFgr)
 
 # Trailer video 
 [![link to](https://img.youtube.com/vi/E2GmlNsK-J8/0.jpg)](https://www.youtube.com/watch?v=E2GmlNsK-J8)
 
-# Install
+# Gameplay video by DaFloove
+[![link to](https://img.youtube.com/vi/3lhHkXPmis0/0.jpg)](https://www.youtube.com/watch?v=3lhHkXPmis0)
 
-Documentation on installation can be found on [docs.voicesofthecourt.app](https://docs.voicesofthecourt.app/installation)
+# Local setup
 
-
+1. clone the repo
+2. install dependencies with `npm i`
+3. start dev mode with `npm run start`
+4. package app with `npm run make`
 
