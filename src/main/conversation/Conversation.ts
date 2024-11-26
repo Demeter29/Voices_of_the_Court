@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import { GameData } from '../../shared/gameData/GameData.js';
+import { Character } from '../../shared/gameData/Character.js';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection} from '../../shared/apiConnection.js';
 import { checkActions } from './checkActions.js';
@@ -72,7 +73,16 @@ export class Conversation{
         this.messages.push(message);
     }
 
-    async generateNewAIMessage(){
+    generateAIsMessages(){        
+        this.gameData.characters.forEach((character: Character, id) => {
+            if (id !== this.gameData.playerID)
+            {
+                this.generateNewAIMessage(character);
+            }
+        })    
+    }
+
+    async generateNewAIMessage(character: Character){
 
         
         let responseMessage: Message;
@@ -81,7 +91,7 @@ export class Conversation{
             this.chatWindow.window.webContents.send('stream-start');
         }
 
-        let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
+        let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this, character));
         //let currentTokens = 500;
         console.log(`current tokens: ${currentTokens}`);
 
@@ -92,7 +102,7 @@ export class Conversation{
 
         let streamMessage = {
             role: "assistant",
-            name: this.gameData.aiName,
+            name: character.fullName,//this.gameData.aiName,
             content: ""
         }
         let cw = this.chatWindow;
@@ -106,8 +116,8 @@ export class Conversation{
             
             responseMessage = {
                 role: "assistant",
-                name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(buildChatPrompt(this), this.config.stream, {
+                name: character.fullName,//this.gameData.aiName,
+                content: await this.textGenApiConnection.complete(buildChatPrompt(this, character), this.config.stream, {
                     //stop: [this.gameData.playerName+":", this.gameData.aiName+":", "you:", "user:"],
                     max_tokens: this.config.maxTokens,
                 },
@@ -120,8 +130,8 @@ export class Conversation{
 
             responseMessage = {
                 role: "assistant",
-                name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config, this.gameData.aiName), this.config.stream, {
+                name: character.fullName,
+                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this, character), this.config, character.fullName), this.config.stream, {
                     stop: [this.config.inputSequence, this.config.outputSequence],
                     max_tokens: this.config.maxTokens,
                 },
@@ -140,21 +150,22 @@ export class Conversation{
             this.chatWindow.window.webContents.send('message-receive', responseMessage, this.config.actionsEnableAll);
         }
         
-
-        let collectedActions: ActionResponse[];
-        if(this.config.actionsEnableAll){
-            try{
-                collectedActions = await checkActions(this);
+        if (character.id === this.gameData.aiID){
+            let collectedActions: ActionResponse[];
+            if(this.config.actionsEnableAll){
+                try{
+                    collectedActions = await checkActions(this);
+                }
+                catch(e){
+                    collectedActions = [];
+                }
             }
-            catch(e){
+            else{
                 collectedActions = [];
             }
+    
+            this.chatWindow.window.webContents.send('actions-receive', collectedActions);    
         }
-        else{
-            collectedActions = [];
-        }
-
-        this.chatWindow.window.webContents.send('actions-receive', collectedActions);
     }
 
     async resummarize(){
