@@ -63,22 +63,7 @@ export class Conversation{
         this.actions = [];
         this.exampleMessages = [],
 
-        //TODO:::!!!
-        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
-
-        if(this.config.summarizationUseTextGenApi){
-            this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
-        }
-        else{
-            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
-        }
-        
-        if(this.config.actionsUseTextGenApi){;
-            this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
-        }
-        else{
-            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
-        }
+        [this.textGenApiConnection, this.summarizationApiConnection, this.actionsApiConnection] = this.getApiConnections();
         
         this.loadConfig();
     }
@@ -252,23 +237,20 @@ export class Conversation{
         }
     
         this.loadActions();
+    }
 
-        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
+    getApiConnections(){
+        let textGenApiConnection, summarizationApiConnection, actionsApiConnection
+        summarizationApiConnection = textGenApiConnection = actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
 
         if(this.config.summarizationUseTextGenApi){
             this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
         }
-        else{
-            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
-        }
-        
+
         if(this.config.actionsUseTextGenApi){;
             this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
         }
-        else{
-            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
-        }
-       
+        return [textGenApiConnection, summarizationApiConnection, actionsApiConnection];
     }
 
     async loadActions(){
