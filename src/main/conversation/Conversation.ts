@@ -73,15 +73,16 @@ export class Conversation{
         this.messages.push(message);
     }
 
-    generateAIsMessages(){        
-        this.gameData.characters.forEach((character: Character, id) => {
-            if (id !== this.gameData.playerID)
-            {
-                this.generateNewAIMessage(character);
+    async generateAIsMessages() {
+        const shuffled_characters = Array.from(this.gameData.characters.values()).sort(() => Math.random() - 0.5);
+        for (const character of shuffled_characters) {
+            if (character.id !== this.gameData.playerID) {
+                await this.generateNewAIMessage(character);
             }
-        })    
+        }
+        this.chatWindow.window.webContents.send('actions-receive', []);
     }
-
+    
     async generateNewAIMessage(character: Character){
 
         

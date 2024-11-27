@@ -37,7 +37,9 @@ export class Character {
     memories: Memory[];
     traits: Trait[];
     relationsToPlayer: string[];
+    relationsToCharacters: { id: number, relations: string[]}[];
     opinionBreakdownToPlayer: OpinionModifier[];
+    opinions: { id: number, opinon: number}[];
 
     constructor(data: string[]){
         this.id = Number(data[0]),
@@ -71,7 +73,9 @@ export class Character {
             this.memories = [],
             this.traits = [],
             this.relationsToPlayer = [],
+            this.relationsToCharacters = [],
             this.opinionBreakdownToPlayer = []
+            this.opinions = [];
     }
 
     /**

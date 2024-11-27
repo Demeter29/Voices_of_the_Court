@@ -102,7 +102,9 @@ export class Character {
     memories: Memory[];
     traits: Trait[];
     relationsToPlayer: string[];
+    relationsToCharacters: { id: number, relations: string[]}[];
     opinionBreakdownToPlayer: OpinionModifier[];
+    opinions: { id: number, opinon: number}[];
 
     constructor(data: string[]){
         this.id = Number(data[0]),
@@ -136,7 +138,9 @@ export class Character {
             this.memories = [],
             this.traits = [],
             this.relationsToPlayer = [],
+            this.relationsToCharacters = [],
             this.opinionBreakdownToPlayer = []
+            this.opinions = [];
     }
 
     /**
@@ -203,10 +207,12 @@ export class Character {
         //recalculate opinionOfPlayer
         let sum = 0;
         for(const opinionModifier of this.opinionBreakdownToPlayer){
-            sum += opinionModifier.value;
+            if (!Number.isNaN(opinionModifier.value)) {
+                sum += Number(opinionModifier.value);
+            }
         }
         this.opinionOfPlayer = sum;
-    }
+    }   
 
 }
 
