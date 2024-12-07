@@ -93,7 +93,7 @@ export class ApiConnection{
         streamRelay?: (arg1: MessageChunk) => void
     ): Promise<string> {
         const MAX_RETRIES = 5; // Maximum number of retries
-        const RETRY_DELAY = 1000; // Initial delay in milliseconds (will increase)
+        const RETRY_DELAY = 750; // Initial delay in milliseconds (will increase)
         
         // Helper function for delaying execution
         const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -200,6 +200,9 @@ export class ApiConnection{
                     }
     
                     console.log(response);
+                    if (response === "" || response === undefined || response === null || response === " ") {
+                        throw new Error("{code: 599, error: {message: 'No response'}}");
+                    }
                     return response;
                 }
             } catch (error) {
@@ -213,6 +216,17 @@ export class ApiConnection{
                     if (
                         typedError.code === 429 &&
                         typedError.error?.message.includes("Provider returned error")
+                    ) {
+                        retries++;
+                        console.warn(
+                            `Retry ${retries}/${MAX_RETRIES} after error: ${typedError.error?.message}, delaying for ${
+                                RETRY_DELAY * retries
+                            }ms`
+                        );
+                        await delay(RETRY_DELAY * retries); // Exponential backoff
+                    } else if (
+                        typedError.code === 599 &&
+                        typedError.error?.message.includes("No response")
                     ) {
                         retries++;
                         console.warn(
