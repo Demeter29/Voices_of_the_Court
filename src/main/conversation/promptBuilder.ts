@@ -55,12 +55,12 @@ export function buildChatPrompt(conv: Conversation, character: Character): Messa
         content: "[example messages]"
     })
     
-    chatPrompt = chatPrompt.concat(conv.exampleMessages);
+    // chatPrompt = chatPrompt.concat(conv.exampleMessages);
 
-    // const userDataPath = path.join(app.getPath('userData'), 'votc_data');
-    // const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages', "custom", "mccAliChat.js");
-    // let exampleMessages = require(exampleMessagesPath)(conv.gameData, character.id);
-    // chatPrompt = chatPrompt.concat(exampleMessages);
+    const userDataPath = path.join(app.getPath('userData'), 'votc_data');
+    const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages', "standard", "mccAliChat.js");
+    let exampleMessages = require(exampleMessagesPath)(conv.gameData, character.id);
+    chatPrompt = chatPrompt.concat(exampleMessages);
     
 
     chatPrompt.push({
