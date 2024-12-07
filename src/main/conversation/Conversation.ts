@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import { GameData } from '../../shared/gameData/GameData.js';
+import { Character } from '../../shared/gameData/Character.js';
 import { Config } from '../../shared/Config.js';
 import { ApiConnection} from '../../shared/apiConnection.js';
 import { checkActions } from './checkActions.js';
@@ -63,22 +64,7 @@ export class Conversation{
         this.actions = [];
         this.exampleMessages = [],
 
-        //TODO:::!!!
-        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
-
-        if(this.config.summarizationUseTextGenApi){
-            this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
-        }
-        else{
-            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
-        }
-        
-        if(this.config.actionsUseTextGenApi){;
-            this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
-        }
-        else{
-            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
-        }
+        [this.textGenApiConnection, this.summarizationApiConnection, this.actionsApiConnection] = this.getApiConnections();
         
         this.loadConfig();
     }
@@ -87,7 +73,17 @@ export class Conversation{
         this.messages.push(message);
     }
 
-    async generateNewAIMessage(){
+    async generateAIsMessages() {
+        const shuffled_characters = Array.from(this.gameData.characters.values()).sort(() => Math.random() - 0.5);
+        for (const character of shuffled_characters) {
+            if (character.id !== this.gameData.playerID) {
+                await this.generateNewAIMessage(character);
+            }
+        }
+        this.chatWindow.window.webContents.send('actions-receive', []);
+    }
+    
+    async generateNewAIMessage(character: Character){
 
         
         let responseMessage: Message;
@@ -96,7 +92,7 @@ export class Conversation{
             this.chatWindow.window.webContents.send('stream-start');
         }
 
-        let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this));
+        let currentTokens = this.textGenApiConnection.calculateTokensFromChat(buildChatPrompt(this, character));
         //let currentTokens = 500;
         console.log(`current tokens: ${currentTokens}`);
 
@@ -107,7 +103,7 @@ export class Conversation{
 
         let streamMessage = {
             role: "assistant",
-            name: this.gameData.aiName,
+            name: character.fullName,//this.gameData.aiName,
             content: ""
         }
         let cw = this.chatWindow;
@@ -121,8 +117,8 @@ export class Conversation{
             
             responseMessage = {
                 role: "assistant",
-                name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(buildChatPrompt(this), this.config.stream, {
+                name: character.fullName,//this.gameData.aiName,
+                content: await this.textGenApiConnection.complete(buildChatPrompt(this, character), this.config.stream, {
                     //stop: [this.gameData.playerName+":", this.gameData.aiName+":", "you:", "user:"],
                     max_tokens: this.config.maxTokens,
                 },
@@ -135,8 +131,8 @@ export class Conversation{
 
             responseMessage = {
                 role: "assistant",
-                name: this.gameData.aiName,
-                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this), this.config, this.gameData.aiName), this.config.stream, {
+                name: character.fullName,
+                content: await this.textGenApiConnection.complete(convertChatToText(buildChatPrompt(this, character), this.config, character.fullName), this.config.stream, {
                     stop: [this.config.inputSequence, this.config.outputSequence],
                     max_tokens: this.config.maxTokens,
                 },
@@ -155,21 +151,22 @@ export class Conversation{
             this.chatWindow.window.webContents.send('message-receive', responseMessage, this.config.actionsEnableAll);
         }
         
-
-        let collectedActions: ActionResponse[];
-        if(this.config.actionsEnableAll){
-            try{
-                collectedActions = await checkActions(this);
+        if (character.id === this.gameData.aiID){
+            let collectedActions: ActionResponse[];
+            if(this.config.actionsEnableAll){
+                try{
+                    collectedActions = await checkActions(this);
+                }
+                catch(e){
+                    collectedActions = [];
+                }
             }
-            catch(e){
+            else{
                 collectedActions = [];
             }
+    
+            this.chatWindow.window.webContents.send('actions-receive', collectedActions);    
         }
-        else{
-            collectedActions = [];
-        }
-
-        this.chatWindow.window.webContents.send('actions-receive', collectedActions);
     }
 
     async resummarize(){
@@ -252,23 +249,20 @@ export class Conversation{
         }
     
         this.loadActions();
+    }
 
-        this.textGenApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
+    getApiConnections(){
+        let textGenApiConnection, summarizationApiConnection, actionsApiConnection
+        summarizationApiConnection = textGenApiConnection = actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.textGenerationApiConnectionConfig.parameters);
 
         if(this.config.summarizationUseTextGenApi){
             this.summarizationApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);;
         }
-        else{
-            this.summarizationApiConnection = new ApiConnection(this.config.summarizationApiConnectionConfig.connection, this.config.summarizationApiConnectionConfig.parameters);
-        }
-        
+
         if(this.config.actionsUseTextGenApi){;
             this.actionsApiConnection = new ApiConnection(this.config.textGenerationApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);;
         }
-        else{
-            this.actionsApiConnection = new ApiConnection(this.config.actionsApiConnectionConfig.connection, this.config.actionsApiConnectionConfig.parameters);
-        }
-       
+        return [textGenApiConnection, summarizationApiConnection, actionsApiConnection];
     }
 
     async loadActions(){

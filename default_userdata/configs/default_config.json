@@ -4,8 +4,8 @@
 	"maxTokens": 500,
 	"maxMemoryTokens": 600,
 	"percentOfContextToSummarize": 40,
-	"selectedDescScript": "standard\\pList.js",
-	"selectedExMsgScript": "standard\\aliChat.js",
+	"selectedDescScript": "standard\\pListMcc.js",
+	"selectedExMsgScript": "standard\\mccAliChat.js",
 	"inputSequence": "[INST]",
     "outputSequence": "[/INST]",
 	"textGenerationApiConnectionConfig": {

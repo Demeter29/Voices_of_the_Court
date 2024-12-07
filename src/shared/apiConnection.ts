@@ -86,120 +86,172 @@ export class ApiConnection{
     
     }
 
-    async complete(prompt: string | Message[], stream: boolean, otherArgs: object, streamRelay?: (arg1: MessageChunk)=> void,  ): Promise<string> {
-
-
-        //OPENAI DOESNT ALLOW spaces inside message.name so we have to put them inside the Message content.
-        if(this.type == "openai"){
-            for(let i=0;i<prompt.length;i++){
-                 //@ts-ignore
-                 if(prompt[i].name){
-                    //@ts-ignore
-                    prompt[i].content = prompt[i].name + ": "+prompt[i].content;
-
-                    //@ts-ignore
-                    delete prompt[i].name;
-                }
-            }
-        }   
-        console.log(prompt);
+    async complete(
+        prompt: string | Message[],
+        stream: boolean,
+        otherArgs: object,
+        streamRelay?: (arg1: MessageChunk) => void
+    ): Promise<string> {
+        const MAX_RETRIES = 5; // Maximum number of retries
+        const RETRY_DELAY = 750; // Initial delay in milliseconds (will increase)
         
-        if(this.isChat()){
-            let completion = await this.client.chat.completions.create({
-                model: this.model,
-                //@ts-ignore
-                messages: prompt,
-                stream: stream,
-                ...this.parameters,
-                ...otherArgs
-            })
-
-            let response: string = "";
-
-            //@ts-ignore
-            if(completion["error"]){
-                //@ts-ignore
-                throw completion.error.message;
+        // Helper function for delaying execution
+        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+        let retries = 0;
+    
+        while (retries < MAX_RETRIES) {
+            try {
+                //OPENAI DOESN'T ALLOW spaces inside message.name so we have to put them inside the Message content.
+                if (this.type === "openai") {
+                    for (let i = 0; i < prompt.length; i++) {
+                        //@ts-ignore
+                        if (prompt[i].name) {
+                            //@ts-ignore
+                            prompt[i].content = prompt[i].name + ": " + prompt[i].content;
+    
+                            //@ts-ignore
+                            delete prompt[i].name;
+                        }
+                    }
+                }
+                console.log(prompt);
+    
+                if (this.isChat()) {
+                    let completion = await this.client.chat.completions.create({
+                        model: this.model,
+                        //@ts-ignore
+                        messages: prompt,
+                        stream: stream,
+                        ...this.parameters,
+                        ...otherArgs
+                    });
+    
+                    let response: string = "";
+    
+                    //@ts-ignore
+                    if (completion["error"]) {
+                        //@ts-ignore
+                        throw new Error(completion.error.message);
+                    }
+    
+                    if (stream) {
+                        // @ts-ignore
+                        for await (const chunk of completion) {
+                            let msgChunk: MessageChunk = chunk.choices[0].delta;
+                            if (msgChunk.content) {
+                                streamRelay!(msgChunk);
+                                response += msgChunk.content;
+                            }
+                        }
+                    } else {
+                        // @ts-ignore
+                        response = completion.choices[0].message.content;
+                    }
+    
+                    console.log(response);
+                    return response;
+                } else {
+                    let completion;
+    
+                    if (this.type === "openrouter") {
+                        //@ts-ignore
+                        completion = await this.client.chat.completions.create({
+                            model: this.model,
+                            //@ts-ignore
+                            prompt: prompt,
+                            stream: stream,
+                            ...this.parameters,
+                            ...otherArgs
+                        });
+                    } else {
+                        completion = await this.client.completions.create({
+                            model: this.model,
+                            //@ts-ignore
+                            prompt: prompt,
+                            stream: stream,
+                            ...this.parameters,
+                            ...otherArgs
+                        });
+                    }
+    
+                    let response: string = "";
+    
+                    //@ts-ignore
+                    if (completion["error"]) {
+                        //@ts-ignore
+                        throw new Error(completion.error.message);
+                    }
+    
+                    if (stream) {
+                        // @ts-ignore
+                        for await (const chunk of completion) {
+                            let msgChunk: MessageChunk = {
+                                // @ts-ignore
+                                content: chunk.choices[0].text
+                            };
+                            streamRelay!(msgChunk);
+    
+                            response += msgChunk.content;
+                        }
+                    } else {
+                        // @ts-ignore
+                        response = completion.choices[0].text;
+                    }
+    
+                    console.log(response);
+                    if (response === "" || response === undefined || response === null || response === " ") {
+                        throw new Error("{code: 599, error: {message: 'No response'}}");
+                    }
+                    return response;
+                }
+            } catch (error) {
+                // Narrow down the error type
+                if (typeof error === "object" && error !== null && "code" in error && "error" in error) {
+                    const typedError = error as {
+                        code: number;
+                        error?: { message: string };
+                    };
+            
+                    if (
+                        typedError.code === 429 &&
+                        typedError.error?.message.includes("Provider returned error")
+                    ) {
+                        retries++;
+                        console.warn(
+                            `Retry ${retries}/${MAX_RETRIES} after error: ${typedError.error?.message}, delaying for ${
+                                RETRY_DELAY * retries
+                            }ms`
+                        );
+                        await delay(RETRY_DELAY * retries); // Exponential backoff
+                    } else if (
+                        typedError.code === 599 &&
+                        typedError.error?.message.includes("No response")
+                    ) {
+                        retries++;
+                        console.warn(
+                            `Retry ${retries}/${MAX_RETRIES} after error: ${typedError.error?.message}, delaying for ${
+                                RETRY_DELAY * retries
+                            }ms`
+                        );
+                        await delay(RETRY_DELAY * retries); // Exponential backoff
+                    } else {
+                        console.error("Unrecoverable error:", error);
+                        throw error; // Propagate unrecoverable errors
+                    }
+                } else {
+                    console.error("Unknown error type:", error);
+                    throw error; // If it's not an object or doesn't have the expected properties
+                }
             }
             
-
-            if(stream){
-
-                // @ts-ignore
-                for await(const chunk of completion){
-                    let msgChunk: MessageChunk = chunk.choices[0].delta;
-                    if(msgChunk.content){
-                        streamRelay!(msgChunk);
-                        response += msgChunk.content;
-                    }   
-                }
-                
-            }
-            else{
-                // @ts-ignore
-                response = completion.choices[0].message.content;
-            }
-
-            console.log(response);
-            return response;
         }
-        else{
-            let completion;
-
-            if(this.type === "openrouter"){
-                //@ts-ignore
-                completion = await this.client.chat.completions.create({
-                    model: this.model,
-                    //@ts-ignore
-                    prompt: prompt,
-                    stream: stream,
-                    ...this.parameters,
-                    ...otherArgs
-                })
-            }
-            else{
-                completion = await this.client.completions.create({
-                    model: this.model,
-                    //@ts-ignore
-                    prompt: prompt,
-                    stream: stream,
-                    ...this.parameters,
-                    ...otherArgs
-                });
-            }
-
-            let response: string = "";
-
-            //@ts-ignore
-            if(completion["error"]){
-                //@ts-ignore
-                throw completion.error.message;
-            }
-
-            if(stream){
-                // @ts-ignore
-                
-                for await(const chunk of completion){
-                    let msgChunk: MessageChunk = {
-                        // @ts-ignore
-                        content: chunk.choices[0].text
-                    }
-                    streamRelay!(msgChunk);
-
-                    response += msgChunk.content;
-                }
-            }
-            else{
-                // @ts-ignore
-            response = completion.choices[0].text
-                
-            }
-
-            console.log(response);
-            return response;
-        }
+    
+        console.error(`Failed after ${MAX_RETRIES} retries.`);
+        //throw new Error(`Unable to complete request after ${MAX_RETRIES} retries.`);
+        return ""
     }
-
+    
     async testConnection(): Promise<apiConnectionTestResult>{
         let prompt: string | Message[];
         if(this.isChat()){

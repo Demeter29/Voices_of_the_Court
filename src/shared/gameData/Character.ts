@@ -1,4 +1,4 @@
-import {Memory, Trait, OpinionModifier} from "./GameData"
+import {Memory, Trait, OpinionModifier, Secret} from "./GameData"
 import { removeTooltip } from "./parseLog";
 
 /** @class */
@@ -33,10 +33,13 @@ export class Character {
     heldCourtAndCouncilPositions: string
     titleRankConcept: string;
 
+    secrets: Secret[];
     memories: Memory[];
     traits: Trait[];
     relationsToPlayer: string[];
+    relationsToCharacters: { id: number, relations: string[]}[];
     opinionBreakdownToPlayer: OpinionModifier[];
+    opinions: { id: number, opinon: number}[];
 
     constructor(data: string[]){
         this.id = Number(data[0]),
@@ -66,10 +69,13 @@ export class Character {
             this.isLandedRuler = !!Number(data[24]),
             this.heldCourtAndCouncilPositions = data[25],
             this.titleRankConcept = data[26],
+            this.secrets = [],
             this.memories = [],
             this.traits = [],
             this.relationsToPlayer = [],
+            this.relationsToCharacters = [],
             this.opinionBreakdownToPlayer = []
+            this.opinions = [];
     }
 
     /**
@@ -102,9 +108,7 @@ export class Character {
      * @returns {number} - opinion modifier's value. returns 0 if doesn't exist.
      */
     getOpinionModifierValue(reason: string): number{
-        let target = this.opinionBreakdownToPlayer.find( (om: OpinionModifier) =>{
-            om.reason.toLowerCase() == reason.toLowerCase();
-        });
+        let target = this.opinionBreakdownToPlayer.find( modifier => modifier.reason === reason);
 
         if(target !== undefined){
             return target.value;
@@ -143,7 +147,7 @@ export class Character {
             }
         }
         this.opinionOfPlayer = sum;
-    }
+    }   
 
 }
 

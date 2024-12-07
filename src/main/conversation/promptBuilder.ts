@@ -1,8 +1,11 @@
 import { Conversation, } from "./Conversation";
 import { parseVariables } from "../parseVariables";
 import { Message } from "../ts/conversation_interfaces";
-import { Memory } from "../../shared/gameData/GameData";
+import { Memory, Secret } from "../../shared/gameData/GameData";
+import { Character } from "../../shared/gameData/Character";
 import { Config } from "../../shared/Config";
+import path from 'path';
+import { app } from 'electron';
 
 export function convertChatToText(chat: Message[], config: Config, aiName: string): string{
     let output: string = "";
@@ -39,7 +42,7 @@ export function convertChatToTextNoNames(messages: Message[], config: Config): s
     return output;
 }
 
-export function buildChatPrompt(conv: Conversation): Message[]{
+export function buildChatPrompt(conv: Conversation, character: Character): Message[]{
     let chatPrompt: Message[]  = [];
 
     chatPrompt.push({
@@ -52,9 +55,12 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         content: "[example messages]"
     })
     
-    chatPrompt = chatPrompt.concat(conv.exampleMessages);
+    // chatPrompt = chatPrompt.concat(conv.exampleMessages);
 
-    
+    const userDataPath = path.join(app.getPath('userData'), 'votc_data');
+    const exampleMessagesPath = path.join(userDataPath, 'scripts', 'prompts', 'example messages', "standard", "mccAliChat.js");
+    let exampleMessages = require(exampleMessagesPath)(conv.gameData, character.id);
+    chatPrompt = chatPrompt.concat(exampleMessages);
     
 
     chatPrompt.push({
@@ -82,8 +88,19 @@ export function buildChatPrompt(conv: Conversation): Message[]{
         insertMessageAtDepth(messages, memoryMessage, conv.config.memoriesInsertDepth);
     }
 
+    // too early right now
+    // const secretMessage: Message = {
+    //     role: "system",
+    //     content: createSecretString(conv)
+    // }
+
+    // if(secretMessage.content){
+    //     insertMessageAtDepth(messages, secretMessage, conv.config.memoriesInsertDepth);
+    // }
+
+
     if(conv.summaries.length > 0){
-        let summaryString = "Here are the date and summary of previous conversations between them:\n"
+        let summaryString = "Here are the date and summary of previous conversations between " + conv.gameData.aiName + " and " + conv.gameData.playerName + ":\n"
 
         conv.summaries.reverse();
 
@@ -248,14 +265,42 @@ function getDateDifference(pastDate: string, todayDate: string): string{
 }
 
 
+function createSecretString(conv: Conversation): string{
+    let aiSecrets: Secret[] = [];
+    let playerSecrets: Secret[] = [];
+    
+    aiSecrets = aiSecrets.concat(conv.gameData.characters.get(conv.gameData.aiID)!.secrets);
+    playerSecrets = playerSecrets.concat(conv.gameData.characters.get(conv.gameData.playerID)!.secrets);
 
+    let output ="SECRETS BELOW SHALL NOT BE REVEALED EASY, IF CHARACTER REVEALS IT, IT MAY BE USED AGAINST HIM AND LEAD HIM TO DEATH OR PRISON\n";
+    if(aiSecrets.length>0){
+        output += `${conv.gameData.aiName}'s secrets:`;
+    }
+    while(aiSecrets.length>0){
+        const secret: Secret = aiSecrets.pop()!;
+        output+=`\n${conv.gameData.aiName}: ${secret.desc}`;
+    }
+
+    if(playerSecrets.length>0){
+        output += `\n\n${conv.gameData.playerName}'s secrets:`;
+    }
+    while(playerSecrets.length>0){
+        const secret: Secret = playerSecrets.pop()!;
+        output+=`\n${conv.gameData.playerName}: ${secret.desc}`;
+    }
+
+    return output+"\n\n";
+}
 
 function createMemoryString(conv: Conversation): string{
 
     let allMemories: Memory[] = [];
 
-    allMemories =allMemories.concat(conv.gameData.characters.get(conv.gameData.playerID)!.memories);
-    allMemories = allMemories.concat(conv.gameData.characters.get(conv.gameData.aiID)!.memories);
+    conv.gameData.characters.forEach((value, key) => {
+        allMemories = allMemories.concat(value!.memories);
+    })
+    // allMemories =allMemories.concat(conv.gameData.characters.get(conv.gameData.playerID)!.memories);
+    // allMemories = allMemories.concat(conv.gameData.characters.get(conv.gameData.aiID)!.memories);
 
     allMemories.sort((a, b) => (a.relevanceWeight - b.relevanceWeight));
     

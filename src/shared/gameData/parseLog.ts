@@ -1,10 +1,10 @@
-import { GameData, Memory, Trait, OpinionModifier} from "./GameData";
+import { GameData, Memory, Trait, OpinionModifier, Secret} from "./GameData";
 import { Character } from "./Character";
 const fs = require('fs');
 const readline = require('readline');
 
 export async function parseLog(debugLogPath: string): Promise<GameData>{
-    let gameData: GameData
+    let gameData!: GameData
 
     //some data are passed through multiple lines
     let multiLineTempStorage: any[] = [];
@@ -22,6 +22,14 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
         if(isWaitingForMultiLine){
             let value = line.split('#')[0]
             switch (multiLineType){
+                case "new_relations":
+                    value = removeTooltip(value)
+                    // if (value.includes("your")) {
+
+                    //     value = value.replace("your", gameData.playerName+"'s");
+                    // }
+                    multiLineTempStorage.push(value)
+                break;
                 case "relations":
                     multiLineTempStorage.push(removeTooltip(value))
                 break;
@@ -63,8 +71,15 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
                     let memory = parseMemory(data)
                     gameData!.characters.get(rootID)!.memories.push(memory);
                 break;
+                case "secret": 
+                    let secret = parseSecret(data)
+                    gameData!.characters.get(rootID)!.secrets.push(secret);
+                break;
                 case "trait":
                     gameData!.characters.get(rootID)!.traits.push(parseTrait(data));
+                break;
+                case "opinons":
+                    gameData!.characters.get(rootID)!.opinions.push({id: Number(data[1]), opinon: Number(data[2])});
                 break;
                 case "relations":
                     
@@ -78,6 +93,21 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
                         multiLineType = "relations";
                     }
                 break;
+                case "new_relations":
+                var tmpTargetId = Number(data[1])
+                if(line.split('#')[1] !== ''){
+                    
+                    gameData!.characters.get(rootID)!.relationsToCharacters.push({id: tmpTargetId, relations: [removeTooltip(line.split('#')[1])]})
+                    //gameData!.characters.get(rootID)!.relationsToPlayer = [removeTooltip(line.split('#')[1])]
+                }
+                
+                if(!line.includes("#ENDMULTILINE")){
+                    multiLineTempStorage = gameData!.characters.get(rootID)!.relationsToCharacters.find(x => x.id == tmpTargetId)!.relations
+                    isWaitingForMultiLine = true;
+                    multiLineType = "new_relations";
+                }
+                break;
+
                 case "opinionBreakdown":
                     if(line.split('#')[1] !== ''){
                         gameData!.characters.get(rootID)!.opinionBreakdownToPlayer = [parseOpinionModifier(line.split('#')[1])]
@@ -101,6 +131,15 @@ export async function parseLog(debugLogPath: string): Promise<GameData>{
             relevanceWeight: Number(data[4])
         }
     }
+
+    function parseSecret(data: string[]): Secret{
+        return {
+            name: data[1],
+            desc: data[2],
+            category: data[3],
+        }
+    }
+
     
     function parseTrait(data: string[]): Trait{
         return {

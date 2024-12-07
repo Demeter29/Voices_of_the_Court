@@ -22,6 +22,11 @@ export type OpinionModifier = {
     value: number,
 }
 
+export type Secret = {
+    name: string,
+    desc: string,
+    category: string
+}
 
 /** 
  * @class

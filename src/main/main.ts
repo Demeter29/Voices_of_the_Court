@@ -280,7 +280,7 @@ clipboardListener.on('VOTC:EFFECT_ACCEPTED', async () =>{
 ipcMain.on('message-send', async (e, message: Message) =>{
     conversation.pushMessage(message);
     try{
-        conversation.generateNewAIMessage();
+        conversation.generateAIsMessages();
     }
     catch(err){
         console.log(err);
