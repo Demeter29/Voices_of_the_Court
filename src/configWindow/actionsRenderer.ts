@@ -1,5 +1,5 @@
 import { ipcRenderer} from 'electron';
-import fs from 'fs';
+import fs, { createReadStream } from 'fs';
 import path from 'path';
 
 //@ts-ignore
@@ -10,6 +10,7 @@ let useConnectionAPI: HTMLElement = document.querySelector("#use-connection-api"
 let apiSelector: HTMLElement = document.querySelector("#api-selector")!;
 
 let actionsDiv: HTMLDivElement = document.querySelector("#actions-group")!;
+let actionDescriptorDiv: HTMLDivElement = document.querySelector("#action-descriptor")!;
 
 let refreshactionsButton: HTMLButtonElement = document.querySelector("#refresh-actions")!;
 
@@ -100,9 +101,7 @@ async function loadactions(){
 
     
 
-    for(const fileName of standardFileNames){
-
-        
+    for(const fileName of standardFileNames){   
         let file  = require(path.join(actionsPath, 'standard', fileName));
         
         let element = document.createElement("div");
@@ -130,12 +129,25 @@ async function loadactions(){
             }
             console.log(disabledActions)
             ipcRenderer.send('config-change', "disabledActions", disabledActions);
-        });     
+        });
+
+        let creatorString = "";
+        if(file.creator){
+            creatorString = `<li class="action-item"><b>Made by:</b> ${file.creator}</li>`;
+        }
+        
+        element.addEventListener("mouseenter", (e: any)=>{
+            actionDescriptorDiv.innerHTML = `
+            <h3>${file.signature}</h3>
+            <ul>
+                <li class="action-item"><b>Description:</b> ${file.description}</li>
+                ${creatorString}
+            </ul>
+            `;
+        });
     }
 
-    for(const fileName of customFileNames){
-
-        
+    for(const fileName of customFileNames){   
         let file  = require(path.join(actionsPath, 'custom', fileName));
         
         let element = document.createElement("div");

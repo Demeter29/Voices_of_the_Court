@@ -44,6 +44,7 @@ export interface Action{
     signature: string,
     args: ActionArgument[],
     description: string,
+    creator?: string,
     check: (gameData: GameData) => boolean,
     run: (arg1: GameData, arg2: (arg1: string)=> void, arg3: string[]) => void,
     chatMessage: (arg1: string[]) => string,

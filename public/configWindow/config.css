@@ -149,6 +149,20 @@ input[type=checkbox]{
   width: 80%;
 }
 
+/* actions page */
+
+#actions-descriptor{
+  height: 100%;
+  width: 100%;
+  margin-left: 10vw;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+li.action-item:not(:last-child) { 
+  margin-bottom: 1vh;  
+}
+
 /* interaction page */
 
 /* model settings */
@@ -228,4 +242,8 @@ textarea{
 
 a {
   color: inherit;
+}
+
+h1,h2,h3{
+  text-align: center;
 }
